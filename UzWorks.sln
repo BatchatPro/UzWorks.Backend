@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34212.112
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UzWorks.API", "UzWorks\UzWorks.API.csproj", "{E09B4E4E-C2AA-4A47-AC2D-6DF38BBCF823}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UzWorks.Core", "UzWorks.Core\UzWorks.Core.csproj", "{4414940B-CFF6-4025-8B9A-B673CEC34443}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UzWorks.Identity", "UzWorks.Identy\UzWorks.Identity.csproj", "{CA8CAD39-33E7-449D-8704-4C8344D1EB27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UzWorks.Persistence", "UzWorks.Persistence\UzWorks.Persistence.csproj", "{1F6308FE-7843-4804-BE66-56825150A71A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UzWorks.BL", "UzWorks.BL\UzWorks.BL.csproj", "{A669DDAD-2E73-4F98-9193-1C4EE90324FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UzWorks.Infrastructure", "UzWorks.Infrastructure\UzWorks.Infrastructure.csproj", "{4C8F864E-A105-4707-8782-D22BC8BDA5FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E09B4E4E-C2AA-4A47-AC2D-6DF38BBCF823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E09B4E4E-C2AA-4A47-AC2D-6DF38BBCF823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E09B4E4E-C2AA-4A47-AC2D-6DF38BBCF823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E09B4E4E-C2AA-4A47-AC2D-6DF38BBCF823}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4414940B-CFF6-4025-8B9A-B673CEC34443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4414940B-CFF6-4025-8B9A-B673CEC34443}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4414940B-CFF6-4025-8B9A-B673CEC34443}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4414940B-CFF6-4025-8B9A-B673CEC34443}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA8CAD39-33E7-449D-8704-4C8344D1EB27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA8CAD39-33E7-449D-8704-4C8344D1EB27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA8CAD39-33E7-449D-8704-4C8344D1EB27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA8CAD39-33E7-449D-8704-4C8344D1EB27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F6308FE-7843-4804-BE66-56825150A71A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F6308FE-7843-4804-BE66-56825150A71A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F6308FE-7843-4804-BE66-56825150A71A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F6308FE-7843-4804-BE66-56825150A71A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A669DDAD-2E73-4F98-9193-1C4EE90324FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A669DDAD-2E73-4F98-9193-1C4EE90324FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A669DDAD-2E73-4F98-9193-1C4EE90324FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A669DDAD-2E73-4F98-9193-1C4EE90324FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C8F864E-A105-4707-8782-D22BC8BDA5FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C8F864E-A105-4707-8782-D22BC8BDA5FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C8F864E-A105-4707-8782-D22BC8BDA5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C8F864E-A105-4707-8782-D22BC8BDA5FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {90BF6654-3A75-4BBC-B3C7-BE3CEE038431}
+	EndGlobalSection
+EndGlobal
