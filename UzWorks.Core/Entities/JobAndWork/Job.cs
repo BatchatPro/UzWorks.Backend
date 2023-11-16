@@ -4,7 +4,6 @@ namespace UzWorks.Core.Entities.JobAndWork;
 
 public class Job: BaseJobEntity
 {
-    public string Title { get; set; }
     public string Benefit { get; set; }
     public string Requirement { get; set; }
     public int MinAge { get; set; }

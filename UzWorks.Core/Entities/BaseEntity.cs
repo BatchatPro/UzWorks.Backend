@@ -2,7 +2,7 @@
 
 namespace UzWorks.Core.Entities;
 
-public class BaseEntity
+public class BaseEntity : IHasIsDeletedProperty
 {
     public Guid Id { get; set; }
 
@@ -18,6 +18,5 @@ public class BaseEntity
     [AllowNull]
     public string? UpdatedBy { get; set; }
 
-    [AllowNull]
-    public bool? IsDeleted { get; set; } = false;
+    public bool IsDeleted { get; set; } = false;
 }

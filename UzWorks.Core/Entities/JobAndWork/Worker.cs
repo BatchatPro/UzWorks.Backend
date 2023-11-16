@@ -5,7 +5,6 @@ namespace UzWorks.Core.Entities.JobAndWork;
 public class Worker : BaseJobEntity
 {
     public string Location { get; set; }
-    public DateTime BirthDate { get; set; }
 
     public Guid DistrictId { get; set; }
     public District District { get; set; }
