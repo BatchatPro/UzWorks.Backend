@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UzWorks.Core\UzWorks.Core.csproj" />
-    <ProjectReference Include="..\UzWorks.Identy\UzWorks.Identity.csproj" />
-    <ProjectReference Include="..\UzWorks.Persistence\UzWorks.Persistence.csproj" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Mappers\" />
+    <ProjectReference Include="..\UzWorks.Core\UzWorks.Core.csproj" />
+    <ProjectReference Include="..\UzWorks.Identy\UzWorks.Identity.csproj" />
+    <ProjectReference Include="..\UzWorks.Persistence\UzWorks.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
