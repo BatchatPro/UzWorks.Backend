@@ -4,6 +4,10 @@ namespace UzWorks.Core.Entities.Location;
 
 public class Region : BaseEntity
 {
+    public Region(string name)
+    {
+        Name = name;
+    }
     public string Name { get; set; }
     
     [AllowNull]

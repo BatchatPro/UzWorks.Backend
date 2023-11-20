@@ -1,7 +1,8 @@
 ﻿namespace UzWorks.Core.DataTransferObjects.Location.Regions;
 
-public class RegionVM
+public class RegionEM
 {
     public Guid Id { get; set; }
-    public string Name {  get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+
 }

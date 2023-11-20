@@ -15,6 +15,7 @@ public class MappingProfile : Profile
     {
         CreateMap<JobCategory, JobCategoryVM>().ReverseMap();
         CreateMap<JobCategory, JobCategoryDto>().ReverseMap();
+        CreateMap<JobCategory, JobCategoryEM>().ReverseMap();
 
         CreateMap<District, DistrictDto>().ReverseMap();
         CreateMap<District, DistrictVM>().ReverseMap();

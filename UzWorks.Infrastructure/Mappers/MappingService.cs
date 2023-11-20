@@ -12,9 +12,9 @@ public class MappingService : IMappingService
         this.mapper = mapper;
     }
 
-    public T Map<T, TSourse>(TSourse sourse)
+    public T Map<T, TSource>(TSource source)
     {
-        return mapper.Map<T>(sourse);
+        return mapper.Map<T>(source);
     }
 
     public T Map<T, TSource>(TSource source, T destination)
