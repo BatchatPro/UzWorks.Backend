@@ -16,7 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\UzWorks.BL\UzWorks.BL.csproj" />
     <ProjectReference Include="..\UzWorks.Identy\UzWorks.Identity.csproj" />
+    <ProjectReference Include="..\UzWorks.Infrastructure\UzWorks.Infrastructure.csproj" />
     <ProjectReference Include="..\UzWorks.Persistence\UzWorks.Persistence.csproj" />
   </ItemGroup>
 

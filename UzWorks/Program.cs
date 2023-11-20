@@ -5,10 +5,13 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using UzWorks.API.Middleware;
+using UzWorks.BL;
 using UzWorks.Core.AccessConfigurations;
 using UzWorks.Identity;
 using UzWorks.Identity.ClaimsPrincipalFactory;
 using UzWorks.Identity.Models;
+using UzWorks.Infrastructure;
+using UzWorks.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,20 +24,6 @@ builder.Services.Configure<AccessConfiguration>(configuration.GetSection("Access
 builder.Services.AddDbContext<UzWorksIdentityDbContext>(option => option.UseNpgsql(connectionString));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddIdentity<User, Role>(option =>
-{
-    option.Password.RequiredLength = 8;
-    option.Password.RequireNonAlphanumeric = false;
-    option.Password.RequireLowercase = true;
-    option.Password.RequireUppercase = false;
-    option.Password.RequireDigit = true;
-}).AddRoles<Role>()
-.AddUserManager<UserManager<User>>()
-.AddRoleManager<RoleManager<Role>>()
-.AddEntityFrameworkStores<UzWorksIdentityDbContext>()
-.AddClaimsPrincipalFactory<UzWorksClaimsPrincipalFactory>();
-
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "UzWorks Api", Version = "v1" });
@@ -66,6 +55,20 @@ builder.Services.AddSwaggerGen(options =>
 
 });
 
+builder.Services.AddIdentity<User, Role>(option =>
+{
+    option.Password.RequiredLength = 8;
+    option.Password.RequireNonAlphanumeric = false;
+    option.Password.RequireLowercase = true;
+    option.Password.RequireUppercase = false;
+    option.Password.RequireDigit = true;
+}).AddRoles<Role>()
+.AddUserManager<UserManager<User>>()
+.AddRoleManager<RoleManager<Role>>()
+.AddEntityFrameworkStores<UzWorksIdentityDbContext>()
+.AddClaimsPrincipalFactory<UzWorksClaimsPrincipalFactory>();
+
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -84,6 +87,18 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = configuration["AccessConfiguration:Issuer"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey.TheSecretKey))
     };
+});
+
+builder.Services.RegisterPersistenceModule(builder.Configuration);
+builder.Services.RegisterBLModule();
+builder.Services.RegisterInfrastructureModule(builder.Configuration);
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(opt =>
+    {
+        opt.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
 });
 
 var app = builder.Build();

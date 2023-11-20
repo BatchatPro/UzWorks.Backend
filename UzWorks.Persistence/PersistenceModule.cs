@@ -18,7 +18,7 @@ public static class PersistenceModule
     {
         services.AddDbContext<UzWorksDbContext>(options =>
         {
-            options.UseNpgsql(configs.GetConnectionString("UzWorksConnectionString"), opt =>
+            options.UseNpgsql(configs.GetConnectionString("PostgresConnectionString"), opt =>
                 opt.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName));
         });
 
