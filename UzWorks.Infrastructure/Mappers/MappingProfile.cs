@@ -19,14 +19,18 @@ public class MappingProfile : Profile
 
         CreateMap<District, DistrictDto>().ReverseMap();
         CreateMap<District, DistrictVM>().ReverseMap();
+        CreateMap<District, DistrictEM>().ReverseMap();
 
         CreateMap<Region,RegionDto>().ReverseMap();
         CreateMap<Region,RegionVM>().ReverseMap();
+        CreateMap<Region,RegionEM>().ReverseMap();
 
         CreateMap<Worker,WorkerDto>().ReverseMap();
         CreateMap<Worker,WorkerVM>().ReverseMap();
+        CreateMap<Worker,WorkerEM>().ReverseMap();
 
         CreateMap<Job,JobDto>().ReverseMap();
         CreateMap<Job,JobVM>().ReverseMap();
+        CreateMap<Job,JobEM>().ReverseMap();
     }
 }

@@ -12,9 +12,4 @@
     <ProjectReference Include="..\UzWorks.Persistence\UzWorks.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Jobs\" />
-    <Folder Include="Services\Workers\" />
-  </ItemGroup>
-
 </Project>
