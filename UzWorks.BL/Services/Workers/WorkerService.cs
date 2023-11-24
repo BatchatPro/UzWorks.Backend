@@ -40,7 +40,12 @@ public class WorkerService : IWorkerService
         await _workersRepository.SaveChanges();
     }
 
-    public async Task<IEnumerable<WorkerVM>> GetAllAsync(int pageNumber, int pageSize, Guid? jobCategoryId, int? maxAge, int? minAge, uint? maxSalary, uint? minSalary, string? gender, Guid? regionId, Guid? districtId)
+    public async Task<IEnumerable<WorkerVM>> GetAllAsync(
+        int pageNumber, int pageSize, 
+        Guid? jobCategoryId, int? maxAge, 
+        int? minAge, uint? maxSalary, 
+        uint? minSalary, string? gender, 
+        Guid? regionId, Guid? districtId)
     {
         var workers = await _workersRepository.GetAllWorkersAsync(pageNumber, pageSize, jobCategoryId, 
                                                                 maxAge, minAge, maxSalary, minSalary, 
