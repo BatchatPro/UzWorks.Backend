@@ -46,7 +46,7 @@ public class DistrictController : BaseController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = _districtService.GetAllAsync();
+        var result = await _districtService.GetAllAsync();
         return Ok(result);
     }
 
