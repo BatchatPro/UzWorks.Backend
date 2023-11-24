@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UzWorks.BL.Services.Locations.Districts;
+using UzWorks.Core.Constants;
 using UzWorks.Core.DataTransferObjects.Location.Districts;
 
 namespace UzWorks.API.Controllers;
@@ -13,6 +14,7 @@ public class DistrictController : BaseController
         _districtService = districtService;
     }
 
+    [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPost] 
     public async Task<IActionResult> Create([FromBody]DistrictDto district)
     {
@@ -20,6 +22,7 @@ public class DistrictController : BaseController
         return Ok(result);
     }
 
+    [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromRoute]Guid id)
     {
@@ -27,6 +30,7 @@ public class DistrictController : BaseController
         return Ok();
     }
 
+    [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPut]
     public async Task<IActionResult> Edit([FromBody]DistrictEM districtEM)
     {

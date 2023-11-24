@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UzWorks.BL.Services.Workers;
+using UzWorks.Core.Constants;
 using UzWorks.Core.DataTransferObjects.Workers;
 
 namespace UzWorks.API.Controllers;
@@ -14,6 +15,7 @@ public class WorkerController: BaseController
         _workerService = workerService;
     }
 
+    [Authorize(Roles = RoleNames.Employee)]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody]WorkerDto workerDto)
     {
@@ -21,6 +23,7 @@ public class WorkerController: BaseController
         return Ok(result);
     }
 
+    [Authorize(Roles = RoleNames.Employee)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromBody] Guid id)
     {
@@ -28,6 +31,7 @@ public class WorkerController: BaseController
         return Ok();
     }
 
+    [Authorize(Roles = RoleNames.Employee)]
     [HttpPut]
     public async Task<IActionResult> Edit([FromBody] WorkerEM workerEM)
     {

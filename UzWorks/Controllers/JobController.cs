@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UzWorks.BL.Services.Jobs;
+using UzWorks.Core.Constants;
 using UzWorks.Core.DataTransferObjects.Jobs;
 
 namespace UzWorks.API.Controllers;
@@ -13,6 +14,7 @@ public class JobController : BaseController
         _jobService = jobService;
     }
 
+    [Authorize(Roles = RoleNames.Employer)]
     [HttpPost]
     public async Task<IActionResult> Create(JobDto jobDto)
     {
@@ -20,6 +22,7 @@ public class JobController : BaseController
         return Ok(result);
     }
 
+    [Authorize(Roles = RoleNames.Employer)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromBody] Guid id)
     {
@@ -27,6 +30,7 @@ public class JobController : BaseController
         return Ok();
     }
 
+    [Authorize(Roles = RoleNames.Employer)]
     [HttpPut]
     public async Task<IActionResult> Edit([FromBody] JobEM jobEM)
     {
