@@ -23,7 +23,7 @@ public class JobService : IJobService
             throw new UzWorksException("Job Dto can not be null.");
 
         var job = _mappingService.Map<Job, JobDto>(jobDto);
-        _jobsRepository.UpdateAsync(job);
+        await _jobsRepository.CreateAsync(job);
         await _jobsRepository.SaveChanges();
 
         return _mappingService.Map<JobVM, Job>(job);
