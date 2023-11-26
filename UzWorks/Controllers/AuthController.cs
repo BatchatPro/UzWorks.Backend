@@ -96,7 +96,7 @@ namespace UzWorks.Controllers
             User user = await _userManager.FindByNameAsync(signUpDto.UserName);
 
             if (user != null)
-                return BadRequest("This user alrady created.");
+                return BadRequest("This user already created.");
 
             User newUser = new User(signUpDto.FirstName, signUpDto.LastName, signUpDto.UserName);
 
