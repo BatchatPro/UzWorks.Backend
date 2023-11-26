@@ -40,6 +40,9 @@ public class JobsRepository : GenericRepository<Job>, IJobsRepository
         if (districtId is not null)
             query = query.Where(x => x.DistrictId.Equals(districtId));
 
+        if (pageNumber != 0 && pageSize != 0)
+            query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
+
         return await query.ToArrayAsync();
     }
 

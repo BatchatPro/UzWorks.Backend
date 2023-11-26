@@ -1,8 +1,6 @@
-﻿
-namespace UzWorks.API.Controllers;
+﻿namespace UzWorks.API.Controllers;
 
 public class UserController : BaseController
 {
-
 
 }

@@ -5,7 +5,7 @@ namespace UzWorks.Core.DataTransferObjects.UserRoles;
 
 public class UserRolesDto
 {
-    public Guid UserID { get; set; }
+    public Guid UserId { get; set; }
 
     [AllowNull]
     public IEnumerable<RoleDto>? Roles { get; set; }

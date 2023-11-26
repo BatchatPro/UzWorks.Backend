@@ -1,15 +1,8 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
 using UzWorks.API.Middleware;
 using UzWorks.BL;
 using UzWorks.Core.AccessConfigurations;
 using UzWorks.Identity;
-using UzWorks.Identity.ClaimsPrincipalFactory;
-using UzWorks.Identity.Models;
 using UzWorks.Infrastructure;
 using UzWorks.Persistence;
 
@@ -17,11 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
-var connectionString = configuration["ConnectionStrings:PostgresConnectionString"];
-
 builder.Services.AddOptions();
 builder.Services.Configure<AccessConfiguration>(configuration.GetSection("AccessConfiguration"));
-builder.Services.AddDbContext<UzWorksIdentityDbContext>(option => option.UseNpgsql(connectionString));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -55,40 +45,7 @@ builder.Services.AddSwaggerGen(options =>
 
 });
 
-builder.Services.AddIdentity<User, Role>(option =>
-{
-    option.Password.RequiredLength = 8;
-    option.Password.RequireNonAlphanumeric = false;
-    option.Password.RequireLowercase = true;
-    option.Password.RequireUppercase = false;
-    option.Password.RequireDigit = true;
-}).AddRoles<Role>()
-.AddUserManager<UserManager<User>>()
-.AddRoleManager<RoleManager<Role>>()
-.AddEntityFrameworkStores<UzWorksIdentityDbContext>()
-.AddClaimsPrincipalFactory<UzWorksClaimsPrincipalFactory>();
-
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.SaveToken = true;
-    options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = configuration["AccessConfiguration:Audience"],
-        ValidIssuer = configuration["AccessConfiguration:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey.TheSecretKey))
-    };
-});
-
+builder.Services.RegisterIdentityModule(builder.Configuration);
 builder.Services.RegisterPersistenceModule(builder.Configuration);
 builder.Services.RegisterBLModule();
 builder.Services.RegisterInfrastructureModule(builder.Configuration);

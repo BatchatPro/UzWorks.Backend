@@ -3,9 +3,11 @@ using UzWorks.Core.DataTransferObjects.JobCategories;
 using UzWorks.Core.DataTransferObjects.Jobs;
 using UzWorks.Core.DataTransferObjects.Location.Districts;
 using UzWorks.Core.DataTransferObjects.Location.Regions;
+using UzWorks.Core.DataTransferObjects.Roles;
 using UzWorks.Core.DataTransferObjects.Workers;
 using UzWorks.Core.Entities.JobAndWork;
 using UzWorks.Core.Entities.Location;
+using UzWorks.Identity.Models;
 
 namespace UzWorks.Infrastructure.Mappers;
 
@@ -32,5 +34,9 @@ public class MappingProfile : Profile
         CreateMap<Job,JobDto>().ReverseMap();
         CreateMap<Job,JobVM>().ReverseMap();
         CreateMap<Job,JobEM>().ReverseMap();
+
+        CreateMap<User,UserEM>().ReverseMap();
+        CreateMap<User,UserDto>().ReverseMap();
+        CreateMap<User,UserVM>().ReverseMap();
     }
 }

@@ -7,9 +7,9 @@ public interface IUserService
 {
     Task Create(UserDto userDto);
     Task Delete(Guid id);
-    Task Update(UserEM userEM);
-    Task AddRolesToUser(IEnumerable<UserRolesDto> userRoles);
-    Task DeleteRolesFromUser(IEnumerable<UserRolesDto> userRoles);
+    Task<UserVM> Update(UserEM userEM);
+    Task<UserRolesDto> AddRolesToUser(UserRolesDto userRoles);
+    Task<UserRolesDto> DeleteRolesFromUser(UserRolesDto userRoles);
     Task<IEnumerable<UserVM>> GetAll(int pageNumber, int pageSize, string? gender, string? email, string? phoneNumber);
     Task<UserDto> GetById(Guid id);
 }
