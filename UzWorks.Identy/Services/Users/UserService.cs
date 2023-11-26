@@ -15,16 +15,21 @@ namespace UzWorks.Identity.Services.Roles;
 public class UserService : IUserService
 {
     private readonly UzWorksIdentityDbContext _dbContext;
+    private readonly IEnvironmentAccessor _environmentAccessor;
     private readonly IMappingService _mappingService;
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<Role> _roleManager;
 
-    public UserService(UzWorksIdentityDbContext dbContext, IMappingService mappingService, UserManager<User> userManager, RoleManager<Role> roleManager)
+    public UserService(
+        UzWorksIdentityDbContext dbContext, IMappingService mappingService, 
+        UserManager<User> userManager, RoleManager<Role> roleManager, 
+        IEnvironmentAccessor environmentAccessor)
     {
         _dbContext = dbContext;
         _mappingService = mappingService;
         _userManager = userManager;
         _roleManager = roleManager;
+        _environmentAccessor = environmentAccessor;
     }
 
     public async Task<UserRolesDto> AddRolesToUser(UserRolesDto userRolesDto)
@@ -82,11 +87,11 @@ public class UserService : IUserService
     public async Task Create(UserDto userDto)
     {
         if (userDto.RoleNmae != RoleNames.Employer && userDto.RoleNmae != RoleNames.Employee)
-            throw new UzWorksException($"Wrong Role! You have to select '{RoleNames.Employee}' or '{RoleNames.Employer}'.");
+            throw new UzWorksException(
+                $"Wrong Role! You have to select '{RoleNames.Employee}' or '{RoleNames.Employer}'."
+                );
 
-        var user = await _userManager.FindByNameAsync(userDto.UserName);
-
-        if (user != null)
+        if (await _userManager.FindByNameAsync(userDto.UserName) != null)
             throw new UzWorksException("This user already created.");
         
         var newUser = new User(userDto.FirstName, userDto.LastName, userDto.UserName);
@@ -95,7 +100,11 @@ public class UserService : IUserService
         if (!result.Succeeded)
             throw new UzWorksException($"Didn't Succeeded.");
 
-        await _userManager.AddToRolesAsync(newUser, new string[] { RoleNames.NewUser, userDto.RoleNmae });
+        await _userManager.AddToRolesAsync(newUser, new string[] 
+        { 
+            RoleNames.NewUser, 
+            userDto.RoleNmae 
+        });
 
         await _dbContext.SaveChangesAsync();
     }
@@ -110,7 +119,10 @@ public class UserService : IUserService
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task<IEnumerable<UserVM>> GetAll(int pageNumber, int pageSize, string? gender, string? email, string? phoneNumber)
+    public Task<IEnumerable<UserVM>> GetAll(
+        int pageNumber, int pageSize, 
+        string? gender, string? email, 
+        string? phoneNumber)
     {
         var query = _dbContext.Set<User>().AsQueryable();
 
@@ -129,33 +141,39 @@ public class UserService : IUserService
         return (Task<IEnumerable<UserVM>>)query;
     }
 
-    public async Task<UserDto> GetById(Guid id)
+    public async Task<UserVM> GetById(Guid id)
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
-        
-        return _mappingService.Map<UserDto, User>(user);
+        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id.Equals(id)) ??
+            throw new UzWorksException("User not found.");
+
+        if (!_environmentAccessor.IsAuthorOrSupervisor(id))
+            throw new UzWorksException("You you have not access for view information about this user.");
+
+        return _mappingService.Map<UserVM, User>(user);
     }
 
     public async Task<UserVM> Update(UserEM userEM)
     {
-        var _user = await _userManager.FindByNameAsync(userEM.UserName);
-        
         if (await _userManager.FindByIdAsync(userEM.Id.ToString()) == null)
             throw new UzWorksException("User not Found");
 
-        var newUserData = _mappingService.Map<User, UserEM>(userEM);
-        var result = await _userManager.UpdateAsync(newUserData);
+        if (!_environmentAccessor.IsAuthorOrAdmin(userEM.Id))
+            throw new UzWorksException("You have not access for change this user information.");
+
+        var usersNewData = _mappingService.Map<User, UserEM>(userEM);
+        var result = await _userManager.UpdateAsync(usersNewData);
 
         if (!result.Succeeded)
             throw new UzWorksException("It is not Succeeded.");
 
-        if (newUserData != null)
+        if (usersNewData != null)
         {
-            await _userManager.RemovePasswordAsync(newUserData);
-            await _userManager.AddPasswordAsync(newUserData, userEM.Password);
+            await _userManager.RemovePasswordAsync(usersNewData);
+            await _userManager.AddPasswordAsync(usersNewData, userEM.Password);
         }
 
-        return _mappingService.Map<UserVM, User>(newUserData);
+        return _mappingService.Map<UserVM, User>(usersNewData) ?? 
+            throw new UzWorksException("There are some errors. This field can not be null.");
     }
 }
 

@@ -11,5 +11,5 @@ public interface IUserService
     Task<UserRolesDto> AddRolesToUser(UserRolesDto userRoles);
     Task<UserRolesDto> DeleteRolesFromUser(UserRolesDto userRoles);
     Task<IEnumerable<UserVM>> GetAll(int pageNumber, int pageSize, string? gender, string? email, string? phoneNumber);
-    Task<UserDto> GetById(Guid id);
+    Task<UserVM> GetById(Guid id);
 }
