@@ -42,7 +42,7 @@ public class EnvironmentAccessor : IEnvironmentAccessor
         return false;
     }
 
-    public bool IsAuthorOrSupervisor(Guid id)
+    public bool IsAuthorOrSupervisor(Guid? id)
     {
         if (_contextAccessor.HttpContext is null)
             throw new UzWorksException("HttpContext can not be null.");

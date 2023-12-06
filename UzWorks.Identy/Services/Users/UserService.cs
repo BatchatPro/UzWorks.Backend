@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UzWorks.Core.Abstract;
 using UzWorks.Core.Constants;
-using UzWorks.Core.DataTransferObjects.Auth;
 using UzWorks.Core.DataTransferObjects.Roles;
 using UzWorks.Core.DataTransferObjects.UserRoles;
 using UzWorks.Core.Exceptions;
 using UzWorks.Identity.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace UzWorks.Identity.Services.Roles;
 

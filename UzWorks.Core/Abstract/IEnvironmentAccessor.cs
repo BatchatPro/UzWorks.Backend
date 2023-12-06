@@ -6,6 +6,6 @@ public interface IEnvironmentAccessor
     string GetWebRootPath();
     bool HasRole(string role);
     bool IsAuthorOrAdmin(Guid id);
-    bool IsAuthorOrSupervisor(Guid id);
+    bool IsAuthorOrSupervisor(Guid? id);
     string GetUserId();
 }

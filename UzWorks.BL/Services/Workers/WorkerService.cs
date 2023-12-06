@@ -1,4 +1,5 @@
-﻿using UzWorks.Core.Abstract;
+﻿using System.Text;
+using UzWorks.Core.Abstract;
 using UzWorks.Core.DataTransferObjects.Workers;
 using UzWorks.Core.Entities.JobAndWork;
 using UzWorks.Core.Exceptions;
@@ -10,11 +11,13 @@ public class WorkerService : IWorkerService
 {
     private readonly IWorkersRepository _workersRepository;
     private readonly IMappingService _mappingService;
+    private readonly IEnvironmentAccessor _environmentAccessor;
 
-    public WorkerService(IWorkersRepository workersRepository, IMappingService mappingService)
+    public WorkerService(IWorkersRepository workersRepository, IMappingService mappingService, IEnvironmentAccessor environmentAccessor)
     {
         _workersRepository = workersRepository;
         _mappingService = mappingService;
+        _environmentAccessor = environmentAccessor;
     }
 
     public async Task<WorkerVM> Create(WorkerDto workerDto)
@@ -23,7 +26,11 @@ public class WorkerService : IWorkerService
             throw new UzWorksException("Work Dto can not be null.");
 
         var worker = _mappingService.Map<Worker, WorkerDto>(workerDto);
-        _workersRepository.UpdateAsync(worker);
+        
+        worker.CreateDate = DateTime.Now;
+        worker.CreatedBy = Guid.Parse(_environmentAccessor.GetUserId());
+
+        await _workersRepository.CreateAsync(worker);
         await _workersRepository.SaveChanges();
 
         return _mappingService.Map<WorkerVM, Worker>(worker);
@@ -35,6 +42,9 @@ public class WorkerService : IWorkerService
 
         if (worker is null)
             throw new UzWorksException($"Could not find worker with id : {id}");
+
+        if (!_environmentAccessor.GetUserId().Equals(worker.Id))
+            throw new UzWorksException("You have not access for delete this Worker.");
 
         _workersRepository.Delete(worker);
         await _workersRepository.SaveChanges();
@@ -70,9 +80,12 @@ public class WorkerService : IWorkerService
             throw new UzWorksException("Could not be null worker edit model.");
 
         var worker = _mappingService.Map<Worker, WorkerEM>(workerEM);
+
+        if (!_environmentAccessor.IsAuthorOrSupervisor(worker.CreatedBy))
+            throw new UzWorksException("You have not access for update this worker model.");
+
         _workersRepository.UpdateAsync(worker);
         await _workersRepository.SaveChanges();
-
         return _mappingService.Map<WorkerVM, Worker>(worker);
     }
 }

@@ -13,10 +13,10 @@ public class BaseEntity : IHasIsDeletedProperty
     public DateTime UpdateDate { get; set; }
 
     [AllowNull]
-    public string? CreatedBy { get; set; }
+    public Guid? CreatedBy { get; set; }
 
     [AllowNull]
-    public string? UpdatedBy { get; set; }
+    public Guid? UpdatedBy { get; set; }
 
     public bool IsDeleted { get; set; } = false;
 }

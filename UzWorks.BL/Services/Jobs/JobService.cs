@@ -10,11 +10,12 @@ public class JobService : IJobService
 {
     private readonly IJobsRepository _jobsRepository;
     private readonly IMappingService _mappingService;
-
-    public JobService(IJobsRepository jobsRepository, IMappingService mappingService)
+    private readonly IEnvironmentAccessor environmentAccessor;
+    public JobService(IJobsRepository jobsRepository, IMappingService mappingService, IEnvironmentAccessor environmentAccessor)
     {
         _jobsRepository = jobsRepository;
         _mappingService = mappingService;
+        this.environmentAccessor = environmentAccessor; 
     }
 
     public async Task<JobVM> Create(JobDto jobDto)
@@ -23,6 +24,10 @@ public class JobService : IJobService
             throw new UzWorksException("Job Dto can not be null.");
 
         var job = _mappingService.Map<Job, JobDto>(jobDto);
+
+        job.CreateDate = DateTime.Now;
+        job.CreatedBy = Guid.Parse(environmentAccessor.GetUserId());
+        
         await _jobsRepository.CreateAsync(job);
         await _jobsRepository.SaveChanges();
 
@@ -35,6 +40,9 @@ public class JobService : IJobService
         
         if (job == null)
             throw new UzWorksException($"Could not find job with id: {id}");
+
+        if (!environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
+            throw new UzWorksException("You have not access to change this Job data.");
 
         _jobsRepository.Delete(job);
         await _jobsRepository.SaveChanges();
@@ -69,6 +77,13 @@ public class JobService : IJobService
             throw new UzWorksException("Could not be null job edit model.");
 
         var job = _mappingService.Map<Job, JobEM>(jobEM);
+
+        if (!environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
+            throw new UzWorksException("You have not access to change this Job data.");
+        
+        job.UpdateDate = DateTime.Now;
+        job.UpdatedBy = Guid.Parse(environmentAccessor.GetUserId());
+
         _jobsRepository.UpdateAsync(job);
         await _jobsRepository.SaveChanges();
 
