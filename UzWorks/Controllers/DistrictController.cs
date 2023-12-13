@@ -56,9 +56,9 @@ public class DistrictController : BaseController
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetByRegionId([FromRoute]Guid regionId)
+    public async Task<IActionResult> GetByRegionId([FromRoute]Guid id)
     {
-        var result = await _districtService.GetDistrictByRegionId(regionId);
+        var result = await _districtService.GetDistrictByRegionId(id);
         return Ok(result);
     }
 }
