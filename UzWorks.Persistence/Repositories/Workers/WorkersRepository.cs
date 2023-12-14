@@ -41,12 +41,22 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
         if (districtId is not null)
             query = query.Where(x => x.DistrictId.Equals(districtId));
 
+        if (pageNumber != 0 && pageSize != 0)
+            query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
+
         return await query.ToArrayAsync();
     }
 
     public async Task<int> GetWorkersCount() 
     {
         return await _context.Workers.CountAsync();
+    }
+
+    public async Task<Worker[]> GetWorkersByUserIdAsync(Guid userId)
+    {
+        var query = _context.Workers.Where(x => (x.CreatedBy == userId));
+
+        return await query.ToArrayAsync() ;
     }
 
 }

@@ -10,12 +10,12 @@ public class JobService : IJobService
 {
     private readonly IJobsRepository _jobsRepository;
     private readonly IMappingService _mappingService;
-    private readonly IEnvironmentAccessor environmentAccessor;
+    private readonly IEnvironmentAccessor _environmentAccessor;
     public JobService(IJobsRepository jobsRepository, IMappingService mappingService, IEnvironmentAccessor environmentAccessor)
     {
         _jobsRepository = jobsRepository;
         _mappingService = mappingService;
-        this.environmentAccessor = environmentAccessor; 
+        _environmentAccessor = environmentAccessor; 
     }
 
     public async Task<JobVM> Create(JobDto jobDto)
@@ -26,7 +26,7 @@ public class JobService : IJobService
         var job = _mappingService.Map<Job, JobDto>(jobDto);
 
         job.CreateDate = DateTime.Now;
-        job.CreatedBy = Guid.Parse(environmentAccessor.GetUserId());
+        job.CreatedBy = Guid.Parse(_environmentAccessor.GetUserId());
         
         await _jobsRepository.CreateAsync(job);
         await _jobsRepository.SaveChanges();
@@ -41,7 +41,7 @@ public class JobService : IJobService
         if (job == null)
             throw new UzWorksException($"Could not find job with id: {id}");
 
-        if (!environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
+        if (!_environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
             throw new UzWorksException("You have not access to change this Job data.");
 
         _jobsRepository.Delete(job);
@@ -71,6 +71,24 @@ public class JobService : IJobService
         return _mappingService.Map<JobVM, Job>(job);
     }
 
+    public Task<int> GetCount()
+    {
+        return _jobsRepository.GetJobsCount();
+    }
+
+    public async Task<IEnumerable<JobVM>> GetJobsByUserId(Guid userId)
+    {
+        if (userId.ToString() == null)
+            throw new UzWorksException("Could not be null userId for get Your Jobs");
+
+        if (!_environmentAccessor.IsAuthorOrSupervisor(userId))
+            throw new UzWorksException($"You have not access to get this {userId}'s jobs.");
+
+        var jobs = await _jobsRepository.GetJobsByUserIdAsync(userId);
+        var result = _mappingService.Map<IEnumerable<JobVM>, IEnumerable<Job>>(jobs);
+        return result;
+    }
+
     public async Task<JobVM> Update(JobEM jobEM)
     {
         if (jobEM is null)
@@ -78,11 +96,11 @@ public class JobService : IJobService
 
         var job = _mappingService.Map<Job, JobEM>(jobEM);
 
-        if (!environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
+        if (!_environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
             throw new UzWorksException("You have not access to change this Job data.");
         
         job.UpdateDate = DateTime.Now;
-        job.UpdatedBy = Guid.Parse(environmentAccessor.GetUserId());
+        job.UpdatedBy = Guid.Parse(_environmentAccessor.GetUserId());
 
         _jobsRepository.UpdateAsync(job);
         await _jobsRepository.SaveChanges();

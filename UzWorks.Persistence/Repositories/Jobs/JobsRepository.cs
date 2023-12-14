@@ -50,4 +50,9 @@ public class JobsRepository : GenericRepository<Job>, IJobsRepository
     {
         return await _context.Jobs.CountAsync();
     }
+
+    public async Task<Job[]> GetJobsByUserIdAsync(Guid userId)
+    {
+        return await _context.Jobs.Where(x => x.CreatedBy == userId).ToArrayAsync();
+    }
 }

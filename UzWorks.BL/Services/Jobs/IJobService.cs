@@ -8,7 +8,9 @@ public interface IJobService
                         Guid? jobCategoryId, int? maxAge, int? minAge, uint? maxSalary,
                         uint? minSalary, string? gender, Guid? regionId, Guid? districtId);
     Task<JobVM> GetById(Guid id);
+    Task<IEnumerable<JobVM>> GetJobsByUserId(Guid userId);
     Task<JobVM> Create(JobDto jobDto);
     Task<JobVM> Update(JobEM jobEM);
     Task Delete(Guid id);
+    Task<int> GetCount();
 }

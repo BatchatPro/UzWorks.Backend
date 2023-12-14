@@ -9,4 +9,6 @@ public interface IJobsRepository : IGenericRepository<Job>
                         uint? minSalary = null, string? gender = null, Guid? regionId = null, Guid? districtId = null);
 
     Task<int> GetJobsCount();
+
+    Task<Job[]> GetJobsByUserIdAsync(Guid userId);
 }
