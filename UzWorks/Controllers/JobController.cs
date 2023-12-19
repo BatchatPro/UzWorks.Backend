@@ -60,4 +60,20 @@ public class JobController : BaseController
                          gender, regionId, districtId);
         return Ok(result);
     }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> GetCount()
+    {
+        var result = await _jobService.GetCount();
+        return Ok(result);
+    }
+
+    [Authorize(Roles = RoleNames.Employer)]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetJobsByUserId([FromRoute] Guid id)
+    {
+        var result = await _jobService.GetJobsByUserId(id);
+        return Ok(result);
+    }
 }

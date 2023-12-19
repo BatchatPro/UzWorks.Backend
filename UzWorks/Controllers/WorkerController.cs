@@ -6,7 +6,7 @@ using UzWorks.Core.DataTransferObjects.Workers;
 
 namespace UzWorks.API.Controllers;
 
-public class WorkerController: BaseController
+public class WorkerController : BaseController
 {
     private readonly IWorkerService _workerService;
 
@@ -17,7 +17,7 @@ public class WorkerController: BaseController
 
     [Authorize(Roles = RoleNames.Employee)]
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody]WorkerDto workerDto)
+    public async Task<IActionResult> Create([FromBody] WorkerDto workerDto)
     {
         var result = await _workerService.Create(workerDto);
         return Ok(result);
@@ -62,4 +62,19 @@ public class WorkerController: BaseController
         return Ok(result);
     }
 
+    [Authorize(Roles = RoleNames.Employee)]
+    [HttpGet]
+    public async Task<IActionResult> GetCount()
+    {
+        var result = await _workerService.GetCount();
+        return Ok(result);
+    }
+
+    [Authorize(Roles = RoleNames.Employee)]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetWorkersByUserId([FromRoute] Guid id)
+    {
+        var result = await _workerService.GetWorkersByUserId(id);
+        return Ok(result);
+    }
 }
