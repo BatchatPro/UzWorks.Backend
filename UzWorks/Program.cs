@@ -1,6 +1,8 @@
 using Microsoft.OpenApi.Models;
 using UzWorks.API.Middleware;
+using UzWorks.API.Utils;
 using UzWorks.BL;
+using UzWorks.Core.Abstract;
 using UzWorks.Core.AccessConfigurations;
 using UzWorks.Identity;
 using UzWorks.Infrastructure;
@@ -45,6 +47,8 @@ builder.Services.AddSwaggerGen(options =>
     });
 
 });
+
+builder.Services.AddScoped<IEnvironmentAccessor, EnvironmentAccessor>();
 
 builder.Services.RegisterIdentityModule(builder.Configuration);
 builder.Services.RegisterPersistenceModule(builder.Configuration);
