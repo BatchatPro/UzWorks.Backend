@@ -1,6 +1,6 @@
 ﻿using NullGuard;
 
-namespace UzWorks.Core.DataTransferObjects.Roles;
+namespace UzWorks.Core.DataTransferObjects.Users;
 
 public class BaseUserDto
 {

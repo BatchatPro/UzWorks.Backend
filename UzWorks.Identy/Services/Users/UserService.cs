@@ -2,10 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using UzWorks.Core.Abstract;
 using UzWorks.Core.Constants;
-using UzWorks.Core.DataTransferObjects.Roles;
+using UzWorks.Core.DataTransferObjects.Users;
 using UzWorks.Core.DataTransferObjects.UserRoles;
 using UzWorks.Core.Exceptions;
 using UzWorks.Identity.Models;
+using UzWorks.Core.DataTransferObjects.Roles;
 
 namespace UzWorks.Identity.Services.Roles;
 
@@ -116,12 +117,12 @@ public class UserService : IUserService
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task<IEnumerable<UserVM>> GetAll(
+    public async Task<IEnumerable<UserVM>> GetAll(
         int pageNumber, int pageSize, 
         string? gender, string? email, 
         string? phoneNumber)
     {
-        var query = _dbContext.Set<User>().AsQueryable();
+        var query = _dbContext.Users.AsQueryable();
 
         if(gender is not null)
             query = query.Where(x => x.Gender == gender);
@@ -135,7 +136,9 @@ public class UserService : IUserService
         if (pageNumber != 0 && pageSize != 0)
             query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
 
-        return (Task<IEnumerable<UserVM>>)query;
+        var users = await query.ToArrayAsync();
+        //var result = _mappingService.Map<IEnumerable<User>, IEnumerable<UserVM>>(users);
+        return null;
     }
 
     public async Task<UserVM> GetById(Guid id)

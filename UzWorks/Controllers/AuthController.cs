@@ -9,6 +9,7 @@ using UzWorks.Core.AccessConfigurations;
 using UzWorks.Core.DataTransferObjects.Auth;
 using UzWorks.Identity.Models;
 using UzWorks.Core.Constants;
+using UzWorks.Identity.Constants;
 
 namespace UzWorks.Controllers
 {
@@ -41,12 +42,17 @@ namespace UzWorks.Controllers
                 List<Claim> authClaims = new List<Claim>
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimNames.Email, user.Email),
+                    new Claim(ClaimNames.UserId, user.Id),
+                    new Claim(ClaimNames.FirstName, user.FirstName),
+                    new Claim(ClaimNames.LastName, user.LastName)
                 };
 
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey.TheSecretKey));
 
                 AddRolesToClaims(authClaims, roles);
+
                 var token = new JwtSecurityToken(
                     issuer: _siteSettings.Value.Issuer,
                     audience: _siteSettings.Value.Audience,

@@ -1,4 +1,5 @@
-﻿using UzWorks.Core.Abstract;
+﻿using System.Security.Claims;
+using UzWorks.Core.Abstract;
 using UzWorks.Core.Constants;
 using UzWorks.Core.Exceptions;
 using UzWorks.Identity.Constants;
@@ -55,6 +56,7 @@ public class EnvironmentAccessor : IEnvironmentAccessor
 
     public string GetUserId()
     {
-        return _contextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimNames.UserId.ToString())).Value;
+        return _contextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimNames.UserId.ToString()))?.Value;
     }
 }
+

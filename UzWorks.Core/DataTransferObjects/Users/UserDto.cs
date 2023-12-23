@@ -1,4 +1,4 @@
-﻿namespace UzWorks.Core.DataTransferObjects.Roles;
+﻿namespace UzWorks.Core.DataTransferObjects.Users;
 
 public class UserDto: BaseUserDto
 {

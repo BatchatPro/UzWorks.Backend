@@ -198,7 +198,6 @@ namespace UzWorks.Identity.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("MobileId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")

@@ -25,6 +25,7 @@ public class DistrictService : IDistrictService
         var district = new District(districtDto.Name, districtDto.RegionId);
         
         await _districtsRepository.CreateAsync(district);
+        await _districtsRepository.SaveChanges();
 
         return _mappingService.Map<DistrictVM,District>(district);
     }

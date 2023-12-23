@@ -1,5 +1,5 @@
 ﻿using UzWorks.Core.DataTransferObjects.UserRoles;
-using UzWorks.Core.DataTransferObjects.Roles;
+using UzWorks.Core.DataTransferObjects.Users;
 
 namespace UzWorks.Identity.Services.Roles;
 

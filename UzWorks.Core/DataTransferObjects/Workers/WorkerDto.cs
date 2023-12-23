@@ -9,7 +9,7 @@ public class WorkerDto
     public string Gender { get; set; } = string.Empty;
     public string WorkingTime { get; set; } = string.Empty;
     public string WorkingSchedule { get; set; } = string.Empty;
-    public string TgLink { get; set; } = string.Empty;
+    public string TelegramLink { get; set; } = string.Empty;
     public string InstagramLink { get; set; } = string.Empty;
     public string TgUserName { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;

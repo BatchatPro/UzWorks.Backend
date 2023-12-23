@@ -12,8 +12,8 @@ using UzWorks.Identity;
 namespace UzWorks.Identity.Migrations
 {
     [DbContext(typeof(UzWorksIdentityDbContext))]
-    [Migration("20231110124209_003")]
-    partial class _003
+    [Migration("20231223103107_001")]
+    partial class _001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -201,7 +201,6 @@ namespace UzWorks.Identity.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("MobileId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")

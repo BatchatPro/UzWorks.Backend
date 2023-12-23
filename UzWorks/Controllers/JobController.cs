@@ -24,7 +24,7 @@ public class JobController : BaseController
 
     [Authorize(Roles = RoleNames.Employer)]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete([FromBody] Guid id)
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         await _jobService.Delete(id);
         return Ok();
