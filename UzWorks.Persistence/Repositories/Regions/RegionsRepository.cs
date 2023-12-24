@@ -19,4 +19,9 @@ public class RegionsRepository : GenericRepository<Region>, IRegionsRepository
     {
         return await _context.Regions.ToArrayAsync();
     }
+
+    public async Task<Region> GetRegionByDistrictId(Guid id)
+    {
+        return await _context.Regions.FirstOrDefaultAsync(r => r.Districts.Any(d => d.Id == id));
+    }
 }

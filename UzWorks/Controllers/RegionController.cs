@@ -54,4 +54,12 @@ public class RegionController : BaseController
         var result = await _regionsService.GetAllAsync();
         return Ok(result);
     }
+
+    [AllowAnonymous]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetByRegionByDistrictId([FromRoute]Guid id)
+    {
+        var result = await _regionsService.GetByRegionByDistrictId(id);
+        return Ok(result);
+    }
 }

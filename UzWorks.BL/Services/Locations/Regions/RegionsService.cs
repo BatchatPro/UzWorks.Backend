@@ -62,6 +62,12 @@ public class RegionsService : IRegionsService
             : _mappingService.Map<RegionVM, Region>(region);
     }
 
+    public async Task<RegionVM> GetByRegionByDistrictId(Guid id)
+    {
+        var region = await _regionsRepository.GetRegionByDistrictId(id);
+        return _mappingService.Map<RegionVM, Region>(region);
+    }
+
     public async Task<RegionVM> Update(RegionEM regionEM)
     {
         var region = await _regionsRepository.GetById(regionEM.Id) 
