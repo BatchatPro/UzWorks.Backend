@@ -9,4 +9,5 @@ public interface IRegionsService
     Task<RegionVM> Create(RegionDto regionDto);
     Task Delete(Guid Id);
     Task<RegionVM> Update(RegionEM regionEM);
+    Task<bool> Exists(string regionName);
 }

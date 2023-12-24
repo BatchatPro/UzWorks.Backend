@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel;
 
-namespace UzWorks.Core.Enums.Location;
+namespace UzWorks.Core.Enums.Location.Districts;
 
-public enum DistrictEnumAndijan
+public enum DistrictsEnumAndijan
 {
     [Description("Andijon shahar")]
+    AndijanCity,
+    [Description("Andijon tumani")]
     Andijan,
     [Description("Asaka tumani")]
     Asaka,

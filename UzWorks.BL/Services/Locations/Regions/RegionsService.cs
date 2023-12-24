@@ -26,11 +26,10 @@ public class RegionsService : IRegionsService
         var region = new Region(regionDto.Name);
 
         await _regionsRepository.CreateAsync(region);
-        var saveTask = _regionsRepository.SaveChanges();
+        await _regionsRepository.SaveChanges();
+        
         var result = _mappingService.Map<RegionVM, Region>(region);
 
-        await saveTask;
-        
         return result;
     }
 
@@ -40,6 +39,11 @@ public class RegionsService : IRegionsService
         if (region is null) return;
         _regionsRepository.Delete(region);
         await _regionsRepository.SaveChanges();
+    }
+
+    public async Task<bool> Exists(string regionName)
+    {
+        return await _regionsRepository.Exists(regionName);
     }
 
     public async Task<IEnumerable<RegionVM>> GetAllAsync()

@@ -10,6 +10,11 @@ public class RegionsRepository : GenericRepository<Region>, IRegionsRepository
     {
     }
 
+    public async Task<bool> Exists(string regionName)
+    {
+        return await _context.Regions.AnyAsync(r => r.Name == regionName);
+    }
+
     public async Task<IEnumerable<Region>> GetAllRegionsAsync()
     {
         return await _context.Regions.ToArrayAsync();

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace UzWorks.Core.Enums.Location;
+namespace UzWorks.Core.Enums.Location.Region;
 
-public enum RegionEnum
+public enum RegionsEnum
 {
     [Description("Andijon viloyati")]
     Andijan,

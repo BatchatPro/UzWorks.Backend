@@ -1,19 +1,19 @@
 ﻿using System.ComponentModel;
 
-namespace UzWorks.Core.Enums.Location;
+namespace UzWorks.Core.Enums.Location.Districts;
 
-public enum DistrictEnumBukhara
+public enum DistrictsEnumBukhara
 {
     [Description("Buxoro shahar")]
+    BukharaCity,
+    [Description("Buxoro tumani")]
     Bukhara,
-    [Description("Galaosiyo tumani")]
-    Galaosiyo,
-    [Description("Gazli tumani")]
-    Gazli,
-    [Description("G'ijduvon tumani")]   
+    [Description("G`ijduvon tumani")]
     Gijduvon,
     [Description("Jondor tumani")]
     Jondor,
+    [Description("Kogon shahar")]
+    KogonCity,
     [Description("Kogon tumani")]
     Kogon,
     [Description("Olot tumani")]

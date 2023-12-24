@@ -10,6 +10,11 @@ public class DistrictsRepository : GenericRepository<District>, IDistrictsReposi
     {
     }
 
+    public async Task<bool> Exists(string districtName)
+    {
+        return await _context.Districts.AnyAsync(d => d.Name == districtName);
+    }
+
     public async Task<IEnumerable<District>> GetAllDistrictsAsync()
     {
         return await _context.Districts.ToArrayAsync();
