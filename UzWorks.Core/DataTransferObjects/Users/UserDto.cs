@@ -2,6 +2,6 @@
 
 public class UserDto: BaseUserDto
 {
-    public string RoleNmae { get; set; }
+    public string RoleName { get; set; }
     public string Password { get; set; }
 }

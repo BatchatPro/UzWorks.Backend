@@ -84,7 +84,7 @@ public class UserService : IUserService
 
     public async Task Create(UserDto userDto)
     {
-        if (userDto.RoleNmae != RoleNames.Employer && userDto.RoleNmae != RoleNames.Employee)
+        if (userDto.RoleName != RoleNames.Employer && userDto.RoleName != RoleNames.Employee)
             throw new UzWorksException(
                 $"Wrong Role! You have to select '{RoleNames.Employee}' or '{RoleNames.Employer}'."
                 );
@@ -101,7 +101,7 @@ public class UserService : IUserService
         await _userManager.AddToRolesAsync(newUser, new string[] 
         { 
             RoleNames.NewUser, 
-            userDto.RoleNmae 
+            userDto.RoleName 
         });
 
         await _dbContext.SaveChangesAsync();

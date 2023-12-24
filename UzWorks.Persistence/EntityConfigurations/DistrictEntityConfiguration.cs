@@ -14,7 +14,7 @@ public class DistrictEntityConfiguration : IEntityTypeConfiguration<District>
         builder.Property(x => x.Name).IsRequired();
 
         builder.HasOne(x => x.Region)
-            .WithMany()
+            .WithMany(x => x.Districts)
                 .HasForeignKey(x => x.RegionId)
                     .OnDelete(DeleteBehavior.Cascade);
 
