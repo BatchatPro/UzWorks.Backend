@@ -11,9 +11,6 @@ public class JobVM
     public string Title { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "This field is required.")]
-    public string UserName { get; set; } = string.Empty;
-    
-    [Required(ErrorMessage = "This field is required.")]
     public uint Salary { get; set; }
     
     [Required(ErrorMessage = "This field is required.")]

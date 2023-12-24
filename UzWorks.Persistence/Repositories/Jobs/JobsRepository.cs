@@ -14,30 +14,30 @@ public class JobsRepository : GenericRepository<Job>, IJobsRepository
                         Guid? jobCategoryId, int? maxAge, int? minAge, uint? maxSalary,
                         uint? minSalary, string? gender, Guid? regionId, Guid? districtId)
     {
-        var query = _context.Jobs.AsQueryable();
+        var query = _dbSet.Where(j => !j.IsDeleted).AsQueryable();
 
-        if (jobCategoryId is not null)
+        if (jobCategoryId != null)
             query = query.Where(x => x.CategoryId.Equals(jobCategoryId));
 
-        if (maxAge is not null)
-            query = query.Where(x => x.MaxAge < maxAge);
+        if (maxAge != null)
+            query = query.Where(x => x.MaxAge <= maxAge);
 
-        if (minAge is not null)
-            query = query.Where(x => x.MinAge > minAge);
+        if (minAge != null)
+            query = query.Where(x => x.MinAge >= minAge);
 
-        if (maxSalary is not null)
-            query = query.Where(x => (x.Salary < maxSalary));
+        if (maxSalary != null)
+            query = query.Where(x => (x.Salary <= maxSalary));
 
-        if (minSalary is not null)
-            query = query.Where(x => (x.Salary > minSalary));
+        if (minSalary != null)
+            query = query.Where(x => (x.Salary >= minSalary));
 
-        if (string.IsNullOrEmpty(gender))
+        if (!string.IsNullOrEmpty(gender))
             query = query.Where(x => x.Gender.Equals(gender));
 
-        if (regionId is not null)
+        if (regionId != null)
             query = query.Where(x => x.District.RegionId.Equals(regionId));
 
-        if (districtId is not null)
+        if (districtId != null)
             query = query.Where(x => x.DistrictId.Equals(districtId));
 
         if (pageNumber != 0 && pageSize != 0)

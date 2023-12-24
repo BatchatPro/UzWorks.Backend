@@ -32,7 +32,7 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
         if (minSalary is not null)
             query = query.Where(x => (x.Salary > minSalary));
 
-        if (string.IsNullOrEmpty(gender))
+        if (!string.IsNullOrEmpty(gender))
             query = query.Where(x => x.Gender.Equals(gender));
 
         if (regionId is not null)
