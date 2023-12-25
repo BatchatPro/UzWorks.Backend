@@ -16,7 +16,7 @@ public class JobController : BaseController
 
     [Authorize(Roles = RoleNames.Employer)]
     [HttpPost]
-    public async Task<IActionResult> Create(JobDto jobDto)
+    public async Task<ActionResult<JobVM>> Create(JobDto jobDto)
     {
         var result = await _jobService.Create(jobDto);
         return Ok(result);
@@ -24,7 +24,7 @@ public class JobController : BaseController
 
     [Authorize(Roles = RoleNames.Employer)]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete([FromRoute] Guid id)
+    public async Task<ActionResult> Delete([FromRoute] Guid id)
     {
         await _jobService.Delete(id);
         return Ok();
@@ -32,7 +32,7 @@ public class JobController : BaseController
 
     [Authorize(Roles = RoleNames.Employer)]
     [HttpPut]
-    public async Task<IActionResult> Edit([FromBody] JobEM jobEM)
+    public async Task<ActionResult<JobVM>> Edit([FromBody] JobEM jobEM)
     {
         var result = await _jobService.Update(jobEM);
         return Ok(result);
@@ -40,7 +40,7 @@ public class JobController : BaseController
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    public async Task<ActionResult<JobVM>> GetById([FromRoute] Guid id)
     {
         var result = await _jobService.GetById(id);
         return Ok(result);
@@ -48,7 +48,7 @@ public class JobController : BaseController
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int pageNumber, [FromQuery] int pageSize,
+    public async Task<ActionResult<IEnumerable<JobVM>>> GetAll([FromQuery] int pageNumber, [FromQuery] int pageSize,
                                             [FromQuery] Guid? jobCategoryId, [FromQuery] int? maxAge,
                                             [FromQuery] int? minAge, [FromQuery] uint? maxSalary,
                                             [FromQuery] uint? minSalary, [FromQuery] string? gender,
@@ -63,7 +63,7 @@ public class JobController : BaseController
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> GetCount()
+    public async Task<ActionResult<int>> GetCount()
     {
         var result = await _jobService.GetCount();
         return Ok(result);
@@ -71,7 +71,7 @@ public class JobController : BaseController
 
     [Authorize(Roles = RoleNames.Employer)]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetJobsByUserId([FromRoute] Guid id)
+    public async Task<ActionResult<IEnumerable<JobVM>>> GetJobsByUserId([FromRoute] Guid id)
     {
         var result = await _jobService.GetJobsByUserId(id);
         return Ok(result);

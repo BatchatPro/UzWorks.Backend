@@ -17,7 +17,7 @@ public class RegionController : BaseController
 
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPost]
-    public async Task<IActionResult> Create(RegionDto regionDto)
+    public async Task<ActionResult<RegionVM>> Create(RegionDto regionDto)
     {
         var result = await _regionsService.Create(regionDto);
         return Ok(result);
@@ -25,7 +25,7 @@ public class RegionController : BaseController
 
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete([FromRoute] Guid id)
+    public async Task<ActionResult> Delete([FromRoute] Guid id)
     {
         await _regionsService.Delete(id);
         return Ok();
@@ -33,7 +33,7 @@ public class RegionController : BaseController
 
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPut]
-    public async Task<IActionResult> Edit([FromBody]RegionEM regionEM)
+    public async Task<ActionResult<RegionVM>> Edit([FromBody]RegionEM regionEM)
     {
         var result = await _regionsService.Update(regionEM);
         return Ok(result);
@@ -41,7 +41,7 @@ public class RegionController : BaseController
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById([FromRoute]Guid id)
+    public async Task<ActionResult<RegionVM>> GetById([FromRoute]Guid id)
     {
         var result = await _regionsService.GetById(id);
         return Ok(result);
@@ -49,7 +49,7 @@ public class RegionController : BaseController
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<IEnumerable<RegionVM>>> GetAll()
     {
         var result = await _regionsService.GetAllAsync();
         return Ok(result);
@@ -57,7 +57,7 @@ public class RegionController : BaseController
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetByRegionByDistrictId([FromRoute]Guid id)
+    public async Task<ActionResult<RegionVM>> GetByRegionByDistrictId([FromRoute]Guid id)
     {
         var result = await _regionsService.GetByRegionByDistrictId(id);
         return Ok(result);

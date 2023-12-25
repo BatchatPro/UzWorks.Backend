@@ -17,7 +17,7 @@ public class JobCategoryController : BaseController
 
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPost]
-    public async Task<IActionResult> Create(JobCategoryDto jobCategoryDto)
+    public async Task<ActionResult<JobCategoryVM>> Create(JobCategoryDto jobCategoryDto)
     {
         var result = await _service.Create(jobCategoryDto);
         return Ok(result);
@@ -25,7 +25,7 @@ public class JobCategoryController : BaseController
 
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete([FromRoute] Guid id)
+    public async Task<ActionResult> Delete([FromRoute] Guid id)
     {
         await _service.Delete(id);
         return Ok();
@@ -33,7 +33,7 @@ public class JobCategoryController : BaseController
 
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPut]
-    public async Task<IActionResult> Edit([FromBody] JobCategoryEM jobCategoryEM)
+    public async Task<ActionResult<JobCategoryVM>> Edit([FromBody] JobCategoryEM jobCategoryEM)
     {
         var result = await _service.Update(jobCategoryEM);
         return Ok(result);
@@ -41,7 +41,7 @@ public class JobCategoryController : BaseController
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    public async Task<ActionResult<JobCategoryVM>> GetById([FromRoute] Guid id)
     {
         var result = await _service.GetById(id);
         return Ok(result);
@@ -49,7 +49,7 @@ public class JobCategoryController : BaseController
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<IEnumerable<JobCategoryVM>>> GetAll()
     {
         var result = await _service.GetAllAsync();
         return Ok(result);

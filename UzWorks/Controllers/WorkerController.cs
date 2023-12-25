@@ -17,7 +17,7 @@ public class WorkerController : BaseController
 
     [Authorize(Roles = RoleNames.Employee)]
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] WorkerDto workerDto)
+    public async Task<ActionResult<WorkerVM>> Create([FromBody] WorkerDto workerDto)
     {
         var result = await _workerService.Create(workerDto);
         return Ok(result);
@@ -25,7 +25,7 @@ public class WorkerController : BaseController
 
     [Authorize(Roles = RoleNames.Employee)]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete([FromBody] Guid id)
+    public async Task<ActionResult> Delete([FromBody] Guid id)
     {
         await _workerService.Delete(id);
         return Ok();
@@ -33,7 +33,7 @@ public class WorkerController : BaseController
 
     [Authorize(Roles = RoleNames.Employee)]
     [HttpPut]
-    public async Task<IActionResult> Edit([FromBody] WorkerEM workerEM)
+    public async Task<ActionResult<WorkerVM>> Edit([FromBody] WorkerEM workerEM)
     {
         var result = await _workerService.Update(workerEM);
         return Ok(result);
@@ -41,7 +41,7 @@ public class WorkerController : BaseController
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    public async Task<ActionResult<WorkerVM>> GetById([FromRoute] Guid id)
     {
         var result = await _workerService.GetById(id);
         return Ok(result);
@@ -49,7 +49,7 @@ public class WorkerController : BaseController
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int pageNumber, [FromQuery] int pageSize,
+    public async Task<ActionResult<IEnumerable<WorkerVM>>> GetAll([FromQuery] int pageNumber, [FromQuery] int pageSize,
                                             [FromQuery] Guid? jobCategoryId, [FromQuery] int? maxAge,
                                             [FromQuery] int? minAge, [FromQuery] uint? maxSalary,
                                             [FromQuery] uint? minSalary, [FromQuery] string? gender,
@@ -62,9 +62,9 @@ public class WorkerController : BaseController
         return Ok(result);
     }
 
-    [Authorize(Roles = RoleNames.Employee)]
+    [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> GetCount()
+    public async Task<ActionResult<int>> GetCount()
     {
         var result = await _workerService.GetCount();
         return Ok(result);
@@ -72,7 +72,7 @@ public class WorkerController : BaseController
 
     [Authorize(Roles = RoleNames.Employee)]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetWorkersByUserId([FromRoute] Guid id)
+    public async Task<ActionResult<IEnumerable<WorkerVM>>> GetWorkersByUserId([FromRoute] Guid id)
     {
         var result = await _workerService.GetWorkersByUserId(id);
         return Ok(result);
