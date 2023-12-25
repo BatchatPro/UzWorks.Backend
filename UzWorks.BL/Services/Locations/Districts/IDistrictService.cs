@@ -10,5 +10,6 @@ public interface IDistrictService
     Task<DistrictVM> Create(DistrictDto districtDto);
     Task<DistrictVM> Update(DistrictEM districtEM);
     Task Delete(Guid id);
-    Task<bool> Exists(string districtName);
+    Task<bool> IsExist(string districtName);
+    Task<bool> IsExist(Guid districtId);
 }

@@ -1,19 +1,33 @@
-﻿namespace UzWorks.Core.DataTransferObjects.Workers;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace UzWorks.Core.DataTransferObjects.Workers;
 
 public class WorkerDto
 {
+    [Required]
     public DateTime Deadline { get; set; }
+    [Required]
     public DateTime BirthDate { get; set; }
+    [Required]
     public string Title { get; set; } = string.Empty;
+    [Required]
     public uint Salary { get; set; } = uint.MinValue;
+    [Required]
     public string Gender { get; set; } = string.Empty;
+    [Required]
     public string WorkingTime { get; set; } = string.Empty;
+    [Required]
     public string WorkingSchedule { get; set; } = string.Empty;
     public string TelegramLink { get; set; } = string.Empty;
     public string InstagramLink { get; set; } = string.Empty;
+    [Required]
     public string TgUserName { get; set; } = string.Empty;
+    [Required]
     public string PhoneNumber { get; set; } = string.Empty;
+    [Required]
     public string Location { get; set; } = string.Empty; 
-    public Guid? DistrictId { get; set; }
-    public Guid? CategoryId { get; set; }
+    [Required]
+    public Guid DistrictId { get; set; }
+    [Required]
+    public Guid CategoryId { get; set; }
 }

@@ -39,11 +39,11 @@ namespace UzWorks.Controllers
             {
                 IEnumerable<string> roles = await _userManager.GetRolesAsync(user);
 
-                List<Claim> authClaims = new List<Claim>
+                List<Claim> authClaims = new()
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(ClaimNames.Email, user.Email),
+                    //new Claim(ClaimNames.Email, user.Email),
                     new Claim(ClaimNames.UserId, user.Id),
                     new Claim(ClaimNames.FirstName, user.FirstName),
                     new Claim(ClaimNames.LastName, user.LastName)
@@ -66,7 +66,7 @@ namespace UzWorks.Controllers
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo,
                     userId = user.Id,
-                    email = user.Email,
+                    //email = user.Email,
                     firstname = user.FirstName,
                     lastName = user.LastName,
                     gender = user.Gender,

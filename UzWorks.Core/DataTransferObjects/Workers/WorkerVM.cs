@@ -2,8 +2,8 @@
  
 public class WorkerVM
 {
-    public Guid? Id { get; set; }
-    public Guid? CreatedBy { get; set; }
+    public Guid Id { get; set; }
+    public Guid CreatedBy { get; set; }
     public DateTime CreateDate { get; set; }
     public DateTime Deadline { get; set; }
     public DateTime BirthDate { get; set; }
@@ -19,6 +19,6 @@ public class WorkerVM
     public string TgUserName { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
     public string Location { get; set; } = string.Empty; 
-    public Guid? DistrictId { get; set; }
-    public Guid? CategoryId { get; set; }
+    public Guid DistrictId { get; set; }
+    public Guid CategoryId { get; set; }
 }

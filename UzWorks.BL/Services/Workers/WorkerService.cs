@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using UzWorks.BL.Services.Locations.Districts;
 using UzWorks.Core.Abstract;
 using UzWorks.Core.DataTransferObjects.Jobs;
 using UzWorks.Core.DataTransferObjects.Workers;
@@ -13,18 +14,23 @@ public class WorkerService : IWorkerService
     private readonly IWorkersRepository _workersRepository;
     private readonly IMappingService _mappingService;
     private readonly IEnvironmentAccessor _environmentAccessor;
+    private readonly IDistrictService _districtService;
 
-    public WorkerService(IWorkersRepository workersRepository, IMappingService mappingService, IEnvironmentAccessor environmentAccessor)
+    public WorkerService(IWorkersRepository workersRepository, IMappingService mappingService, IEnvironmentAccessor environmentAccessor, IDistrictService districtService)
     {
         _workersRepository = workersRepository;
         _mappingService = mappingService;
         _environmentAccessor = environmentAccessor;
+        _districtService = districtService;
     }
 
     public async Task<WorkerVM> Create(WorkerDto workerDto)
     {
         if (workerDto == null)
             throw new UzWorksException("Work Dto can not be null.");
+
+        if (!await _districtService.IsExist(workerDto.DistrictId))
+            throw new UzWorksException($"Could not find district with id: {workerDto.DistrictId}");
 
         var worker = _mappingService.Map<Worker, WorkerDto>(workerDto);
         
@@ -52,11 +58,11 @@ public class WorkerService : IWorkerService
     }
 
     public async Task<IEnumerable<WorkerVM>> GetAllAsync(
-        int pageNumber, int pageSize, 
-        Guid? jobCategoryId, int? maxAge, 
-        int? minAge, uint? maxSalary, 
-        uint? minSalary, string? gender, 
-        Guid? regionId, Guid? districtId)
+                        int pageNumber, int pageSize, 
+                        Guid? jobCategoryId, int? maxAge, 
+                        int? minAge, uint? maxSalary, 
+                        uint? minSalary, string? gender, 
+                        Guid? regionId, Guid? districtId)
     {
         var workers = await _workersRepository.GetAllWorkersAsync(pageNumber, pageSize, jobCategoryId, 
                                                                 maxAge, minAge, maxSalary, minSalary, 
@@ -98,6 +104,9 @@ public class WorkerService : IWorkerService
     {
         if (workerEM is null)
             throw new UzWorksException("Could not be null worker edit model.");
+
+        if (!await _districtService.IsExist(workerEM.DistrictId))
+            throw new UzWorksException($"Could not find district with id: {workerEM.DistrictId}");
 
         var worker = _mappingService.Map<Worker, WorkerEM>(workerEM);
 

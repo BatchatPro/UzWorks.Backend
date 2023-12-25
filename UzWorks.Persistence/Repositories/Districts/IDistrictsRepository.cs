@@ -4,7 +4,10 @@ namespace UzWorks.Persistence.Repositories.Districts;
 
 public interface IDistrictsRepository : IGenericRepository<District>
 {
-    Task<bool> Exists(string districtName);
+    Task<bool> IsExist(string districtName);
+
+    Task<bool> IsExist(Guid districtId);
+
     Task<IEnumerable<District>> GetAllDistrictsAsync();
 
     Task<IEnumerable<District>> GetDistrictsByRegionIdAsync(Guid regionId);

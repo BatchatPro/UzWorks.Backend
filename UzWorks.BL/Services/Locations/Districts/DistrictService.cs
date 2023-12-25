@@ -41,9 +41,14 @@ public class DistrictService : IDistrictService
         await _districtsRepository.SaveChanges();
     }
 
-    public Task<bool> Exists(string districtName)
+    public Task<bool> IsExist(string districtName)
     {
-        return _districtsRepository.Exists(districtName);
+        return _districtsRepository.IsExist(districtName);
+    }
+
+    public Task<bool> IsExist(Guid districtId)
+    {
+        return _districtsRepository.IsExist(districtId);
     }
 
     public async Task<IEnumerable<DistrictVM>> GetAllAsync()

@@ -1,5 +1,7 @@
-﻿using UzWorks.Core.Abstract;
+﻿using UzWorks.BL.Services.Locations.Districts;
+using UzWorks.Core.Abstract;
 using UzWorks.Core.DataTransferObjects.Jobs;
+using UzWorks.Core.DataTransferObjects.Location.Districts;
 using UzWorks.Core.Entities.JobAndWork;
 using UzWorks.Core.Exceptions;
 using UzWorks.Persistence.Repositories.Jobs;
@@ -9,19 +11,24 @@ namespace UzWorks.BL.Services.Jobs;
 public class JobService : IJobService
 {
     private readonly IJobsRepository _jobsRepository;
+    private readonly IDistrictService _districtService;
     private readonly IMappingService _mappingService;
     private readonly IEnvironmentAccessor _environmentAccessor;
-    public JobService(IJobsRepository jobsRepository, IMappingService mappingService, IEnvironmentAccessor environmentAccessor)
+    public JobService(IJobsRepository jobsRepository, IMappingService mappingService, IEnvironmentAccessor environmentAccessor, IDistrictService districtService)
     {
         _jobsRepository = jobsRepository;
         _mappingService = mappingService;
         _environmentAccessor = environmentAccessor; 
+        _districtService = districtService;
     }
 
     public async Task<JobVM> Create(JobDto jobDto)
     {
         if (jobDto == null)
             throw new UzWorksException("Job Dto can not be null.");
+
+        if (!await _districtService.IsExist(jobDto.DistrictId))
+            throw new UzWorksException($"Could not find district with id: {jobDto.DistrictId}");
 
         var job = _mappingService.Map<Job, JobDto>(jobDto);
 
@@ -93,6 +100,9 @@ public class JobService : IJobService
     {
         if (jobEM is null)
             throw new UzWorksException("Could not be null job edit model.");
+
+        if (!await _districtService.IsExist(jobEM.DistrictId))
+            throw new UzWorksException($"Could not find district with id: {jobEM.DistrictId}");
 
         var job = _mappingService.Map<Job, JobEM>(jobEM);
 

@@ -22,10 +22,8 @@ public class JobDto
     [Required(ErrorMessage = "This field is required.")]
     public DateTime Deadline { get; set; }
     
-    [Required(ErrorMessage = "This field is required.")]
     public string TelegramLink { get; set; } = string.Empty;
     
-    [Required(ErrorMessage = "This field is required.")]
     public string InstagramLink { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "This field is required.")]
@@ -53,8 +51,8 @@ public class JobDto
     public double Longitude { get; set; }
     
     [Required(ErrorMessage = "This field is required.")]
-    public Guid? CategoryId { get; set; }
+    public Guid CategoryId { get; set; }
     
     [Required(ErrorMessage = "This field is required.")]
-    public Guid? DistrictId { get; set; }
+    public Guid DistrictId { get; set; }
 }

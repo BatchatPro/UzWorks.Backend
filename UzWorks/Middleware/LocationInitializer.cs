@@ -30,7 +30,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Andijan));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id });
         }
 
@@ -41,7 +41,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Bukhara));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id });
         }
 
@@ -52,7 +52,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Fergana));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id });
         }
 
@@ -63,7 +63,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Jizzakh));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id });
         }
 
@@ -74,7 +74,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Karakalpakstan));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id }); 
         }
 
@@ -85,7 +85,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Xorazm));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName,RegionId = region.Id });
         }
 
@@ -96,7 +96,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Namangan));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id });
         }
 
@@ -107,7 +107,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Navoiy));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id });
         }
 
@@ -118,7 +118,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Qashqadaryo));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id });
         }
 
@@ -129,7 +129,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Samarqand));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id });
         }
 
@@ -140,7 +140,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Sirdaryo));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id });
         }
 
@@ -151,7 +151,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Surxondaryo));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id });
         }
 
@@ -162,7 +162,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.Tashkent));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id });
         }
 
@@ -173,7 +173,7 @@ public class LocationInitializer
 
             var region = regions.FirstOrDefault(r => r.Name == EnumHelper.GetDescription(RegionsEnum.TashkentCity));
 
-            if (!await _districtService.Exists(districtName) && region != null)
+            if (!await _districtService.IsExist(districtName) && region != null)
                 await _districtService.Create(new DistrictDto { Name = districtName, RegionId = region.Id }); 
         }
 
