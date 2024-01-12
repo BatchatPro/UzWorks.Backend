@@ -1,0 +1,46 @@
+﻿@page "/login"
+@using UzWorks.UI.Models
+@using Newtonsoft.Json;
+@using UzWorks.UI.Services
+
+@inject NavigationManager Navigation;
+@inject IAuthService AuthService;
+
+<h3>Login to Access Application</h3>
+<p style="color:darkred">@errorMassage</p>
+
+<EditForm Model="@loginModel" OnValidSubmit="@LoginTask" FormName="LoginForm">
+    <InputText id="userName" @bind-Value="loginModel.UserName" />
+    <InputText id="password" @bind-Value="loginModel.Password" type="password" />
+    <button type="submit">Log in</button>
+</EditForm>
+
+@code {
+    public string errorMassage { get; set; } = "start";
+    public LoginRequestModel loginModel = new LoginRequestModel();
+
+    private async Task LoginTask()
+    {
+        errorMassage = $"User Name is :{loginModel.UserName}  \nPassword is {loginModel.Password}";
+
+        if (loginModel.UserName == null || loginModel.Password == null)
+        {
+            errorMassage = "Username or Password is null !";
+            return;
+        }
+        else
+        {
+            errorMassage = $"User Name is :{loginModel.UserName}  \nPassword is {loginModel.Password}";
+        }
+
+        var jsonResponse = await AuthService.LoginAsync(loginModel);
+        Console.WriteLine(jsonResponse);
+        var loginResponse = JsonConvert.DeserializeObject<LoginRequestModel>(jsonResponse);
+        
+        if (loginResponse == null)
+            errorMassage = "This User not found.";
+
+        else
+            Navigation.NavigateTo("");
+    }
+}

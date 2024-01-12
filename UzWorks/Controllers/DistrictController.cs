@@ -56,7 +56,7 @@ public class DistrictController : BaseController
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<ActionResult<DistrictVM>> GetByRegionId([FromRoute]Guid id)
+    public async Task<ActionResult<IEnumerable<DistrictVM>>> GetByRegionId([FromRoute]Guid id)
     {
         var result = await _districtService.GetDistrictByRegionId(id);
         return Ok(result);

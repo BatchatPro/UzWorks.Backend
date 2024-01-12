@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UzWorks.BL", "UzWorks.BL\Uz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UzWorks.Infrastructure", "UzWorks.Infrastructure\UzWorks.Infrastructure.csproj", "{4C8F864E-A105-4707-8782-D22BC8BDA5FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UzWorks.UI", "UzWorks.UI\UzWorks.UI.csproj", "{1EA1230E-5588-49A4-9A2B-F56B9A90F67E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UzWorks.UI", "UzWorks.UI\UzWorks.UI.csproj", "{1EA1230E-5588-49A4-9A2B-F56B9A90F67E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
