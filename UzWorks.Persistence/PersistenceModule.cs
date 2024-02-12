@@ -34,7 +34,7 @@ public static class PersistenceModule
 
         var dbContext = provider.GetService<UzWorksDbContext>();
 
-        //dbContext?.Database.Migrate();
+        dbContext?.Database.Migrate();
 
         return services;
     }

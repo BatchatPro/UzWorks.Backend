@@ -50,7 +50,7 @@ public class WorkerService : IWorkerService
         if (worker is null)
             throw new UzWorksException($"Could not find worker with id : {id}");
 
-        if (!_environmentAccessor.GetUserId().Equals(worker.Id))
+        if (!_environmentAccessor.GetUserId().Equals(worker.CreatedBy))
             throw new UzWorksException("You have not access for delete this Worker.");
 
         _workersRepository.Delete(worker);

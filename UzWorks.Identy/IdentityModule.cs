@@ -58,6 +58,12 @@ public static class IdentityModule
 
         services.AddScoped<IUserService, UserService>();
 
+        using var provider = services.BuildServiceProvider();
+
+        var dbContext = provider.GetService<UzWorksIdentityDbContext>();
+
+        dbContext?.Database.Migrate();
+
         return services;
     }
 }
