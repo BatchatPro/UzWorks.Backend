@@ -16,5 +16,4 @@ public class Experience : BaseEntity
 
     [AllowNull]
     public Worker? Worker { get; set; }
-
 }

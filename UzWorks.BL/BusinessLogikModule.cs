@@ -4,6 +4,7 @@ using UzWorks.BL.Services.Jobs;
 using UzWorks.BL.Services.Locations.Districts;
 using UzWorks.BL.Services.Locations.Regions;
 using UzWorks.BL.Services.Workers;
+using UzWorks.BL.Services.Workers.Experiences;
 
 namespace UzWorks.BL;
 
@@ -16,6 +17,7 @@ public static class BusinessLogicModule
         services.AddScoped<IDistrictService, DistrictService>();
         services.AddScoped<IJobService, JobService>();
         services.AddScoped<IWorkerService, WorkerService>();
+        services.AddScoped<IExperienceService, ExperienceService>();
         
         return services;
     }

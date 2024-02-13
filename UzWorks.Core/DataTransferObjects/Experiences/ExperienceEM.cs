@@ -1,6 +1,6 @@
-﻿namespace UzWorks.Core.DataTransferObjects.Profile;
+﻿namespace UzWorks.Core.DataTransferObjects.Experiences;
 
-public class ExperienceDto
+public class ExperienceEM
 {
     public Guid Id { get; set; }
     public string CompanyName { get; set; }

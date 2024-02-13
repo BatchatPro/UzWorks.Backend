@@ -9,6 +9,7 @@ using UzWorks.Persistence.Repositories.Districts;
 using UzWorks.Persistence.Repositories.JobCategories;
 using UzWorks.Persistence.Repositories.Jobs;
 using UzWorks.Persistence.Repositories.Workers;
+using UzWorks.Persistence.Repositories.Workers.Experiences;
 
 namespace UzWorks.Persistence;
 
@@ -29,6 +30,7 @@ public static class PersistenceModule
         services.AddScoped<IJobCategoriesRepository, JobCategoriesRepository>();
         services.AddScoped<IJobsRepository, JobsRepository>();
         services.AddScoped<IWorkersRepository, WorkersRepository>();
+        services.AddScoped<IExperienceRepository, ExperienceRepository>();
 
         using var provider = services.BuildServiceProvider();
 
