@@ -1,7 +1,5 @@
-﻿using System.Text;
-using UzWorks.BL.Services.Locations.Districts;
+﻿using UzWorks.BL.Services.Locations.Districts;
 using UzWorks.Core.Abstract;
-using UzWorks.Core.DataTransferObjects.Jobs;
 using UzWorks.Core.DataTransferObjects.Workers;
 using UzWorks.Core.Entities.JobAndWork;
 using UzWorks.Core.Exceptions;
@@ -50,7 +48,7 @@ public class WorkerService : IWorkerService
         if (worker is null)
             throw new UzWorksException($"Could not find worker with id : {id}");
 
-        if (_environmentAccessor.IsAuthorOrSupervisor(worker.CreatedBy))
+        if (!_environmentAccessor.IsAuthorOrSupervisor(worker.CreatedBy))
             throw new UzWorksException("You have not access for delete this Worker.");
 
         _workersRepository.Delete(worker);

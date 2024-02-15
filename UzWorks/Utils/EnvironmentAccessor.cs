@@ -58,5 +58,10 @@ public class EnvironmentAccessor : IEnvironmentAccessor
     {
         return _contextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimNames.UserId.ToString()))?.Value;
     }
+
+    public string GetUserName()
+    {
+        return _contextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimNames.UserName.ToString()))?.Value;
+    }
 }
 

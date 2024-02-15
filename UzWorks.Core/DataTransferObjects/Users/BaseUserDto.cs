@@ -10,9 +10,12 @@ public class BaseUserDto
     [AllowNull]
     public string? Email { get; set; }
     [AllowNull]
+    public string? PhoneNumber { get; set; }
+    [AllowNull]
     public string? Gender { get; set; }
     [AllowNull]
     public string? MobileId { get; set; }
     [AllowNull]
     public DateTime BirthDate { get; set; }
 }
+

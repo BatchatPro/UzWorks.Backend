@@ -43,6 +43,8 @@ public class UserService : IUserService
         if (!result.Succeeded)
             throw new UzWorksException(result.Errors.Select(x => x.Description).ToString());
 
+        _dbContext.SaveChanges();
+
         var userRoles = await _userManager.GetRolesAsync(user);
         var rolesDTOs = new List<RoleDto>();
         
@@ -55,7 +57,7 @@ public class UserService : IUserService
         userRolesDto.Roles = rolesDTOs;
         return userRolesDto;
     }
-
+    
     public async Task<UserRolesDto> DeleteRolesFromUser(UserRolesDto userRolesDto)
     {
         var user = await _userManager.FindByIdAsync(userRolesDto.UserId.ToString());
@@ -68,6 +70,8 @@ public class UserService : IUserService
 
         if (!result.Succeeded)
             throw new UzWorksException(result.Errors.Select(x => x.Description).ToString());
+
+        _dbContext.SaveChanges();
 
         var userRoles = await _userManager.GetRolesAsync(user);
         var roles = new List<RoleDto>();
@@ -92,7 +96,7 @@ public class UserService : IUserService
         if (await _userManager.FindByNameAsync(userDto.UserName) != null)
             throw new UzWorksException("This user already created.");
         
-        var newUser = new User(userDto.FirstName, userDto.LastName, userDto.UserName);
+        var newUser = _mappingService.Map<User,UserDto>(userDto) ;
         var result = await _userManager.CreateAsync(newUser, userDto.Password);
 
         if (!result.Succeeded)
@@ -104,17 +108,17 @@ public class UserService : IUserService
             userDto.RoleName 
         });
 
-        await _dbContext.SaveChangesAsync();
+        _dbContext.SaveChanges();
     }
 
     public async Task Delete(Guid id)
     {
         var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
         
-        if (user != null)
+        if (user != null && _environmentAccessor.IsAuthorOrAdmin(id))
             await _userManager.DeleteAsync(user);
 
-        await _dbContext.SaveChangesAsync();
+        _dbContext.SaveChanges();
     }
 
     public async Task<IEnumerable<UserVM>> GetAll(
@@ -137,7 +141,7 @@ public class UserService : IUserService
             query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
 
         var users = await query.ToArrayAsync();
-        //var result = _mappingService.Map<IEnumerable<User>, IEnumerable<UserVM>>(users);
+        var result = _mappingService.Map<IEnumerable<UserVM>, IEnumerable<User>>(users);
         return null;
     }
 
@@ -154,26 +158,31 @@ public class UserService : IUserService
 
     public async Task<UserVM> Update(UserEM userEM)
     {
-        if (await _userManager.FindByIdAsync(userEM.Id.ToString()) == null)
+        var user = await _userManager.FindByIdAsync(userEM.Id.ToString()) ??
             throw new UzWorksException("User not Found");
 
         if (!_environmentAccessor.IsAuthorOrAdmin(userEM.Id))
             throw new UzWorksException("You have not access for change this user information.");
 
-        var usersNewData = _mappingService.Map<User, UserEM>(userEM);
-        var result = await _userManager.UpdateAsync(usersNewData);
+        if (user.UserName != userEM.UserName)
+            throw new UzWorksException("You can not change UserName.");
+
+        var userNewData = _mappingService.Map<User, UserEM>(userEM);
+        var result = await _userManager.UpdateAsync(userNewData);
 
         if (!result.Succeeded)
             throw new UzWorksException("It is not Succeeded.");
 
-        if (usersNewData != null)
+        if (userNewData != null)
         {
-            await _userManager.RemovePasswordAsync(usersNewData);
-            await _userManager.AddPasswordAsync(usersNewData, userEM.Password);
+            await _userManager.RemovePasswordAsync(userNewData);
+            await _userManager.AddPasswordAsync(userNewData, userEM.Password);
         }
 
-        return _mappingService.Map<UserVM, User>(usersNewData) ?? 
-            throw new UzWorksException("There are some errors. This field can not be null.");
+        _dbContext.SaveChanges();
+
+        return _mappingService.Map<UserVM, User>(userNewData) ?? 
+            throw new UzWorksException("There are some errors.");
     }
 }
 

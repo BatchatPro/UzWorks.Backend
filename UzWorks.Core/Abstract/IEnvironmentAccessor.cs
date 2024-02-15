@@ -8,4 +8,5 @@ public interface IEnvironmentAccessor
     bool IsAuthorOrAdmin(Guid id);
     bool IsAuthorOrSupervisor(Guid? id);
     string GetUserId();
+    string GetUserName();
 }
