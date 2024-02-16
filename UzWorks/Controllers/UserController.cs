@@ -12,15 +12,11 @@ namespace UzWorks.API.Controllers;
 
 public class UserController : BaseController
 {
-    private readonly UserManager<User> _userManager;
     private readonly IUserService _userService;
-    private readonly IEnvironmentAccessor _environmentAccessor;
     
-    public UserController(UserManager<User> userManager,IUserService userService, IEnvironmentAccessor environmentAccessor)
+    public UserController(IUserService userService)
     {
-        _userManager = userManager;
         _userService = userService;
-        _environmentAccessor = environmentAccessor;
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
@@ -46,8 +42,10 @@ public class UserController : BaseController
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete([FromRoute]Guid id)
     {
-        await _userService.Delete(id);
-        return Ok();
+        if(await _userService.Delete(id))
+            return Ok();
+
+        return BadRequest();
     }
 
     [HttpPut]
@@ -61,12 +59,33 @@ public class UserController : BaseController
         return Ok(result);
     }
 
+    [HttpPut]
+    [Authorize] 
+    public async Task<ActionResult<ResetPasswordDto>> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+    {
+        if (resetPasswordDto == null)
+            return BadRequest("User is null");
+
+        if (await _userService.ResetPassword(resetPasswordDto))
+            return Ok();
+
+        return BadRequest();
+    }
+
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPut]
     public async Task<ActionResult> AddRolesToUser([FromBody] UserRolesDto userRoles)
     {
         await _userService.AddRolesToUser(userRoles);
         return Ok();
+    }
+
+    [Authorize]
+    [HttpGet("{id}")]   
+    public async Task <ActionResult<IEnumerable<string>>> GetRoles([FromRoute] Guid id)
+    {
+        var roles = await _userService.GetUserRoles(id);
+        return Ok(roles);
     }
 
     [Authorize(Roles = RoleNames.SuperAdmin)]

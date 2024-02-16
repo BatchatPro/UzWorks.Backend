@@ -34,12 +34,16 @@ namespace UzWorks.Controllers
                 return BadRequest("Model state is not valid.");
 
             User user = await _userManager.FindByNameAsync(loginDto.UserName);
-            
-            if (user != null &&  await _userManager.CheckPasswordAsync(user, loginDto.Password))
-            {
-                IEnumerable<string> roles = await _userManager.GetRolesAsync(user);
+             
+            if (user == null)
+                return NotFound();
 
-                List<Claim> authClaims = new()
+            if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
+                return BadRequest("Your Password is incorrect.");
+
+            IEnumerable<string> roles = await _userManager.GetRolesAsync(user);
+
+            List<Claim> authClaims = new()
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -49,34 +53,31 @@ namespace UzWorks.Controllers
                     new Claim(ClaimNames.LastName, user.LastName)
                 };
 
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey.TheSecretKey));
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey.TheSecretKey));
 
-                AddRolesToClaims(authClaims, roles);
+            AddRolesToClaims(authClaims, roles);
 
-                var token = new JwtSecurityToken(
-                    issuer: _siteSettings.Value.Issuer,
-                    audience: _siteSettings.Value.Audience,
-                    expires: DateTime.Now.AddDays(10),
-                    claims: authClaims,
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                    );
+            var token = new JwtSecurityToken(
+                issuer: _siteSettings.Value.Issuer,
+                audience: _siteSettings.Value.Audience,
+                expires: DateTime.Now.AddDays(10),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                );
 
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo,
-                    userId = user.Id,
-                    //email = user.Email,
-                    firstname = user.FirstName,
-                    lastName = user.LastName,
-                    gender = user.Gender,
-                    phoneNumber = user.PhoneNumber,
-                    birthDate = user.BirthDate,
-                    access = roles,
-                });
-            }
-
-            return NotFound();
+            return Ok(new
+            {
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+                expiration = token.ValidTo,
+                userId = user.Id,
+                //email = user.Email,
+                firstname = user.FirstName,
+                lastName = user.LastName,
+                gender = user.Gender,
+                phoneNumber = user.PhoneNumber,
+                birthDate = user.BirthDate,
+                access = roles,
+            });
         }
 
         private void AddRolesToClaims (List<Claim> claims, IEnumerable<string> roles)

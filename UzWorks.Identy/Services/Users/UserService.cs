@@ -7,6 +7,7 @@ using UzWorks.Core.DataTransferObjects.UserRoles;
 using UzWorks.Core.Exceptions;
 using UzWorks.Identity.Models;
 using UzWorks.Core.DataTransferObjects.Roles;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace UzWorks.Identity.Services.Roles;
 
@@ -28,6 +29,27 @@ public class UserService : IUserService
         _userManager = userManager;
         _roleManager = roleManager;
         _environmentAccessor = environmentAccessor;
+    }
+
+    public async Task<UserRolesDto> GetUserRoles(Guid userId)
+    {
+        if (await _userManager.FindByIdAsync(userId.ToString()) == null)
+            throw new UzWorksException("User not found.");
+        
+        var userRolesDto = new UserRolesDto();
+        var userRoles = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(userId.ToString()));
+        var roles = new List<RoleDto>();
+
+        foreach (var role in userRoles)
+        {
+            var userRole = await _roleManager.FindByNameAsync(role);
+            roles.Add(new RoleDto(userRole.Name));
+        }
+
+        userRolesDto.UserId = userId;
+        userRolesDto.Roles = roles;
+
+        return userRolesDto;
     }
 
     public async Task<UserRolesDto> AddRolesToUser(UserRolesDto userRolesDto)
@@ -111,14 +133,69 @@ public class UserService : IUserService
         _dbContext.SaveChanges();
     }
 
-    public async Task Delete(Guid id)
+    public async Task<UserVM> GetById(Guid id)
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
-        
-        if (user != null && _environmentAccessor.IsAuthorOrAdmin(id))
-            await _userManager.DeleteAsync(user);
+        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == Convert.ToString(id)) ??
+            throw new UzWorksException("User not found.");
+
+        if (!_environmentAccessor.IsAuthorOrSupervisor(id))
+            throw new UzWorksException("You you have not access for view information about this user.");
+
+        return _mappingService.Map<UserVM, User>(user);
+    }
+    
+    public async Task<UserVM> Update(UserEM userEM)
+    {
+        var user = await _userManager.FindByIdAsync(userEM.Id.ToString()) ??
+            throw new UzWorksException("User not Found");
+
+        if (!_environmentAccessor.IsAuthorOrAdmin(userEM.Id))
+            throw new UzWorksException("You have not access for change this user information.");
+
+        if (user.UserName != userEM.UserName)
+            throw new UzWorksException("You can not change UserName.");
+
+        var userNewData = _mappingService.Map<User, UserEM>(userEM);
+        var result = await _userManager.UpdateAsync(userNewData);
+
+        if (!result.Succeeded)
+            throw new UzWorksException("It is not Succeeded.");
 
         _dbContext.SaveChanges();
+
+        return _mappingService.Map<UserVM, User>(userNewData) ?? 
+            throw new UzWorksException("There are some errors.");
+    }
+
+    public async Task<bool> ResetPassword(ResetPasswordDto resetPasswordDto)
+    {
+        var user = await _userManager.FindByIdAsync(resetPasswordDto.UserId.ToString()) ??
+            throw new UzWorksException("User not found.");
+
+        if (!_environmentAccessor.IsAuthorOrAdmin(resetPasswordDto.UserId))
+            return false;
+
+        var result = await _userManager.ChangePasswordAsync(user, resetPasswordDto.OldPassword, resetPasswordDto.NewPassword);
+
+        if (!result.Succeeded)
+            throw new UzWorksException(result.Errors.Select(x => x.Description).ToString());
+
+        _dbContext.SaveChanges();
+        return true;
+    }
+
+    public async Task<bool> Delete(Guid id)
+    {
+//        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
+        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == Convert.ToString(id));
+        
+        if (user == null || !_environmentAccessor.IsAuthorOrAdmin(id))
+            return false;
+        
+        await _userManager.DeleteAsync(user);
+        _dbContext.SaveChanges();
+        return true;
+
     }
 
     public async Task<IEnumerable<UserVM>> GetAll(
@@ -142,48 +219,10 @@ public class UserService : IUserService
 
         var users = await query.ToArrayAsync();
         var result = _mappingService.Map<IEnumerable<UserVM>, IEnumerable<User>>(users);
-        return null;
+        return result;
     }
 
-    public async Task<UserVM> GetById(Guid id)
-    {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id.Equals(id)) ??
-            throw new UzWorksException("User not found.");
 
-        if (!_environmentAccessor.IsAuthorOrSupervisor(id))
-            throw new UzWorksException("You you have not access for view information about this user.");
-
-        return _mappingService.Map<UserVM, User>(user);
-    }
-
-    public async Task<UserVM> Update(UserEM userEM)
-    {
-        var user = await _userManager.FindByIdAsync(userEM.Id.ToString()) ??
-            throw new UzWorksException("User not Found");
-
-        if (!_environmentAccessor.IsAuthorOrAdmin(userEM.Id))
-            throw new UzWorksException("You have not access for change this user information.");
-
-        if (user.UserName != userEM.UserName)
-            throw new UzWorksException("You can not change UserName.");
-
-        var userNewData = _mappingService.Map<User, UserEM>(userEM);
-        var result = await _userManager.UpdateAsync(userNewData);
-
-        if (!result.Succeeded)
-            throw new UzWorksException("It is not Succeeded.");
-
-        if (userNewData != null)
-        {
-            await _userManager.RemovePasswordAsync(userNewData);
-            await _userManager.AddPasswordAsync(userNewData, userEM.Password);
-        }
-
-        _dbContext.SaveChanges();
-
-        return _mappingService.Map<UserVM, User>(userNewData) ?? 
-            throw new UzWorksException("There are some errors.");
-    }
 }
 
 
