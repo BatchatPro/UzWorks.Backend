@@ -12,6 +12,7 @@ public interface IWorkerService
     Task<IEnumerable<WorkerVM>> GetWorkersByUserId (Guid userId);
     Task<WorkerVM> Create(WorkerDto workerDto);
     Task<WorkerVM> Update(WorkerEM workerEM);
+    Task<bool> ChangeStatus(Guid id, bool status);
     Task Delete(Guid id);
     Task<int> GetCount();
 }

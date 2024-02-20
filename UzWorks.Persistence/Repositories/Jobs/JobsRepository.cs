@@ -16,8 +16,11 @@ public class JobsRepository : GenericRepository<Job>, IJobsRepository
     {
         var query = _dbSet.Where(j => !j.IsDeleted).AsQueryable();
 
+        query = query.Where(x => x.Status == true);
+
         if (jobCategoryId != null)
-            query = query.Where(x => x.CategoryId.Equals(jobCategoryId));
+            query = query.Where(x => x.CategoryId == jobCategoryId);
+            //query = query.Where(x => x.CategoryId.Equals(jobCategoryId));
 
         if (maxAge != null)
             query = query.Where(x => x.MaxAge <= maxAge);

@@ -44,6 +44,18 @@ public class WorkerController : BaseController
         return Ok(result);
     }
 
+    [Authorize(Roles = RoleNames.Supervisor)]
+    [HttpPut("{id}")]
+    public async Task<ActionResult> ChangeStatus([FromRoute] Guid id, [FromBody] bool status)
+    {
+        var result = await _workerService.ChangeStatus(id, status);
+        
+        if (result)
+            return Ok();
+
+        return BadRequest();
+    }
+
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<WorkerVM>> GetById([FromRoute] Guid id)

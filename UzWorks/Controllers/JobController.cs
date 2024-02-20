@@ -38,6 +38,18 @@ public class JobController : BaseController
         return Ok(result);
     }
 
+    [Authorize(Roles = RoleNames.Supervisor)]
+    [HttpPut("{id}")]
+    public async Task<ActionResult> ChangeStatus([FromRoute] Guid id, [FromBody] bool status)
+    {
+        var result = await _jobService.ChangeStatus(id, status);
+
+        if (result)
+            return Ok();
+
+        return BadRequest();
+    }
+
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<JobVM>> GetById([FromRoute] Guid id)

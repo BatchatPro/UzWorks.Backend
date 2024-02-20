@@ -11,6 +11,7 @@ public interface IJobService
     Task<IEnumerable<JobVM>> GetJobsByUserId(Guid userId);
     Task<JobVM> Create(JobDto jobDto);
     Task<JobVM> Update(JobEM jobEM);
+    Task<bool> ChangeStatus(Guid id, bool status);
     Task Delete(Guid id);
     Task<int> GetCount();
 }

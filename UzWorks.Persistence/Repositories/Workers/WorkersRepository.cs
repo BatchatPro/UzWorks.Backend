@@ -16,9 +16,11 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
     {
         var query = _context.Workers.AsQueryable();
 
+        query = query.Where(x => x.Status == true);
+
         if (jobCategoryId is not null)
-            query = query.Where(x => x.CategoryId.Equals(jobCategoryId));
-        //query = query.Where(x => x.CategoryId == jobCategoryId);
+            query = query.Where(x => x.CategoryId == jobCategoryId);
+            //query = query.Where(x => x.CategoryId.Equals(jobCategoryId));
 
         if (maxAge is not null)
             query = query.Where(x => (DateTime.Now.Year - x.BirthDate.Year) < maxAge);

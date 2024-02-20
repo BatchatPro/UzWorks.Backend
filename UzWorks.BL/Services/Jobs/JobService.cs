@@ -22,6 +22,7 @@ public class JobService : IJobService
         _districtService = districtService;
     }
 
+
     public async Task<JobVM> Create(JobDto jobDto)
     {
         if (jobDto == null)
@@ -116,5 +117,21 @@ public class JobService : IJobService
         await _jobsRepository.SaveChanges();
 
         return _mappingService.Map<JobVM,Job>(job);
+    }
+    
+    public async Task<bool> ChangeStatus(Guid id, bool status)
+    {
+        var job = await _jobsRepository.GetById(id);
+
+        if (job is null)
+            throw new UzWorksException($"Could not find job with id: {id}");
+
+        if (!_environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
+            throw new UzWorksException("You have not access to change this Job status.");
+
+        job.Status = status;
+        _jobsRepository.UpdateAsync(job);
+        await _jobsRepository.SaveChanges();
+        return true;
     }
 }

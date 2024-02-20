@@ -9,7 +9,7 @@ public class BaseJobEntity : BaseEntity
     public string Gender { get; set; }
     public string WorkingTime { get; set; }
     public string WorkingSchedule { get; set; }
-    public bool Status { get; set; } = true;
+    public bool Status { get; set; } = false;
     public DateTime Deadline { get; set; }
     
     [AllowNull]

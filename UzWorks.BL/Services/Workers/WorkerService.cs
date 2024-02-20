@@ -115,4 +115,20 @@ public class WorkerService : IWorkerService
         await _workersRepository.SaveChanges();
         return _mappingService.Map<WorkerVM, Worker>(worker);
     }
+
+    public async Task<bool> ChangeStatus(Guid id, bool status)
+    {
+        var worker = await _workersRepository.GetById(id);
+
+        if (worker is null)
+            throw new UzWorksException($"Could not find worker with id: {id}");
+
+        if (!_environmentAccessor.IsAuthorOrSupervisor(worker.CreatedBy))
+            throw new UzWorksException("You have not access for change this worker status.");
+
+        worker.Status = status;
+        _workersRepository.UpdateAsync(worker);
+        await _workersRepository.SaveChanges();
+        return true;
+    }
 }
