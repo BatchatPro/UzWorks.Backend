@@ -87,7 +87,7 @@ public class WorkerController : BaseController
         return Ok(result);
     }
 
-    [Authorize(Roles = RoleNames.Employee)]
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<IEnumerable<WorkerVM>>> GetWorkersByUserId([FromRoute] Guid id)
     {
@@ -138,7 +138,7 @@ public class WorkerController : BaseController
         return Ok(result);
     }
 
-    [Authorize(Roles = RoleNames.Employee)]
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<ExperienceVM>> GetExperienceById([FromRoute] Guid id)
     {

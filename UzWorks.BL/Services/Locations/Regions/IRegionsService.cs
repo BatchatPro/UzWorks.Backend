@@ -10,5 +10,5 @@ public interface IRegionsService
     Task Delete(Guid Id);
     Task<RegionVM> Update(RegionEM regionEM);
     Task<bool> Exists(string regionName);
-    Task<RegionVM> GetByRegionByDistrictId(Guid id);
+    Task<RegionVM> GetRegionByDistrictId(Guid id);
 }

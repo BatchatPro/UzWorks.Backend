@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using UzWorks.Core.Abstract;
+﻿using UzWorks.Core.Abstract;
 using UzWorks.Core.DataTransferObjects.Location.Districts;
 using UzWorks.Core.Entities.Location;
 using UzWorks.Core.Exceptions;

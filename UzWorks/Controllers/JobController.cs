@@ -81,7 +81,7 @@ public class JobController : BaseController
         return Ok(result);
     }
 
-    [Authorize(Roles = RoleNames.Employer)]
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<IEnumerable<JobVM>>> GetJobsByUserId([FromRoute] Guid id)
     {

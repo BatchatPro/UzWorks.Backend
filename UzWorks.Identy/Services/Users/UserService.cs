@@ -155,7 +155,8 @@ public class UserService : IUserService
         if (user.UserName != userEM.UserName)
             throw new UzWorksException("You can not change UserName.");
 
-        var userNewData = _mappingService.Map<User, UserEM>(userEM);
+        var userNewData = _mappingService.Map(userEM, user);
+
         var result = await _userManager.UpdateAsync(userNewData);
 
         if (!result.Succeeded)
