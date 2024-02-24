@@ -75,6 +75,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseCors(options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowCredentials().AllowAnyHeader());
+
 app.MapControllers();
 
 app.Run();
