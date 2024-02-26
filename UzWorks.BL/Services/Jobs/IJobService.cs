@@ -6,7 +6,7 @@ public interface IJobService
 {
     Task<IEnumerable<JobVM>> GetAllAsync(int pageNumber, int pageSize,
                         Guid? jobCategoryId, int? maxAge, int? minAge, uint? maxSalary,
-                        uint? minSalary, string? gender, Guid? regionId, Guid? districtId);
+                        uint? minSalary, string? gender, bool? status, Guid? regionId, Guid? districtId);
     Task<JobVM> GetById(Guid id);
     Task<IEnumerable<JobVM>> GetJobsByUserId(Guid userId);
     Task<JobVM> Create(JobDto jobDto);

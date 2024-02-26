@@ -58,12 +58,12 @@ public class JobService : IJobService
 
     public async Task<IEnumerable<JobVM>> GetAllAsync(int pageNumber, int pageSize, Guid? jobCategoryId, int? maxAge, 
                                                 int? minAge, uint? maxSalary, uint? minSalary, string? gender, 
-                                                Guid? regionId, Guid? districtId)
+                                                bool? status, Guid? regionId, Guid? districtId)
     {
         var jobs = await _jobsRepository.GetAllJobsAsync(
             pageNumber, pageSize, jobCategoryId, 
             maxAge, minAge, maxSalary, minSalary, 
-            gender, regionId, districtId);
+            gender, status, regionId, districtId);
 
         var result = _mappingService.Map<IEnumerable<JobVM>, IEnumerable<Job>>(jobs);
         return result;

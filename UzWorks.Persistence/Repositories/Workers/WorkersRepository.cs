@@ -12,15 +12,18 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
 
     public async Task<Worker[]> GetAllWorkersAsync(int pageNumber, int pageSize,
                         Guid? jobCategoryId, int? maxAge, int? minAge, uint? maxSalary,
-                        uint? minSalary, string? gender, Guid? regionId, Guid? districtId)
+                        uint? minSalary, string? gender, bool? status, Guid? regionId, Guid? districtId)
     {
         var query = _context.Workers.AsQueryable();
 
-        query = query.Where(x => x.Status == true);
+        if (status != null)
+        {
+            query = query.Where(x => x.Status == true);
+            query = query.Where(x => x.Deadline >= DateTime.Now);
+        }
 
         if (jobCategoryId is not null)
             query = query.Where(x => x.CategoryId == jobCategoryId);
-            //query = query.Where(x => x.CategoryId.Equals(jobCategoryId));
 
         if (maxAge is not null)
             query = query.Where(x => (DateTime.Now.Year - x.BirthDate.Year) < maxAge);

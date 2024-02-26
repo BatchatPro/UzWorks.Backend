@@ -59,12 +59,12 @@ public class WorkerService : IWorkerService
                         int pageNumber, int pageSize, 
                         Guid? jobCategoryId, int? maxAge, 
                         int? minAge, uint? maxSalary, 
-                        uint? minSalary, string? gender, 
+                        uint? minSalary, string? gender, bool? status, 
                         Guid? regionId, Guid? districtId)
     {
         var workers = await _workersRepository.GetAllWorkersAsync(pageNumber, pageSize, jobCategoryId, 
                                                                 maxAge, minAge, maxSalary, minSalary, 
-                                                                gender, regionId, districtId);
+                                                                gender, status, regionId, districtId);
         
         var result = _mappingService.Map<IEnumerable<WorkerVM>, IEnumerable<Worker>>(workers);
         return result;

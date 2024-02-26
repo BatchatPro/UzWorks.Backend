@@ -75,7 +75,22 @@ public class WorkerController : BaseController
         var result = await _workerService.GetAllAsync(
                          pageNumber, pageSize, jobCategoryId,
                          maxAge, minAge, maxSalary, minSalary,
-                         gender, regionId, districtId);
+                         gender, true, regionId, districtId);
+        return Ok(result);
+    }
+
+    [Authorize(Roles = RoleNames.Supervisor)]
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<WorkerVM>>> GetAllForAdmin([FromQuery] int pageNumber, [FromQuery] int pageSize,
+                                            [FromQuery] Guid? jobCategoryId, [FromQuery] int? maxAge,
+                                            [FromQuery] int? minAge, [FromQuery] uint? maxSalary,
+                                            [FromQuery] uint? minSalary, [FromQuery] string? gender,
+                                            [FromQuery] Guid? regionId, [FromQuery] Guid? districtId)
+    {
+        var result = await _workerService.GetAllAsync(
+                         pageNumber, pageSize, jobCategoryId,
+                         maxAge, minAge, maxSalary, minSalary,
+                         gender, null, regionId, districtId);
         return Ok(result);
     }
 

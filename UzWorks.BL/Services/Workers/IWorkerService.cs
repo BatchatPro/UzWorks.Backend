@@ -7,7 +7,7 @@ public interface IWorkerService
 
     Task<IEnumerable<WorkerVM>> GetAllAsync(int pageNumber, int pageSize,
                         Guid? jobCategoryId, int? maxAge, int? minAge, uint? maxSalary,
-                        uint? minSalary, string? gender, Guid? regionId, Guid? districtId);
+                        uint? minSalary, string? gender, bool? status, Guid? regionId, Guid? districtId);
     Task<WorkerVM> GetById(Guid id);
     Task<IEnumerable<WorkerVM>> GetWorkersByUserId (Guid userId);
     Task<WorkerVM> Create(WorkerDto workerDto);
