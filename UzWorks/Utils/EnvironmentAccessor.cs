@@ -19,7 +19,9 @@ public class EnvironmentAccessor : IEnvironmentAccessor
 
     public string GetFullName()
     {
-        throw new NotImplementedException();
+        var firstName = _contextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimNames.FirstName.ToString()))?.Value;
+        var lastName = _contextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimNames.LastName.ToString()))?.Value;
+        return $"{firstName} {lastName}";
     }
 
     public string GetWebRootPath()

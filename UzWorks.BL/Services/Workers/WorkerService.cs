@@ -77,7 +77,10 @@ public class WorkerService : IWorkerService
         if (worker is null) 
             throw new UzWorksException($"Could not find worker with id: {id}");
 
-        return _mappingService.Map<WorkerVM, Worker>(worker); 
+        var result = _mappingService.Map<WorkerVM, Worker>(worker);
+        result.FullName = _environmentAccessor.GetFullName();
+
+        return result; 
     }
 
     public Task<int> GetCount()
@@ -95,6 +98,7 @@ public class WorkerService : IWorkerService
 
         var workers = await _workersRepository.GetWorkersByUserIdAsync(userId);
         var result = _mappingService.Map<IEnumerable<WorkerVM>,IEnumerable<Worker>>(workers);
+        
         return result;
     }
 
@@ -113,7 +117,11 @@ public class WorkerService : IWorkerService
 
         _workersRepository.UpdateAsync(worker);
         await _workersRepository.SaveChanges();
-        return _mappingService.Map<WorkerVM, Worker>(worker);
+
+        var result = _mappingService.Map<WorkerVM, Worker>(worker);
+        result.FullName = _environmentAccessor.GetFullName();
+        
+        return result;
     }
 
     public async Task<bool> ChangeStatus(Guid id, bool status)
@@ -127,8 +135,10 @@ public class WorkerService : IWorkerService
             throw new UzWorksException("You have not access for change this worker status.");
 
         worker.Status = status;
+
         _workersRepository.UpdateAsync(worker);
         await _workersRepository.SaveChanges();
+
         return true;
     }
 }

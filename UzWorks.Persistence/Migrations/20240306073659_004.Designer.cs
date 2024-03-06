@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UzWorks.Persistence.Data;
@@ -11,9 +12,11 @@ using UzWorks.Persistence.Data;
 namespace UzWorks.Persistence.Migrations
 {
     [DbContext(typeof(UzWorksDbContext))]
-    partial class UzWorksDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240306073659_004")]
+    partial class _004
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,12 +107,9 @@ namespace UzWorks.Persistence.Migrations
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("WorkerId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("WorkerId");
+                    b.HasIndex("CreatedBy");
 
                     b.ToTable("Experiences", (string)null);
                 });
@@ -443,9 +443,12 @@ namespace UzWorks.Persistence.Migrations
 
             modelBuilder.Entity("UzWorks.Core.Entities.Experiences.Experience", b =>
                 {
-                    b.HasOne("UzWorks.Core.Entities.JobAndWork.Worker", null)
+                    b.HasOne("UzWorks.Core.Entities.JobAndWork.Worker", "Worker")
                         .WithMany("Experiences")
-                        .HasForeignKey("WorkerId");
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Worker");
                 });
 
             modelBuilder.Entity("UzWorks.Core.Entities.JobAndWork.Job", b =>

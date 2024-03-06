@@ -13,7 +13,4 @@ public class Experience : BaseEntity
     public string Position { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-
-    [AllowNull]
-    public Worker? Worker { get; set; }
 }
