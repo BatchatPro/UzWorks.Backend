@@ -10,11 +10,9 @@ public class ExperienceRepository : GenericRepository<Experience>, IExperienceRe
     {
     }
 
-    public async Task<Experience[]> GetAllExperiencesByWorkerIdAsync(Guid workerId)
+    public async Task<Experience[]> GetAllExperiencesByWorkerIdAsync(Guid userId)
     {
-        return await _context.Experiences
-            .Where(e => e.CreatedBy == workerId)
-            .ToArrayAsync();
+        return await _context.Experiences.Where(e => e.CreatedBy == userId).ToArrayAsync();
     }
 
     public async Task<Experience[]> GetAllExperiencesAsync()
