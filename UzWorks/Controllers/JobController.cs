@@ -85,6 +85,7 @@ public class JobController : BaseController
                          pageNumber, pageSize, jobCategoryId,
                          maxAge, minAge, maxSalary, minSalary,
                          gender, null, regionId, districtId);
+
         return Ok(result);
     }
 
@@ -93,6 +94,20 @@ public class JobController : BaseController
     public async Task<ActionResult<int>> GetCount([FromRoute]bool? status)
     {
         var result = await _jobService.GetCount(status);
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<ActionResult<int>> GetCountForFilter(
+                                            [FromQuery] Guid? jobCategoryId, [FromQuery] int? maxAge,
+                                            [FromQuery] int? minAge, [FromQuery] uint? maxSalary,
+                                            [FromQuery] uint? minSalary, [FromQuery] string? gender,
+                                            [FromQuery] Guid? regionId, [FromQuery] Guid? districtId)
+    {
+        var result = await _jobService.GetGountForFilter(jobCategoryId,
+                         maxAge, minAge, maxSalary, minSalary,
+                         gender, null, regionId, districtId);
         return Ok(result);
     }
 

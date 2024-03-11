@@ -10,5 +10,8 @@ public interface IWorkersRepository : IGenericRepository<Worker>
 
     Task<int> GetWorkersCount(bool? statusType);
 
+    Task<int> GetWorkersCountForFilter(Guid? jobCategoryId = null, int? maxAge = null, int? minAge = null, uint? maxSalary = null,
+                        uint? minSalary = null, string? gender = null, bool? status = null, Guid? regionId = null, Guid? districtId = null);
+
     Task<Worker[]> GetWorkersByUserIdAsync(Guid userId);
 }

@@ -141,4 +141,14 @@ public class WorkerService : IWorkerService
 
         return true;
     }
+
+    public Task<int> GetCountForFilter(Guid? jobCategoryId, int? maxAge,
+                        int? minAge, uint? maxSalary,
+                        uint? minSalary, string? gender, bool? status,
+                        Guid? regionId, Guid? districtId)
+    {
+        return _workersRepository.GetWorkersCountForFilter(jobCategoryId,
+                                                                maxAge, minAge, maxSalary, minSalary,
+                                                                gender, status, regionId, districtId);
+    }
 }

@@ -99,6 +99,21 @@ public class WorkerController : BaseController
     }
 
     [AllowAnonymous]
+    [HttpGet]
+    public async Task<ActionResult<int>> GetCountForFilter(
+                                            [FromQuery] Guid? jobCategoryId, [FromQuery] int? maxAge,
+                                            [FromQuery] int? minAge, [FromQuery] uint? maxSalary,
+                                            [FromQuery] uint? minSalary, [FromQuery] string? gender,
+                                            [FromQuery] Guid? regionId, [FromQuery] Guid? districtId)
+    {
+        var result = await _workerService.GetCountForFilter(jobCategoryId,
+                         maxAge, minAge, maxSalary, minSalary,
+                         gender, null, regionId, districtId);
+        
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<IEnumerable<WorkerVM>>> GetWorkersByUserId([FromRoute] Guid id)
     {

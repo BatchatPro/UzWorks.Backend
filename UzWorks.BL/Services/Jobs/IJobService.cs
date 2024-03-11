@@ -14,4 +14,6 @@ public interface IJobService
     Task<bool> ChangeStatus(Guid id, bool status);
     Task Delete(Guid id);
     Task<int> GetCount(bool? status);
+    Task<int> GetGountForFilter(Guid? jobCategoryId, int? maxAge, int? minAge, uint? maxSalary,
+                        uint? minSalary, string? gender, bool? status, Guid? regionId, Guid? districtId);
 }

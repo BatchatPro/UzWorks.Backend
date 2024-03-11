@@ -1,7 +1,6 @@
 ﻿using UzWorks.BL.Services.Locations.Districts;
 using UzWorks.Core.Abstract;
 using UzWorks.Core.DataTransferObjects.Jobs;
-using UzWorks.Core.DataTransferObjects.Location.Districts;
 using UzWorks.Core.Entities.JobAndWork;
 using UzWorks.Core.Exceptions;
 using UzWorks.Persistence.Repositories.Jobs;
@@ -133,5 +132,15 @@ public class JobService : IJobService
         _jobsRepository.UpdateAsync(job);
         await _jobsRepository.SaveChanges();
         return true;
+    }
+
+    public async Task<int> GetGountForFilter(Guid? jobCategoryId, int? maxAge,
+                                       int? minAge, uint? maxSalary, uint? minSalary, string? gender,
+                                       bool? status, Guid? regionId, Guid? districtId)
+    {
+        return await _jobsRepository.GetJobscountForFilter(
+                                        jobCategoryId,
+                                        maxAge, minAge, maxSalary, minSalary,
+                                        gender, status, regionId, districtId);
     }
 }
