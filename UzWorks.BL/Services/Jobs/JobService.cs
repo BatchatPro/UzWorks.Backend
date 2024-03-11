@@ -79,9 +79,9 @@ public class JobService : IJobService
         return _mappingService.Map<JobVM, Job>(job);
     }
 
-    public Task<int> GetCount()
+    public Task<int> GetCount(bool? statys)
     {
-        return _jobsRepository.GetJobsCount();
+        return _jobsRepository.GetJobsCount(statys);
     }
 
     public async Task<IEnumerable<JobVM>> GetJobsByUserId(Guid userId)

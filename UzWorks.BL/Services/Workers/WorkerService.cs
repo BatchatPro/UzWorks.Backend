@@ -83,9 +83,9 @@ public class WorkerService : IWorkerService
         return result; 
     }
 
-    public Task<int> GetCount()
+    public Task<int> GetCount(bool? status)
     {
-        return _workersRepository.GetWorkersCount();
+        return _workersRepository.GetWorkersCount(status);
     }
 
     public async Task<IEnumerable<WorkerVM>> GetWorkersByUserId(Guid userId)

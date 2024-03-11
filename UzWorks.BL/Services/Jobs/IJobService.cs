@@ -13,5 +13,5 @@ public interface IJobService
     Task<JobVM> Update(JobEM jobEM);
     Task<bool> ChangeStatus(Guid id, bool status);
     Task Delete(Guid id);
-    Task<int> GetCount();
+    Task<int> GetCount(bool? status);
 }

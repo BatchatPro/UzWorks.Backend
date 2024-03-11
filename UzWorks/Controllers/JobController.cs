@@ -89,10 +89,10 @@ public class JobController : BaseController
     }
 
     [AllowAnonymous]
-    [HttpGet]
-    public async Task<ActionResult<int>> GetCount()
+    [HttpGet("{status}")]
+    public async Task<ActionResult<int>> GetCount([FromRoute]bool? status)
     {
-        var result = await _jobService.GetCount();
+        var result = await _jobService.GetCount(status);
         return Ok(result);
     }
 

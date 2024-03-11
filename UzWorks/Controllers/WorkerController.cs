@@ -95,10 +95,10 @@ public class WorkerController : BaseController
     }
 
     [AllowAnonymous]
-    [HttpGet]
-    public async Task<ActionResult<int>> GetCount()
+    [HttpGet("{status}")]
+    public async Task<ActionResult<int>> GetCount([FromRoute]bool? status)
     {
-        var result = await _workerService.GetCount();
+        var result = await _workerService.GetCount(status);
         return Ok(result);
     }
 

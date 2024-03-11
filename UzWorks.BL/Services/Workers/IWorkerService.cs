@@ -14,5 +14,5 @@ public interface IWorkerService
     Task<WorkerVM> Update(WorkerEM workerEM);
     Task<bool> ChangeStatus(Guid id, bool status);
     Task Delete(Guid id);
-    Task<int> GetCount();
+    Task<int> GetCount(bool? status);
 }

@@ -52,9 +52,17 @@ public class JobsRepository : GenericRepository<Job>, IJobsRepository
         return await query.ToArrayAsync();
     }
 
-    public async Task<int> GetJobsCount()
+    public async Task<int> GetJobsCount(bool? statusType)
     {
-        return await _context.Jobs.CountAsync();
+        var query = _context.Jobs.AsQueryable();
+
+        if (statusType == null || statusType == false)
+            return await _context.Jobs.CountAsync();
+    
+        query = query.Where(x => x.Status == true);
+        query = query.Where(x => x.Deadline >= DateTime.Now);
+        
+        return await query.CountAsync();
     }
 
     public async Task<Job[]> GetJobsByUserIdAsync(Guid userId)

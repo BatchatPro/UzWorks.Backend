@@ -8,7 +8,7 @@ public interface IWorkersRepository : IGenericRepository<Worker>
                         Guid? jobCategoryId = null, int? maxAge = null, int? minAge = null, uint? maxSalary = null,
                         uint? minSalary = null, string? gender = null, bool? status = null, Guid? regionId = null, Guid? districtId = null);
 
-    Task<int> GetWorkersCount();
+    Task<int> GetWorkersCount(bool? statusType);
 
     Task<Worker[]> GetWorkersByUserIdAsync(Guid userId);
 }
