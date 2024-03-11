@@ -107,7 +107,7 @@ public class JobController : BaseController
     {
         var result = await _jobService.GetGountForFilter(jobCategoryId,
                          maxAge, minAge, maxSalary, minSalary,
-                         gender, null, regionId, districtId);
+                         gender, true, regionId, districtId);
         return Ok(result);
     }
 

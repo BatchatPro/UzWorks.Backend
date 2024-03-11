@@ -108,7 +108,7 @@ public class WorkerController : BaseController
     {
         var result = await _workerService.GetCountForFilter(jobCategoryId,
                          maxAge, minAge, maxSalary, minSalary,
-                         gender, null, regionId, districtId);
+                         gender, true, regionId, districtId);
         
         return Ok(result);
     }
