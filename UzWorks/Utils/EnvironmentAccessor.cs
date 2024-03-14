@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using UzWorks.Core.Abstract;
+﻿using UzWorks.Core.Abstract;
 using UzWorks.Core.Constants;
 using UzWorks.Core.Exceptions;
 using UzWorks.Identity.Constants;

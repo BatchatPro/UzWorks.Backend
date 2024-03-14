@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UzWorks.BL", "UzWorks.BL\Uz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UzWorks.Infrastructure", "UzWorks.Infrastructure\UzWorks.Infrastructure.csproj", "{4C8F864E-A105-4707-8782-D22BC8BDA5FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UzWorks.Web", "UzWorks.Web\UzWorks.Web.csproj", "{1D8885FF-D544-40AB-A07C-273C0D566674}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{4C8F864E-A105-4707-8782-D22BC8BDA5FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C8F864E-A105-4707-8782-D22BC8BDA5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C8F864E-A105-4707-8782-D22BC8BDA5FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D8885FF-D544-40AB-A07C-273C0D566674}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D8885FF-D544-40AB-A07C-273C0D566674}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D8885FF-D544-40AB-A07C-273C0D566674}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D8885FF-D544-40AB-A07C-273C0D566674}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

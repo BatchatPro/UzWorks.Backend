@@ -7,7 +7,6 @@ using UzWorks.Core.DataTransferObjects.UserRoles;
 using UzWorks.Core.Exceptions;
 using UzWorks.Identity.Models;
 using UzWorks.Core.DataTransferObjects.Roles;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace UzWorks.Identity.Services.Roles;
 
@@ -77,6 +76,7 @@ public class UserService : IUserService
         }
 
         userRolesDto.Roles = rolesDTOs;
+        
         return userRolesDto;
     }
     
@@ -105,6 +105,7 @@ public class UserService : IUserService
         }
 
         userRolesDto.Roles = roles;
+
         return userRolesDto;
     }
 
@@ -182,12 +183,12 @@ public class UserService : IUserService
             throw new UzWorksException(result.Errors.Select(x => x.Description).ToString());
 
         _dbContext.SaveChanges();
+
         return true;
     }
 
     public async Task<bool> Delete(Guid id)
     {
-//        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
         var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == Convert.ToString(id));
         
         if (user == null || !_environmentAccessor.IsAuthorOrAdmin(id))
@@ -195,6 +196,7 @@ public class UserService : IUserService
         
         await _userManager.DeleteAsync(user);
         _dbContext.SaveChanges();
+
         return true;
 
     }
@@ -220,10 +222,17 @@ public class UserService : IUserService
 
         var users = await query.ToArrayAsync();
         var result = _mappingService.Map<IEnumerable<UserVM>, IEnumerable<User>>(users);
+
         return result;
     }
 
+    public async Task<string> GetUserFullName(Guid id)
+    {
+        var user = await _userManager.FindByIdAsync(id.ToString()) ??
+            throw new UzWorksException("User not found.");
 
+        return user.FirstName + " " + user.LastName;
+    }
 }
 
 

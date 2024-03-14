@@ -13,7 +13,11 @@ public class JobService : IJobService
     private readonly IDistrictService _districtService;
     private readonly IMappingService _mappingService;
     private readonly IEnvironmentAccessor _environmentAccessor;
-    public JobService(IJobsRepository jobsRepository, IMappingService mappingService, IEnvironmentAccessor environmentAccessor, IDistrictService districtService)
+    public JobService(
+                IJobsRepository jobsRepository, 
+                IMappingService mappingService, 
+                IEnvironmentAccessor environmentAccessor, 
+                IDistrictService districtService)
     {
         _jobsRepository = jobsRepository;
         _mappingService = mappingService;

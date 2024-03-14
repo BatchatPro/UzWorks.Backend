@@ -3,6 +3,7 @@ using UzWorks.Core.Abstract;
 using UzWorks.Core.DataTransferObjects.Workers;
 using UzWorks.Core.Entities.JobAndWork;
 using UzWorks.Core.Exceptions;
+using UzWorks.Identity.Services.Roles;
 using UzWorks.Persistence.Repositories.Workers;
 
 namespace UzWorks.BL.Services.Workers;
@@ -13,13 +14,20 @@ public class WorkerService : IWorkerService
     private readonly IMappingService _mappingService;
     private readonly IEnvironmentAccessor _environmentAccessor;
     private readonly IDistrictService _districtService;
+    private readonly IUserService _userService;
 
-    public WorkerService(IWorkersRepository workersRepository, IMappingService mappingService, IEnvironmentAccessor environmentAccessor, IDistrictService districtService)
+    public WorkerService(
+                    IWorkersRepository workersRepository, 
+                    IMappingService mappingService, 
+                    IEnvironmentAccessor environmentAccessor, 
+                    IDistrictService districtService,
+                    IUserService userService)
     {
         _workersRepository = workersRepository;
         _mappingService = mappingService;
         _environmentAccessor = environmentAccessor;
         _districtService = districtService;
+        _userService = userService;
     }
 
     public async Task<WorkerVM> Create(WorkerDto workerDto)
@@ -37,8 +45,10 @@ public class WorkerService : IWorkerService
 
         await _workersRepository.CreateAsync(worker);
         await _workersRepository.SaveChanges();
+        var result = _mappingService.Map<WorkerVM, Worker>(worker);
+        result.FullName = _environmentAccessor.GetFullName();
 
-        return _mappingService.Map<WorkerVM, Worker>(worker);
+        return result;
     }
 
     public async Task Delete(Guid id)
@@ -78,7 +88,9 @@ public class WorkerService : IWorkerService
             throw new UzWorksException($"Could not find worker with id: {id}");
 
         var result = _mappingService.Map<WorkerVM, Worker>(worker);
-        result.FullName = _environmentAccessor.GetFullName();
+
+        result.FullName = await _userService.GetUserFullName(worker.CreatedBy ?? 
+                            throw new UzWorksException("CreatedBy cannot be null."));
 
         return result; 
     }
