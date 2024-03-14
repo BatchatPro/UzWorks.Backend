@@ -10,6 +10,7 @@ public class BaseJobEntity : BaseEntity
     public string WorkingTime { get; set; }
     public string WorkingSchedule { get; set; }
     public bool Status { get; set; } = false;
+    public bool IsTop { get; set; } = false;
     public DateTime Deadline { get; set; }
     
     [AllowNull]

@@ -15,48 +15,11 @@ public class WorkerController : BaseController
         _workerService = workerService;
     }
 
-    #region Worker
     [Authorize(Roles = RoleNames.Employee)]
     [HttpPost]
     public async Task<ActionResult<WorkerVM>> Create([FromBody] WorkerDto workerDto)
     {
         var result = await _workerService.Create(workerDto);
-        return Ok(result);
-    }
-
-    [Authorize(Roles = RoleNames.Employee)]
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete([FromRoute] Guid id)
-    {
-        await _workerService.Delete(id);
-        return Ok();
-    }
-
-    [Authorize(Roles = RoleNames.Employee)]
-    [HttpPut]
-    public async Task<ActionResult<WorkerVM>> Edit([FromBody] WorkerEM workerEM)
-    {
-        var result = await _workerService.Update(workerEM);
-        return Ok(result);
-    }
-
-    [Authorize(Roles = RoleNames.Supervisor)]
-    [HttpPut("{id}")]
-    public async Task<ActionResult> ChangeStatus([FromRoute] Guid id, [FromBody] bool status)
-    {
-        var result = await _workerService.ChangeStatus(id, status);
-        
-        if (result)
-            return Ok();
-
-        return BadRequest();
-    }
-
-    [AllowAnonymous]
-    [HttpGet("{id}")]
-    public async Task<ActionResult<WorkerVM>> GetById([FromRoute] Guid id)
-    {
-        var result = await _workerService.GetById(id);
         return Ok(result);
     }
 
@@ -72,6 +35,22 @@ public class WorkerController : BaseController
                          pageNumber, pageSize, jobCategoryId,
                          maxAge, minAge, maxSalary, minSalary,
                          gender, true, regionId, districtId);
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<WorkerVM>> GetById([FromRoute] Guid id)
+    {
+        var result = await _workerService.GetById(id);
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<WorkerVM>>> GetTopWorkers()
+    {
+        var result = await _workerService.GetTopWorkers();
         return Ok(result);
     }
 
@@ -120,6 +99,33 @@ public class WorkerController : BaseController
         var result = await _workerService.GetWorkersByUserId(id);
         return Ok(result);
     }
-    #endregion
 
+    [Authorize(Roles = RoleNames.Employee)]
+    [HttpPut]
+    public async Task<ActionResult<WorkerVM>> Edit([FromBody] WorkerEM workerEM)
+    {
+        var result = await _workerService.Update(workerEM);
+        return Ok(result);
+    }
+
+    [Authorize(Roles = RoleNames.Supervisor)]
+    [HttpPut("{id}")]
+    public async Task<ActionResult> ChangeStatus([FromRoute] Guid id, [FromBody] bool status)
+    {
+        var result = await _workerService.ChangeStatus(id, status);
+        
+        if (result)
+            return Ok();
+
+        return BadRequest();
+    }
+
+    [Authorize(Roles = RoleNames.Employee)]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete([FromRoute] Guid id)
+    {
+        await _workerService.Delete(id);
+        return Ok();
+    }
 }
+

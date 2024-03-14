@@ -22,42 +22,6 @@ public class JobController : BaseController
         return Ok(result);
     }
 
-    [Authorize(Roles = RoleNames.Employer)]
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete([FromRoute] Guid id)
-    {
-        await _jobService.Delete(id);
-        return Ok();
-    }
-
-    [Authorize(Roles = RoleNames.Employer)]
-    [HttpPut]
-    public async Task<ActionResult<JobVM>> Edit([FromBody] JobEM jobEM)
-    {
-        var result = await _jobService.Update(jobEM);
-        return Ok(result);
-    }
-
-    [Authorize(Roles = RoleNames.Supervisor)]
-    [HttpPut("{id}")]
-    public async Task<ActionResult> ChangeStatus([FromRoute] Guid id, [FromBody] bool status)
-    {
-        var result = await _jobService.ChangeStatus(id, status);
-
-        if (result)
-            return Ok();
-
-        return BadRequest();
-    }
-
-    [AllowAnonymous]
-    [HttpGet("{id}")]
-    public async Task<ActionResult<JobVM>> GetById([FromRoute] Guid id)
-    {
-        var result = await _jobService.GetById(id);
-        return Ok(result);
-    }
-
     [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<JobVM>>> GetAll([FromQuery] int pageNumber, [FromQuery] int pageSize,
@@ -70,6 +34,22 @@ public class JobController : BaseController
                          pageNumber, pageSize, jobCategoryId,
                          maxAge, minAge, maxSalary, minSalary,
                          gender, true, regionId, districtId);
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<JobVM>> GetById([FromRoute] Guid id)
+    {
+        var result = await _jobService.GetById(id);
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<JobVM>>> GetTopJobs()
+    {
+        var result = await _jobService.GetTopJobs();
         return Ok(result);
     }
 
@@ -117,5 +97,33 @@ public class JobController : BaseController
     {
         var result = await _jobService.GetJobsByUserId(id);
         return Ok(result);
+    }
+
+    [Authorize(Roles = RoleNames.Employer)]
+    [HttpPut]
+    public async Task<ActionResult<JobVM>> Edit([FromBody] JobEM jobEM)
+    {
+        var result = await _jobService.Update(jobEM);
+        return Ok(result);
+    }
+
+    [Authorize(Roles = RoleNames.Supervisor)]
+    [HttpPut("{id}")]
+    public async Task<ActionResult> ChangeStatus([FromRoute] Guid id, [FromBody] bool status)
+    {
+        var result = await _jobService.ChangeStatus(id, status);
+
+        if (result)
+            return Ok();
+
+        return BadRequest();
+    }
+
+    [Authorize(Roles = RoleNames.Employer)]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete([FromRoute] Guid id)
+    {
+        await _jobService.Delete(id);
+        return Ok();
     }
 }

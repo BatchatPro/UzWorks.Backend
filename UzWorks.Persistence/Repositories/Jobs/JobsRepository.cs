@@ -54,7 +54,7 @@ public class JobsRepository : GenericRepository<Job>, IJobsRepository
 
     public async Task<int> GetJobsCount(bool? statusType)
     {
-        var query = _context.Jobs.AsQueryable();
+        var query = _dbSet.AsQueryable();
 
         if (statusType == null || statusType == false)
             return await _context.Jobs.CountAsync();
@@ -105,6 +105,16 @@ public class JobsRepository : GenericRepository<Job>, IJobsRepository
 
     public async Task<Job[]> GetJobsByUserIdAsync(Guid userId)
     {
-        return await _context.Jobs.Where(x => x.CreatedBy == userId).ToArrayAsync();
+        return await _dbSet.Where(x => x.CreatedBy == userId).ToArrayAsync();
+    }
+
+    public async Task<Job[]> GetTopJobsAsync()
+    {
+        var query = _dbSet.Where(j => !j.IsDeleted).AsQueryable();
+        query = query.Where(x => x.IsTop == true);
+        query = query.Where(x => x.Status == true);
+        query = query.Where(x => x.Deadline >= DateTime.Now);
+
+        return await query.ToArrayAsync();
     }
 }

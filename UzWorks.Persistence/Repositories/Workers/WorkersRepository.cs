@@ -14,7 +14,7 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
                         Guid? jobCategoryId, int? maxAge, int? minAge, uint? maxSalary,
                         uint? minSalary, string? gender, bool? status, Guid? regionId, Guid? districtId)
     {
-        var query = _context.Workers.AsQueryable();
+        var query = _dbSet.AsQueryable();
 
         if (status != null)
         {
@@ -54,10 +54,10 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
 
     public async Task<int> GetWorkersCount(bool? statusType) 
     {
-        var query = _context.Workers.AsQueryable();
+        var query = _dbSet.AsQueryable();
 
         if (statusType == null || statusType == false)
-            return await _context.Workers.CountAsync();
+            return await query.CountAsync();
     
         query = query.Where(x => x.Status == true);
         query = query.Where(x => x.Deadline >= DateTime.Now);
@@ -67,7 +67,7 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
 
     public async Task<int> GetWorkersCountForFilter(Guid? jobCategoryId = null, int? maxAge = null, int? minAge = null, uint? maxSalary = null, uint? minSalary = null, string? gender = null, bool? status = null, Guid? regionId = null, Guid? districtId = null)
     {
-        var query = _context.Workers.AsQueryable();
+        var query = _dbSet.AsQueryable();
 
         if (status != null)
         {
@@ -104,8 +104,19 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
 
     public async Task<Worker[]> GetWorkersByUserIdAsync(Guid userId)
     {
-        var query = _context.Workers.Where(x => (x.CreatedBy == userId));
+        var query = _dbSet.Where(x => (x.CreatedBy == userId));
 
         return await query.ToArrayAsync() ;
     }
+    
+    public async Task<Worker[]> GetTopWorkersAsync()
+    {
+        var query = _dbSet.Where(j => !j.IsDeleted).AsQueryable();
+        query = query.Where(x => x.IsTop == true);
+        query = query.Where(x => x.Status == true);
+        query = query.Where(x => x.Deadline >= DateTime.Now);
+
+        return await query.ToArrayAsync();
+    }
+
 }

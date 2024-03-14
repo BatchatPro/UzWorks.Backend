@@ -13,6 +13,7 @@ public class JobService : IJobService
     private readonly IDistrictService _districtService;
     private readonly IMappingService _mappingService;
     private readonly IEnvironmentAccessor _environmentAccessor;
+
     public JobService(
                 IJobsRepository jobsRepository, 
                 IMappingService mappingService, 
@@ -24,7 +25,6 @@ public class JobService : IJobService
         _environmentAccessor = environmentAccessor; 
         _districtService = districtService;
     }
-
 
     public async Task<JobVM> Create(JobDto jobDto)
     {
@@ -38,7 +38,14 @@ public class JobService : IJobService
 
         job.CreateDate = DateTime.Now;
         job.CreatedBy = Guid.Parse(_environmentAccessor.GetUserId());
-        
+
+        if (_environmentAccessor.IsAdmin(job.CreatedBy ?? 
+                throw new UzWorksException("CreatedBy cannot be null")))
+        {
+            job.Status = true;
+            job.IsTop = true;   
+        }
+
         await _jobsRepository.CreateAsync(job);
         await _jobsRepository.SaveChanges();
 
@@ -82,6 +89,14 @@ public class JobService : IJobService
         return _mappingService.Map<JobVM, Job>(job);
     }
 
+    public async Task<IEnumerable<JobVM>> GetTopJobs() 
+    { 
+        var jobs = await _jobsRepository.GetTopJobsAsync();
+        var result = _mappingService.Map<IEnumerable<JobVM>, IEnumerable<Job>>(jobs);
+    
+        return result;
+    }
+
     public Task<int> GetCount(bool? statys)
     {
         return _jobsRepository.GetJobsCount(statys);
@@ -97,6 +112,7 @@ public class JobService : IJobService
 
         var jobs = await _jobsRepository.GetJobsByUserIdAsync(userId);
         var result = _mappingService.Map<IEnumerable<JobVM>, IEnumerable<Job>>(jobs);
+
         return result;
     }
 
@@ -135,6 +151,7 @@ public class JobService : IJobService
         job.Status = status;
         _jobsRepository.UpdateAsync(job);
         await _jobsRepository.SaveChanges();
+
         return true;
     }
 

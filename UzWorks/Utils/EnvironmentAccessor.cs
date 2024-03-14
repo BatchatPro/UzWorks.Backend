@@ -33,6 +33,17 @@ public class EnvironmentAccessor : IEnvironmentAccessor
         throw new NotImplementedException();
     }
 
+    public bool IsAdmin(Guid id)
+    {
+        if (_contextAccessor.HttpContext is null)
+            throw new UzWorksException("HttpContext can not be null.");
+
+        if (_contextAccessor.HttpContext.User.IsInRole(RoleNames.SuperAdmin))
+            return true;
+
+        return false;
+    }
+
     public bool IsAuthorOrAdmin(Guid id)
     {
         if (_contextAccessor.HttpContext is null)

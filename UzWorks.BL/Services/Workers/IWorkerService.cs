@@ -10,6 +10,7 @@ public interface IWorkerService
                         uint? minSalary, string? gender, bool? status, Guid? regionId, Guid? districtId);
     Task<WorkerVM> GetById(Guid id);
     Task<IEnumerable<WorkerVM>> GetWorkersByUserId (Guid userId);
+    Task<IEnumerable<WorkerVM>> GetTopWorkers();
     Task<WorkerVM> Create(WorkerDto workerDto);
     Task<WorkerVM> Update(WorkerEM workerEM);
     Task<bool> ChangeStatus(Guid id, bool status);

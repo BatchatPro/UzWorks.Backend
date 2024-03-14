@@ -43,6 +43,13 @@ public class WorkerService : IWorkerService
         worker.CreateDate = DateTime.Now;
         worker.CreatedBy = Guid.Parse(_environmentAccessor.GetUserId());
 
+        if (_environmentAccessor.IsAdmin(worker.CreatedBy ?? 
+                           throw new UzWorksException("CreatedBy cannot be null")))
+        {
+            worker.Status = true;
+            worker.IsTop = true;   
+        }
+
         await _workersRepository.CreateAsync(worker);
         await _workersRepository.SaveChanges();
         var result = _mappingService.Map<WorkerVM, Worker>(worker);
@@ -111,6 +118,13 @@ public class WorkerService : IWorkerService
         var workers = await _workersRepository.GetWorkersByUserIdAsync(userId);
         var result = _mappingService.Map<IEnumerable<WorkerVM>,IEnumerable<Worker>>(workers);
         
+        return result;
+    }
+
+    public async Task<IEnumerable<WorkerVM>> GetTopWorkers()
+    {
+        var workers = await _workersRepository.GetTopWorkersAsync();
+        var result = _mappingService.Map<IEnumerable<WorkerVM>, IEnumerable<Worker>>(workers);
         return result;
     }
 

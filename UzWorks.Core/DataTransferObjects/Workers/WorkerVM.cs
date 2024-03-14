@@ -7,6 +7,7 @@ public class WorkerVM
     public DateTime CreateDate { get; set; }
     public DateTime Deadline { get; set; }
     public DateTime BirthDate { get; set; }
+    public bool IsTop { get; set; }
     public string FullName { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
