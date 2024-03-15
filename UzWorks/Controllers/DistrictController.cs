@@ -22,22 +22,6 @@ public class DistrictController : BaseController
         return Ok(result);
     }
 
-    [Authorize(Roles = RoleNames.SuperAdmin)]
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete([FromRoute]Guid id)
-    {
-        await _districtService.Delete(id);
-        return Ok();
-    }
-
-    [Authorize(Roles = RoleNames.SuperAdmin)]
-    [HttpPut]
-    public async Task<ActionResult<DistrictVM>> Edit([FromBody]DistrictEM districtEM)
-    {
-        var result = await _districtService.Update(districtEM);
-        return Ok(result);
-    }
-
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<DistrictVM>> GetById([FromRoute]Guid id)
@@ -60,5 +44,22 @@ public class DistrictController : BaseController
     {
         var result = await _districtService.GetDistrictByRegionId(id);
         return Ok(result);
+    }
+    
+    [Authorize(Roles = RoleNames.SuperAdmin)]
+    [HttpPut]
+    public async Task<ActionResult<DistrictVM>> Update([FromBody]DistrictEM districtEM)
+    {
+        var result = await _districtService.Update(districtEM);
+        return Ok(result);
+    }
+
+    
+    [Authorize(Roles = RoleNames.SuperAdmin)]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete([FromRoute]Guid id)
+    {
+        await _districtService.Delete(id);
+        return Ok();
     }
 }

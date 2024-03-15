@@ -15,52 +15,51 @@ public class ExperienceController : BaseController
         _experienceService = experienceService;
     }
 
-    [AllowAnonymous]
-    [HttpGet("{id}")]
-    public async Task<ActionResult<IEnumerable<ExperienceVM>>> GetExperiencesByUserId([FromRoute] Guid id)
-    {
-        var result = await _experienceService.GetExperiencesByUserId(id);
-        return Ok(result);
-    }
-
-    [AllowAnonymous]
-    //[Authorize(Roles = RoleNames.Supervisor)]
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<ExperienceVM>>> GetAllExperiences()
-    {
-        var result = await _experienceService.GetAllExperiences();
-        return Ok(result);
-    }
-
     [Authorize(Roles = RoleNames.Employee)]
     [HttpPost]
-    public async Task<ActionResult<ExperienceVM>> CreateExperience([FromBody] ExperienceDto experienceDto)
+    public async Task<ActionResult<ExperienceVM>> Create([FromBody] ExperienceDto experienceDto)
     {
         var result = await _experienceService.Create(experienceDto);
         return Ok(result);
     }
 
-    [Authorize(Roles = RoleNames.Employee)]
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteExperience([FromRoute] Guid id)
+    [Authorize(Roles = RoleNames.Supervisor)]
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ExperienceVM>>> GetAll()
     {
-        await _experienceService.Delete(id);
-        return Ok();
-    }
-
-    [Authorize(Roles = RoleNames.Employee)]
-    [HttpPut]
-    public async Task<ActionResult<ExperienceVM>> EditExperience([FromBody] ExperienceEM experienceEM)
-    {
-        var result = await _experienceService.Update(experienceEM);
+        var result = await _experienceService.GetAllExperiences();
         return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<ActionResult<ExperienceVM>> GetExperienceById([FromRoute] Guid id)
+    public async Task<ActionResult<ExperienceVM>> GetById([FromRoute] Guid id)
     {
         var result = await _experienceService.GetById(id);
         return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<IEnumerable<ExperienceVM>>> GetByUserId([FromRoute] Guid id)
+    {
+        var result = await _experienceService.GetExperiencesByUserId(id);
+        return Ok(result);
+    }
+
+    [Authorize(Roles = RoleNames.Employee)]
+    [HttpPut]
+    public async Task<ActionResult<ExperienceVM>> Update([FromBody] ExperienceEM experienceEM)
+    {
+        var result = await _experienceService.Update(experienceEM);
+        return Ok(result);
+    }
+
+    [Authorize(Roles = RoleNames.Employee)]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete([FromRoute] Guid id)
+    {
+        await _experienceService.Delete(id);
+        return Ok();
     }
 }

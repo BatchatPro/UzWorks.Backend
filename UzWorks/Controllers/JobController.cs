@@ -93,7 +93,7 @@ public class JobController : BaseController
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<ActionResult<IEnumerable<JobVM>>> GetJobsByUserId([FromRoute] Guid id)
+    public async Task<ActionResult<IEnumerable<JobVM>>> GetByUserId([FromRoute] Guid id)
     {
         var result = await _jobService.GetJobsByUserId(id);
         return Ok(result);
@@ -101,7 +101,7 @@ public class JobController : BaseController
 
     [Authorize(Roles = RoleNames.Employer)]
     [HttpPut]
-    public async Task<ActionResult<JobVM>> Edit([FromBody] JobEM jobEM)
+    public async Task<ActionResult<JobVM>> Update([FromBody] JobEM jobEM)
     {
         var result = await _jobService.Update(jobEM);
         return Ok(result);

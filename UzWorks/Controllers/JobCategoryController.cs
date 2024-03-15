@@ -23,19 +23,11 @@ public class JobCategoryController : BaseController
         return Ok(result);
     }
 
-    [Authorize(Roles = RoleNames.SuperAdmin)]
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete([FromRoute] Guid id)
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<JobCategoryVM>>> GetAll()
     {
-        await _service.Delete(id);
-        return Ok();
-    }
-
-    [Authorize(Roles = RoleNames.SuperAdmin)]
-    [HttpPut]
-    public async Task<ActionResult<JobCategoryVM>> Edit([FromBody] JobCategoryEM jobCategoryEM)
-    {
-        var result = await _service.Update(jobCategoryEM);
+        var result = await _service.GetAllAsync();
         return Ok(result);
     }
 
@@ -47,12 +39,19 @@ public class JobCategoryController : BaseController
         return Ok(result);
     }
 
-    [AllowAnonymous]
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<JobCategoryVM>>> GetAll()
+    [Authorize(Roles = RoleNames.SuperAdmin)]
+    [HttpPut]
+    public async Task<ActionResult<JobCategoryVM>> Update([FromBody] JobCategoryEM jobCategoryEM)
     {
-        var result = await _service.GetAllAsync();
+        var result = await _service.Update(jobCategoryEM);
         return Ok(result);
     }
 
+    [Authorize(Roles = RoleNames.SuperAdmin)]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete([FromRoute] Guid id)
+    {
+        await _service.Delete(id);
+        return Ok();
+    }
 }

@@ -23,19 +23,11 @@ public class RegionController : BaseController
         return Ok(result);
     }
 
-    [Authorize(Roles = RoleNames.SuperAdmin)]
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete([FromRoute] Guid id)
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<RegionVM>>> GetAll()
     {
-        await _regionsService.Delete(id);
-        return Ok();
-    }
-
-    [Authorize(Roles = RoleNames.SuperAdmin)]
-    [HttpPut]
-    public async Task<ActionResult<RegionVM>> Edit([FromBody]RegionEM regionEM)
-    {
-        var result = await _regionsService.Update(regionEM);
+        var result = await _regionsService.GetAllAsync();
         return Ok(result);
     }
 
@@ -48,18 +40,26 @@ public class RegionController : BaseController
     }
 
     [AllowAnonymous]
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<RegionVM>>> GetAll()
-    {
-        var result = await _regionsService.GetAllAsync();
-        return Ok(result);
-    }
-
-    [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<ActionResult<RegionVM>> GetRegionByDistrictId([FromRoute]Guid id)
+    public async Task<ActionResult<RegionVM>> GetByDistrictId([FromRoute]Guid id)
     {
         var result = await _regionsService.GetRegionByDistrictId(id);
         return Ok(result);
+    }
+
+    [Authorize(Roles = RoleNames.SuperAdmin)]
+    [HttpPut]
+    public async Task<ActionResult<RegionVM>> Update([FromBody]RegionEM regionEM)
+    {
+        var result = await _regionsService.Update(regionEM);
+        return Ok(result);
+    }
+
+    [Authorize(Roles = RoleNames.SuperAdmin)]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete([FromRoute] Guid id)
+    {
+        await _regionsService.Delete(id);
+        return Ok();
     }
 }

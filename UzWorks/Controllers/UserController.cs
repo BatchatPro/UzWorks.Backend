@@ -20,6 +20,14 @@ public class UserController : BaseController
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
+    [HttpPost]
+    public async Task<ActionResult> Create([FromBody] UserDto user)
+    {
+        await _userService.Create(user);
+        return Ok();
+    }
+
+    [Authorize(Roles = RoleNames.Supervisor)]
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery]int pageNumber, [FromQuery]int pageSize, 
@@ -32,25 +40,23 @@ public class UserController : BaseController
 
     [Authorize]
     [HttpGet("{id}")]
-    public async Task<ActionResult<UserVM>> GetUserById([FromRoute]Guid id)
+    public async Task<ActionResult<UserVM>> GetById([FromRoute]Guid id)
     {
         var user = await _userService.GetById(id);
         return Ok(user);
     }
 
     [Authorize]
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete([FromRoute]Guid id)
+    [HttpGet("{id}")]   
+    public async Task <ActionResult<IEnumerable<string>>> GetRoles([FromRoute] Guid id)
     {
-        if(await _userService.Delete(id))
-            return Ok();
-
-        return BadRequest();
+        var roles = await _userService.GetUserRoles(id);
+        return Ok(roles);
     }
 
     [HttpPut]
     [Authorize]
-    public async Task<ActionResult<UserVM>> UpdateAsync([FromBody] UserEM profileEM)
+    public async Task<ActionResult<UserVM>> Update([FromBody] UserEM profileEM)
     {
         if (profileEM == null)
             return BadRequest("User is null");
@@ -80,14 +86,6 @@ public class UserController : BaseController
         return Ok();
     }
 
-    [Authorize]
-    [HttpGet("{id}")]   
-    public async Task <ActionResult<IEnumerable<string>>> GetRoles([FromRoute] Guid id)
-    {
-        var roles = await _userService.GetUserRoles(id);
-        return Ok(roles);
-    }
-
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpDelete]
     public async Task<ActionResult> DeleteRolesFromUser([FromBody] UserRolesDto userRoles)
@@ -97,10 +95,12 @@ public class UserController : BaseController
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
-    [HttpPost]
-    public async Task<ActionResult> Create([FromBody] UserDto user)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete([FromRoute]Guid id)
     {
-        await _userService.Create(user);
-        return Ok();
+        if(await _userService.Delete(id))
+            return Ok();
+
+        return BadRequest();
     }
 }

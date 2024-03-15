@@ -77,7 +77,7 @@ public class ContactService : IContactService
         contact.UpdatedBy = Guid.Parse(_environmentAccessor.GetUserId());
 
         if (!_environmentAccessor.IsAuthorOrSupervisor(contact.CreatedBy))
-            throw new UzWorksException("You have not access to change this Job data.");
+            throw new UzWorksException("You have not access to change this Contact data.");
 
         _contactsRepository.UpdateAsync(contact);
         await _contactsRepository.SaveChanges();
@@ -93,7 +93,7 @@ public class ContactService : IContactService
             throw new UzWorksException($"Could not find contact with id: {id}");
 
         if (!_environmentAccessor.IsAuthorOrSupervisor(contact.CreatedBy))
-            throw new UzWorksException("You have not access to change this Job status.");
+            throw new UzWorksException("You have not access to change this Contact status.");
 
         contact.IsComplated = status;
         _contactsRepository.UpdateAsync(contact);

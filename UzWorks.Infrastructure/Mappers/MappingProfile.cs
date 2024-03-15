@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using UzWorks.Core.DataTransferObjects.Contacts;
 using UzWorks.Core.DataTransferObjects.Experiences;
+using UzWorks.Core.DataTransferObjects.FAQs;
 using UzWorks.Core.DataTransferObjects.JobCategories;
 using UzWorks.Core.DataTransferObjects.Jobs;
 using UzWorks.Core.DataTransferObjects.Location.Districts;
@@ -9,6 +10,7 @@ using UzWorks.Core.DataTransferObjects.Users;
 using UzWorks.Core.DataTransferObjects.Workers;
 using UzWorks.Core.Entities.Contacts;
 using UzWorks.Core.Entities.Experiences;
+using UzWorks.Core.Entities.FAQs;
 using UzWorks.Core.Entities.JobAndWork;
 using UzWorks.Core.Entities.Location;
 using UzWorks.Identity.Models;
@@ -50,5 +52,9 @@ public class MappingProfile : Profile
         CreateMap<Contact,ContactDto>().ReverseMap();
         CreateMap<Contact,ContactVM>().ReverseMap();
         CreateMap<Contact,ContactEM>().ReverseMap();
+
+        CreateMap<FAQ,FAQDto>().ReverseMap();
+        CreateMap<FAQ,FAQVM>().ReverseMap();
+        CreateMap<FAQ,FAQEM>().ReverseMap();
     }
 }

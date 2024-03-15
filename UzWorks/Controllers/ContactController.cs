@@ -15,22 +15,6 @@ public class ContactController : BaseController
         _contactService = contactService;
     }
 
-    [Authorize(Roles = RoleNames.SuperAdmin)]
-    [HttpGet]
-    public async Task<ActionResult<ContactVM>> GetAllContactsAsync(int pageNumber = 1, int pageSize = 15, bool? isComplated = null)
-    {
-        var contacts = await _contactService.GetAllContactsAsync(pageNumber, pageSize, isComplated);
-        return Ok(contacts);
-    }
-
-    [Authorize(Roles = RoleNames.SuperAdmin)]
-    [HttpGet("{id}")]
-    public async Task<ActionResult<ContactVM>> GetById([FromRoute]Guid id)
-    {
-        var contact = await _contactService.GetById(id);
-        return Ok(contact);
-    }
-
     [AllowAnonymous]
     [HttpPost]
     public async Task<ActionResult<ContactVM>> Create([FromBody] ContactDto contactDto)
@@ -39,7 +23,23 @@ public class ContactController : BaseController
         return Ok(contact);
     }
 
-    [Authorize(Roles = RoleNames.SuperAdmin)]
+    [Authorize(Roles = RoleNames.Supervisor)]
+    [HttpGet]
+    public async Task<ActionResult<ContactVM>> GetAllContactsAsync(int pageNumber = 1, int pageSize = 15, bool? isComplated = null)
+    {
+        var contacts = await _contactService.GetAllContactsAsync(pageNumber, pageSize, isComplated);
+        return Ok(contacts);
+    }
+
+    [Authorize(Roles = RoleNames.Supervisor)]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ContactVM>> GetById([FromRoute]Guid id)
+    {
+        var contact = await _contactService.GetById(id);
+        return Ok(contact);
+    }
+
+    [Authorize(Roles = RoleNames.Supervisor)]
     [HttpPut]
     public async Task<ActionResult<ContactVM>> Update([FromBody] ContactEM contactEM)
     {
@@ -47,7 +47,7 @@ public class ContactController : BaseController
         return Ok(contact);
     }
 
-    [Authorize(Roles = RoleNames.SuperAdmin)]
+    [Authorize(Roles = RoleNames.Supervisor)]
     [HttpPut("{id}/{status}")]
     public async Task<ActionResult<ContactVM>> ChangeStatus(Guid id, bool status)
     {
@@ -55,7 +55,7 @@ public class ContactController : BaseController
         return result?Ok(_contactService.GetById(id)):BadRequest();
     }
 
-    [Authorize(Roles = RoleNames.SuperAdmin)]
+    [Authorize(Roles = RoleNames.Supervisor)]
     [HttpDelete("{id}")]
     public async Task<ActionResult<string>> Delete(Guid id)
     {

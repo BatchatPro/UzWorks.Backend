@@ -102,7 +102,7 @@ public class WorkerController : BaseController
 
     [Authorize(Roles = RoleNames.Employee)]
     [HttpPut]
-    public async Task<ActionResult<WorkerVM>> Edit([FromBody] WorkerEM workerEM)
+    public async Task<ActionResult<WorkerVM>> Update([FromBody] WorkerEM workerEM)
     {
         var result = await _workerService.Update(workerEM);
         return Ok(result);
