@@ -26,23 +26,13 @@ public class FAQService : IFAQService
 
         var faq = _mapping.Map<FAQ, FAQDto>(dto);
 
+        faq.CreateDate = DateTime.Now;
+        faq.CreatedBy = Guid.Parse(_environment.GetUserId());
+
         await _repository.CreateAsync(faq);
         await _repository.SaveChanges();
 
         return _mapping.Map<FAQVM, FAQ>(faq);
-    }
-
-    public async Task<bool> Delete(Guid Id)
-    {
-        var faq = await _repository.GetById(Id);
-
-        if (faq == null)
-            return false;
-           
-        _repository.Delete(faq);
-        await _repository.SaveChanges();
-
-        return true; 
     }
 
     public async Task<IEnumerable<FAQVM>> GetAllAsync()
@@ -69,5 +59,21 @@ public class FAQService : IFAQService
         await _repository.SaveChanges();
 
         return _mapping.Map<FAQVM, FAQ>(faq);
+    }
+
+    public async Task<bool> Delete(Guid Id)
+    {
+        var faq = await _repository.GetById(Id);
+
+        if (faq == null)
+            return false;
+
+        if (!_environment.IsAuthorOrSupervisor(faq.CreatedBy))
+            throw new UzWorksException("You have not access to change this FAQ data.");
+
+        _repository.Delete(faq);
+        await _repository.SaveChanges();
+
+        return true; 
     }
 }

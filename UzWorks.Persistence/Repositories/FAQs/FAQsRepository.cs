@@ -12,7 +12,7 @@ public class FAQsRepository : GenericRepository<FAQ>, IFAQsRepository
 
     public async Task<FAQ[]> GetAllFAQsAsync()
     {
-        var query = _dbSet.Where(j => !j.IsDeleted).AsQueryable();
+        var query = _dbSet.Where(f => !f.IsDeleted).AsQueryable();
 
         return await query.ToArrayAsync();
     }
