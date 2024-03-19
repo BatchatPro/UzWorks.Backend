@@ -4,8 +4,8 @@ namespace UzWorks.BL.Services.Workers.Experiences;
 
 public interface IExperienceService
 {
-    Task<IEnumerable<ExperienceVM>> GetAllExperiences();
-    Task<IEnumerable<ExperienceVM>> GetExperiencesByUserId(Guid userId);
+    Task<IEnumerable<ExperienceVM>> GetAll();
+    Task<IEnumerable<ExperienceVM>> GetByUserId(Guid userId);
     Task<ExperienceVM> GetById(Guid id);
     Task<ExperienceVM> Create(ExperienceDto workerDto);
     Task<ExperienceVM> Update(ExperienceEM workerEM);

@@ -36,7 +36,7 @@ public class ExperienceController : BaseController
     {
         try
         {
-            var result = await _experienceService.GetAllExperiences();
+            var result = await _experienceService.GetAll();
             return Ok(result);
         }
         catch (Exception ex)
@@ -66,7 +66,7 @@ public class ExperienceController : BaseController
     {
         try
         {
-            var result = await _experienceService.GetExperiencesByUserId(id);
+            var result = await _experienceService.GetByUserId(id);
             return Ok(result);
         }
         catch (Exception ex)
