@@ -10,7 +10,7 @@ public class JobsRepository : GenericRepository<Job>, IJobsRepository
     {
     }
 
-    public async Task<Job[]> GetAllJobsAsync(int pageNumber, int pageSize,
+    public async Task<Job[]> GetAllAsync(int pageNumber, int pageSize,
                         Guid? jobCategoryId, int? maxAge, int? minAge, uint? maxSalary,
                         uint? minSalary, string? gender, bool? status, Guid? regionId, Guid? districtId)
     {
@@ -52,7 +52,7 @@ public class JobsRepository : GenericRepository<Job>, IJobsRepository
         return await query.ToArrayAsync();
     }
 
-    public async Task<int> GetJobsCount(bool? statusType)
+    public async Task<int> GetCount(bool? statusType)
     {
         var query = _dbSet.AsQueryable();
 
@@ -65,7 +65,7 @@ public class JobsRepository : GenericRepository<Job>, IJobsRepository
         return await query.CountAsync();
     }
 
-    public async Task<int> GetJobscountForFilter(Guid? jobCategoryId = null, int? maxAge = null, int? minAge = null, uint? maxSalary = null, uint? minSalary = null, string? gender = null, bool? status = null, Guid? regionId = null, Guid? districtId = null)
+    public async Task<int> GetcountForFilter(Guid? jobCategoryId = null, int? maxAge = null, int? minAge = null, uint? maxSalary = null, uint? minSalary = null, string? gender = null, bool? status = null, Guid? regionId = null, Guid? districtId = null)
     {
         var query = _dbSet.Where(j => !j.IsDeleted).AsQueryable();
 
@@ -103,12 +103,12 @@ public class JobsRepository : GenericRepository<Job>, IJobsRepository
         return await query.CountAsync();
     }
 
-    public async Task<Job[]> GetJobsByUserIdAsync(Guid userId)
+    public async Task<Job[]> GetByUserIdAsync(Guid userId)
     {
         return await _dbSet.Where(x => x.CreatedBy == userId).ToArrayAsync();
     }
 
-    public async Task<Job[]> GetTopJobsAsync()
+    public async Task<Job[]> GetTopsAsync()
     {
         var query = _dbSet.Where(j => !j.IsDeleted).AsQueryable();
         query = query.Where(x => x.IsTop == true);

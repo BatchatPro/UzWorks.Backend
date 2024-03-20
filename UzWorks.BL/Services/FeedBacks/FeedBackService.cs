@@ -44,16 +44,14 @@ public class FeedBackService : IFeedBackService
 
     public async Task<FeedBackVM> Update(FeedBackEM EM)
     {
-        if (EM == null)
-            throw new UzWorksException("FeedBack EM can not be null.");
-
-        var feedBack = _mappingService.Map<FeedBack, FeedBackEM>(EM);
-
-        feedBack.UpdateDate = DateTime.Now;
-        feedBack.UpdatedBy = Guid.Parse(_environmentAccessor.GetUserId());
+        var feedBack = await _feedBacksRepository.GetById(EM.Id) ?? 
+            throw new UzWorksException($"Could not find FeedBack with {EM.Id}");
 
         if (!_environmentAccessor.IsAuthorOrSupervisor(feedBack.CreatedBy))
             throw new UzWorksException("You have not access to change this FeedBack data.");
+
+        feedBack.UpdateDate = DateTime.Now;
+        feedBack.UpdatedBy = Guid.Parse(_environmentAccessor.GetUserId());
 
         _feedBacksRepository.UpdateAsync(feedBack);
         await _feedBacksRepository.SaveChanges();
@@ -63,10 +61,8 @@ public class FeedBackService : IFeedBackService
 
     public async Task<bool> Delete(Guid Id)
     {
-        var feedBack = await _feedBacksRepository.GetById(Id);
-        
-        if (feedBack == null)
-            return false;
+        var feedBack = await _feedBacksRepository.GetById(Id)??
+            throw new UzWorksException($"Could not find FeedBack with id: {Id}");
 
         if(!_environmentAccessor.IsAuthorOrSupervisor(feedBack.CreatedBy))
             throw new UzWorksException("You have not access to delete this FeedBack data.");

@@ -4,12 +4,12 @@ namespace UzWorks.BL.Services.Locations.Districts;
 
 public interface IDistrictService
 {
-    Task<IEnumerable<DistrictVM>> GetAllAsync();
-    Task<IEnumerable<DistrictVM>> GetDistrictByRegionId(Guid regionId);
-    Task<DistrictVM> GetById(Guid id);
     Task<DistrictVM> Create(DistrictDto districtDto);
-    Task<DistrictVM> Update(DistrictEM districtEM);
-    Task Delete(Guid id);
+    Task<IEnumerable<DistrictVM>> GetAllAsync();
+    Task<DistrictVM> GetById(Guid id);
+    Task<IEnumerable<DistrictVM>> GetByRegionId(Guid regionId);
     Task<bool> IsExist(string districtName);
     Task<bool> IsExist(Guid districtId);
+    Task<DistrictVM> Update(DistrictEM districtEM);
+    Task<bool> Delete(Guid id);
 }

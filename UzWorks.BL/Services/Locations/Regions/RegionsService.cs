@@ -20,25 +20,36 @@ public class RegionsService : IRegionsService
 
     public async Task<RegionVM> Create(RegionDto regionDto)
     {
-        if (regionDto == null)
+        var region = new Region(regionDto.Name) ??
             throw new UzWorksException("Region Dto can't be null.");
-
-        var region = new Region(regionDto.Name);
 
         await _regionsRepository.CreateAsync(region);
         await _regionsRepository.SaveChanges();
         
-        var result = _mappingService.Map<RegionVM, Region>(region);
-
-        return result;
+        return _mappingService.Map<RegionVM, Region>(region);
     }
 
-    public async Task Delete(Guid id)
+    public async Task<IEnumerable<RegionVM>> GetAllAsync()
     {
-        var region = await _regionsRepository.GetById(id);
-        if (region is null) return;
-        _regionsRepository.Delete(region);
-        await _regionsRepository.SaveChanges();
+        var regions = await _regionsRepository.GetAllAsync();
+
+        return _mappingService.Map<IEnumerable<RegionVM>, IEnumerable<Region>>(regions);
+    }
+
+    public async Task<RegionVM> GetById(Guid id)
+    {
+        var region = await _regionsRepository.GetById(id) ?? 
+            throw new UzWorksException($"Could not find region with Id ; {id}");
+        
+        return _mappingService.Map<RegionVM, Region>(region);
+    }
+
+    public async Task<RegionVM> GetByDistrictId(Guid id)
+    {
+        var region = await _regionsRepository.GetByDistrictId(id) ?? 
+            throw new UzWorksException($"Could not find region with District Id ; {id}");
+
+        return _mappingService.Map<RegionVM, Region>(region);
     }
 
     public async Task<bool> Exists(string regionName)
@@ -46,37 +57,26 @@ public class RegionsService : IRegionsService
         return await _regionsRepository.Exists(regionName);
     }
 
-    public async Task<IEnumerable<RegionVM>> GetAllAsync()
-    {
-        var regions = await _regionsRepository.GetAllRegionsAsync();
-        var result = _mappingService.Map<IEnumerable<RegionVM>, IEnumerable<Region>>(regions);
-        return result;
-    }
-
-    public async Task<RegionVM> GetById(Guid id)
-    {
-        var region = await _regionsRepository.GetById(id);
-        
-        return region is null
-            ?throw new UzWorksException($"Could not find region with Id ; {id}")
-            : _mappingService.Map<RegionVM, Region>(region);
-    }
-
-    public async Task<RegionVM> GetRegionByDistrictId(Guid id)
-    {
-        var region = await _regionsRepository.GetRegionByDistrictId(id);
-        return _mappingService.Map<RegionVM, Region>(region);
-    }
-
     public async Task<RegionVM> Update(RegionEM regionEM)
     {
-        var region = await _regionsRepository.GetById(regionEM.Id) 
-            ?? throw new UzWorksException($"Could not find region with Id ; {regionEM.Id}");
+        var region = await _regionsRepository.GetById(regionEM.Id) ??
+            throw new UzWorksException($"Could not find region with Id ; {regionEM.Id}");
 
         _mappingService.Map(regionEM, region);
         _regionsRepository.UpdateAsync(region);
         await _regionsRepository.SaveChanges();
 
         return _mappingService.Map<RegionVM, Region>(region);
+    }
+
+    public async Task<bool> Delete(Guid id)
+    {
+        var region = await _regionsRepository.GetById(id) ?? 
+            throw new UzWorksException($"Could not find region with Id ; {id}");
+
+        _regionsRepository.Delete(region);
+        await _regionsRepository.SaveChanges();
+
+        return true;
     }
 }

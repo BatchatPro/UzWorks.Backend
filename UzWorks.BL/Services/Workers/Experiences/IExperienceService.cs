@@ -9,5 +9,5 @@ public interface IExperienceService
     Task<ExperienceVM> GetById(Guid id);
     Task<ExperienceVM> Create(ExperienceDto workerDto);
     Task<ExperienceVM> Update(ExperienceEM workerEM);
-    Task Delete(Guid id);
+    Task<bool> Delete(Guid id);
 }

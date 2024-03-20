@@ -10,9 +10,9 @@ public class FAQsRepository : GenericRepository<FAQ>, IFAQsRepository
     {
     }
 
-    public async Task<FAQ[]> GetAllFAQsAsync()
+    public async Task<FAQ[]> GetAllAsync()
     {
-        var query = _dbSet.Where(f => !f.IsDeleted).AsQueryable();
+        var query = _dbSet.Where(f => !f.IsDeleted).OrderBy(x => x.CreateDate).AsQueryable();
 
         return await query.ToArrayAsync();
     }

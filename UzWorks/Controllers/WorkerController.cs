@@ -50,7 +50,7 @@ public class WorkerController : BaseController
     [HttpGet]
     public async Task<ActionResult<IEnumerable<WorkerVM>>> GetTopWorkers()
     {
-        var result = await _workerService.GetTopWorkers();
+        var result = await _workerService.GetTops();
         return Ok(result);
     }
 
@@ -96,7 +96,7 @@ public class WorkerController : BaseController
     [HttpGet("{id}")]
     public async Task<ActionResult<IEnumerable<WorkerVM>>> GetWorkersByUserId([FromRoute] Guid id)
     {
-        var result = await _workerService.GetWorkersByUserId(id);
+        var result = await _workerService.GetByUserId(id);
         return Ok(result);
     }
 

@@ -52,25 +52,11 @@ public class JobService : IJobService
         return _mappingService.Map<JobVM, Job>(job);
     }
 
-    public async Task Delete(Guid id)
-    {
-        var job = await _jobsRepository.GetById(id);
-        
-        if (job == null)
-            throw new UzWorksException($"Could not find job with id: {id}");
-
-        if (!_environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
-            throw new UzWorksException("You have not access to change this Job data.");
-
-        _jobsRepository.Delete(job);
-        await _jobsRepository.SaveChanges();
-    }
-
     public async Task<IEnumerable<JobVM>> GetAllAsync(int pageNumber, int pageSize, Guid? jobCategoryId, int? maxAge, 
                                                 int? minAge, uint? maxSalary, uint? minSalary, string? gender, 
                                                 bool? status, Guid? regionId, Guid? districtId)
     {
-        var jobs = await _jobsRepository.GetAllJobsAsync(
+        var jobs = await _jobsRepository.GetAllAsync(
             pageNumber, pageSize, jobCategoryId, 
             maxAge, minAge, maxSalary, minSalary, 
             gender, status, regionId, districtId);
@@ -81,9 +67,7 @@ public class JobService : IJobService
 
     public async Task<JobVM> GetById(Guid id)
     {
-        var job = await _jobsRepository.GetById(id);
-        
-        if( job is null)
+        var job = await _jobsRepository.GetById(id) ??
             throw new UzWorksException($"Could not find job with id: {id}");
 
         return _mappingService.Map<JobVM, Job>(job);
@@ -91,7 +75,7 @@ public class JobService : IJobService
 
     public async Task<IEnumerable<JobVM>> GetTopJobs() 
     { 
-        var jobs = await _jobsRepository.GetTopJobsAsync();
+        var jobs = await _jobsRepository.GetTopsAsync();
         var result = _mappingService.Map<IEnumerable<JobVM>, IEnumerable<Job>>(jobs);
     
         return result;
@@ -99,36 +83,43 @@ public class JobService : IJobService
 
     public Task<int> GetCount(bool? statys)
     {
-        return _jobsRepository.GetJobsCount(statys);
+        return _jobsRepository.GetCount(statys);
     }
 
     public async Task<IEnumerable<JobVM>> GetJobsByUserId(Guid userId)
     {
-        if (userId.ToString() == null)
-            throw new UzWorksException("Could not be null userId for get Your Jobs");
-
         if (!_environmentAccessor.IsAuthorOrSupervisor(userId))
             throw new UzWorksException($"You have not access to get this {userId}'s jobs.");
 
-        var jobs = await _jobsRepository.GetJobsByUserIdAsync(userId);
+        var jobs = await _jobsRepository.GetByUserIdAsync(userId);
         var result = _mappingService.Map<IEnumerable<JobVM>, IEnumerable<Job>>(jobs);
 
         return result;
     }
 
+    public async Task<int> GetGountForFilter(Guid? jobCategoryId, int? maxAge,
+                                       int? minAge, uint? maxSalary, uint? minSalary, string? gender,
+                                       bool? status, Guid? regionId, Guid? districtId)
+    {
+        return await _jobsRepository.GetcountForFilter(
+                                        jobCategoryId,
+                                        maxAge, minAge, maxSalary, minSalary,
+                                        gender, status, regionId, districtId);
+    }
+
     public async Task<JobVM> Update(JobEM jobEM)
     {
-        if (jobEM is null)
-            throw new UzWorksException("Could not be null job edit model.");
-
+        var job = await _jobsRepository.GetById(jobEM.Id) ?? 
+            throw new UzWorksException($"Could not find job with {jobEM.Id}");
+        
         if (!await _districtService.IsExist(jobEM.DistrictId))
             throw new UzWorksException($"Could not find district with id: {jobEM.DistrictId}");
 
-        var job = _mappingService.Map<Job, JobEM>(jobEM);
-
         if (!_environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
             throw new UzWorksException("You have not access to change this Job data.");
-        
+
+        _mappingService.Map(jobEM, job);
+
         job.UpdateDate = DateTime.Now;
         job.UpdatedBy = Guid.Parse(_environmentAccessor.GetUserId());
 
@@ -140,28 +131,31 @@ public class JobService : IJobService
     
     public async Task<bool> ChangeStatus(Guid id, bool status)
     {
-        var job = await _jobsRepository.GetById(id);
-
-        if (job is null)
+        var job = await _jobsRepository.GetById(id) ??
             throw new UzWorksException($"Could not find job with id: {id}");
 
         if (!_environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
             throw new UzWorksException("You have not access to change this Job status.");
 
         job.Status = status;
+
         _jobsRepository.UpdateAsync(job);
         await _jobsRepository.SaveChanges();
 
         return true;
     }
 
-    public async Task<int> GetGountForFilter(Guid? jobCategoryId, int? maxAge,
-                                       int? minAge, uint? maxSalary, uint? minSalary, string? gender,
-                                       bool? status, Guid? regionId, Guid? districtId)
+    public async Task<bool> Delete(Guid id)
     {
-        return await _jobsRepository.GetJobscountForFilter(
-                                        jobCategoryId,
-                                        maxAge, minAge, maxSalary, minSalary,
-                                        gender, status, regionId, districtId);
+        var job = await _jobsRepository.GetById(id) ??
+            throw new UzWorksException($"Could not find job with id: {id}");
+
+        if (!_environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
+            throw new UzWorksException("You have not access to change this Job data.");
+
+        _jobsRepository.Delete(job);
+        await _jobsRepository.SaveChanges();
+
+        return true;
     }
 }

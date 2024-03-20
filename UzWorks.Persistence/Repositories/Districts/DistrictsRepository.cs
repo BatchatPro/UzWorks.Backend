@@ -20,12 +20,12 @@ public class DistrictsRepository : GenericRepository<District>, IDistrictsReposi
         return await _context.Districts.AnyAsync(d => d.Id == districtId);
     }
 
-    public async Task<IEnumerable<District>> GetAllDistrictsAsync()
+    public async Task<IEnumerable<District>> GetAllAsync()
     {
-        return await _context.Districts.ToArrayAsync();
+        return await _context.Districts.OrderBy(x => x.Name).ToArrayAsync();
     }
 
-    public async Task<IEnumerable<District>> GetDistrictsByRegionIdAsync(Guid regionId)
+    public async Task<IEnumerable<District>> GetByRegionIdAsync(Guid regionId)
     {
         return await _dbSet.Where(x => x.RegionId.Equals(regionId)).ToArrayAsync();
     }

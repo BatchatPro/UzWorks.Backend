@@ -30,20 +30,9 @@ public class JobCategoryService : IJobCategoryService
         return _mappingService.Map<JobCategoryVM, JobCategory>(jobCategory);
     }
 
-    public async Task Delete(Guid Id)
-    {
-        var jobCategory = await _repository.GetById(Id);
-        
-        if(jobCategory != null)
-        {
-            _repository.Delete(jobCategory);
-            await _repository.SaveChanges();
-        }
-    }
-
     public async Task<IEnumerable<JobCategoryVM>> GetAllAsync()
     {
-        var jobCategories = await _repository.GetAllJobCategoriesAsync();
+        var jobCategories = await _repository.GetAllAsync();
 
         var result = _mappingService.Map<IEnumerable<JobCategoryVM>, IEnumerable<JobCategory>>(jobCategories);
         return result;
@@ -51,9 +40,7 @@ public class JobCategoryService : IJobCategoryService
 
     public async Task<JobCategoryVM> GetById(Guid id)
     {
-        var jobCategory = await _repository.GetById(id);
-        
-        if (jobCategory is null)
+        var jobCategory = await _repository.GetById(id) ??
             throw new UzWorksException($"Could not find Job Category with id:  {id}");
         
         return _mappingService.Map<JobCategoryVM, JobCategory>(jobCategory);
@@ -61,11 +48,25 @@ public class JobCategoryService : IJobCategoryService
 
     public async Task<JobCategoryVM> Update(JobCategoryEM jobCategoryEM)
     {
-        var jobCategory = await _repository.GetById(jobCategoryEM.Id) ?? throw new UzWorksException($"Could not find JobCategory with Id: {jobCategoryEM.Id}");
+        var jobCategory = await _repository.GetById(jobCategoryEM.Id) ?? 
+            throw new UzWorksException($"Could not find JobCategory with Id: {jobCategoryEM.Id}");
+        
         _mappingService.Map(jobCategoryEM, jobCategory);
+        
         _repository.UpdateAsync(jobCategory);
         await _repository.SaveChanges();
 
         return _mappingService.Map<JobCategoryVM, JobCategory>(jobCategory);
+    }
+
+    public async Task<bool> Delete(Guid Id)
+    {
+        var jobCategory = await _repository.GetById(Id) ??
+            throw new UzWorksException($"Could not find JobCategory with {Id}");
+        
+        _repository.Delete(jobCategory);
+        await _repository.SaveChanges();
+
+        return true;
     }
 }

@@ -37,23 +37,23 @@ public class FAQService : IFAQService
 
     public async Task<IEnumerable<FAQVM>> GetAllAsync()
     {
-        var contacts = await _repository.GetAllFAQsAsync();
+        var contacts = await _repository.GetAllAsync();
 
         return _mapping.Map<IEnumerable<FAQVM>, IEnumerable<FAQ>>(contacts);
     }
 
     public async Task<FAQVM> Update(FAQEM EM)
     {
-        if (EM == null)
-            throw new UzWorksException("FAQ EM can not be null.");
+        var faq = await _repository.GetById(EM.Id) ??
+            throw new UzWorksException($"Could not find FAQ with {EM.Id}");
+        
+        if (!_environment.IsAuthorOrSupervisor(EM.Id))
+            throw new UzWorksException("You have not access to change this FAQ data.");
 
-        var faq = _mapping.Map<FAQ, FAQEM>(EM);
+        _mapping.Map(EM, faq);
 
         faq.UpdateDate = DateTime.Now;
         faq.UpdatedBy = Guid.Parse(_environment.GetUserId());
-
-        if (!_environment.IsAuthorOrSupervisor(faq.CreatedBy))
-            throw new UzWorksException("You have not access to change this FAQ data.");
 
         _repository.UpdateAsync(faq);
         await _repository.SaveChanges();
@@ -63,10 +63,8 @@ public class FAQService : IFAQService
 
     public async Task<bool> Delete(Guid Id)
     {
-        var faq = await _repository.GetById(Id);
-
-        if (faq == null)
-            return false;
+        var faq = await _repository.GetById(Id) ??
+            throw new UzWorksException($"Could not find FAQ with {Id}");
 
         if (!_environment.IsAuthorOrSupervisor(faq.CreatedBy))
             throw new UzWorksException("You have not access to change this FAQ data.");

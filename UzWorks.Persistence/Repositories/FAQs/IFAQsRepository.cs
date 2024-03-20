@@ -4,5 +4,5 @@ namespace UzWorks.Persistence.Repositories.FAQs;
 
 public interface IFAQsRepository : IGenericRepository<FAQ>
 {
-    Task<FAQ[]> GetAllFAQsAsync();
+    Task<FAQ[]> GetAllAsync();
 }

@@ -10,9 +10,9 @@ public class JobCategoriesRepository : GenericRepository<JobCategory>, IJobCateg
     {
     }
 
-    public async Task<IEnumerable<JobCategory>> GetAllJobCategoriesAsync()
+    public async Task<IEnumerable<JobCategory>> GetAllAsync()
     {
-        return await _context.JobCategories.ToArrayAsync();
+        return await _context.JobCategories.OrderBy(x => x.Title).ToArrayAsync();
     }
 
 }

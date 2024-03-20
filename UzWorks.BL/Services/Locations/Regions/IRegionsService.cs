@@ -4,11 +4,11 @@ namespace UzWorks.BL.Services.Locations.Regions;
 
 public interface IRegionsService
 {
+    Task<RegionVM> Create(RegionDto regionDto);
     Task<IEnumerable<RegionVM>> GetAllAsync();
     Task<RegionVM> GetById(Guid id);
-    Task<RegionVM> Create(RegionDto regionDto);
-    Task Delete(Guid Id);
-    Task<RegionVM> Update(RegionEM regionEM);
+    Task<RegionVM> GetByDistrictId(Guid id);
     Task<bool> Exists(string regionName);
-    Task<RegionVM> GetRegionByDistrictId(Guid id);
+    Task<RegionVM> Update(RegionEM regionEM);
+    Task<bool> Delete(Guid Id);
 }

@@ -4,5 +4,5 @@ namespace UzWorks.Persistence.Repositories.JobCategories;
 
 public interface IJobCategoriesRepository : IGenericRepository<JobCategory>
 {
-    Task<IEnumerable<JobCategory>> GetAllJobCategoriesAsync();
+    Task<IEnumerable<JobCategory>> GetAllAsync();
 }

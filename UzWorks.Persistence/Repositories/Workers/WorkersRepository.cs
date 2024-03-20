@@ -10,7 +10,7 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
     {
     }
 
-    public async Task<Worker[]> GetAllWorkersAsync(int pageNumber, int pageSize,
+    public async Task<Worker[]> GetAllAsync(int pageNumber, int pageSize,
                         Guid? jobCategoryId, int? maxAge, int? minAge, uint? maxSalary,
                         uint? minSalary, string? gender, bool? status, Guid? regionId, Guid? districtId)
     {
@@ -52,7 +52,7 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
         return await query.ToArrayAsync();
     }
 
-    public async Task<int> GetWorkersCount(bool? statusType) 
+    public async Task<int> GetCount(bool? statusType) 
     {
         var query = _dbSet.AsQueryable();
 
@@ -65,7 +65,7 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
         return await query.CountAsync();
     }
 
-    public async Task<int> GetWorkersCountForFilter(Guid? jobCategoryId = null, int? maxAge = null, int? minAge = null, uint? maxSalary = null, uint? minSalary = null, string? gender = null, bool? status = null, Guid? regionId = null, Guid? districtId = null)
+    public async Task<int> GetCountForFilter(Guid? jobCategoryId = null, int? maxAge = null, int? minAge = null, uint? maxSalary = null, uint? minSalary = null, string? gender = null, bool? status = null, Guid? regionId = null, Guid? districtId = null)
     {
         var query = _dbSet.AsQueryable();
 
@@ -102,14 +102,14 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
         return await query.CountAsync();
     }
 
-    public async Task<Worker[]> GetWorkersByUserIdAsync(Guid userId)
+    public async Task<Worker[]> GetByUserIdAsync(Guid userId)
     {
         var query = _dbSet.Where(x => (x.CreatedBy == userId));
 
         return await query.ToArrayAsync() ;
     }
     
-    public async Task<Worker[]> GetTopWorkersAsync()
+    public async Task<Worker[]> GetTopsAsync()
     {
         var query = _dbSet.Where(j => !j.IsDeleted).AsQueryable();
         query = query.Where(x => x.IsTop == true);
@@ -118,5 +118,4 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
 
         return await query.ToArrayAsync();
     }
-
 }

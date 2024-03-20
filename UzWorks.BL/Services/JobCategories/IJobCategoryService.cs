@@ -7,6 +7,6 @@ public interface IJobCategoryService
     Task<IEnumerable<JobCategoryVM>> GetAllAsync();
     Task<JobCategoryVM> GetById(Guid id);
     Task<JobCategoryVM> Create(JobCategoryDto jobCategoryDto);
-    Task Delete(Guid Id);
+    Task<bool> Delete(Guid Id);
     Task<JobCategoryVM> Update(JobCategoryEM jobCategoryEM);
 }

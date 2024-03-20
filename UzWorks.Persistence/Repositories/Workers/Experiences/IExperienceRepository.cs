@@ -4,6 +4,6 @@ namespace UzWorks.Persistence.Repositories.Workers.Experiences;
 
 public interface IExperienceRepository : IGenericRepository<Experience>
 {
-    Task<Experience[]> GetAllExperiencesByWorkerIdAsync(Guid userId);
-    Task<Experience[]> GetAllExperiencesAsync();
+    Task<Experience[]> GetAllByWorkerIdAsync(Guid userId);
+    Task<Experience[]> GetAllAsync();
 }

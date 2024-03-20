@@ -51,7 +51,6 @@ public class JobCategoryController : BaseController
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete([FromRoute] Guid id)
     {
-        await _service.Delete(id);
-        return Ok();
+        return (await _service.Delete(id)) ? Ok() : BadRequest();
     }
 }

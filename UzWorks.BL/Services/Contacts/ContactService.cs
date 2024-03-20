@@ -35,10 +35,8 @@ public class ContactService : IContactService
 
     public async Task<bool> Delete(Guid Id)
     {
-        var contact = await _contactsRepository.GetById(Id);
-
-        if (contact == null)
-            return false;
+        var contact = await _contactsRepository.GetById(Id) ?? 
+            throw new UzWorksException($"Could not find contact with id: {Id}");
            
         _contactsRepository.Delete(contact);
         await _contactsRepository.SaveChanges();
@@ -48,19 +46,14 @@ public class ContactService : IContactService
 
     public async Task<IEnumerable<ContactVM>> GetAllContactsAsync(int pageNumber, int pageSize, bool? isComplated)
     {
-        var contacts = await _contactsRepository.GetAllContactsAsync(pageNumber, pageSize, isComplated);
+        var contacts = await _contactsRepository.GetAllAsync(pageNumber, pageSize, isComplated);
 
         return _mappingService.Map<IEnumerable<ContactVM>, IEnumerable<Contact>>(contacts);
     }
 
     public async Task<ContactVM> GetById(Guid id)
     {
-        if (id == null) 
-            throw new UzWorksException("Id can not be null.");
-
-        var contact = await _contactsRepository.GetById(id);
-
-        if (contact == null)
+        var contact = await _contactsRepository.GetById(id) ?? 
             throw new UzWorksException($"Could not find contact with id: {id}");
 
         return _mappingService.Map<ContactVM, Contact>(contact);
@@ -71,13 +64,16 @@ public class ContactService : IContactService
         if (contactEM == null)
             throw new UzWorksException("Contact EM can not be null.");  
 
-        var contact = _mappingService.Map<Contact, ContactEM>(contactEM);
+        if (!_environmentAccessor.IsAuthorOrSupervisor(contactEM.Id))
+            throw new UzWorksException("You have not access to change this Contact data.");
+
+        var contact = await _contactsRepository.GetById(contactEM.Id) ??
+            throw new UzWorksException($"Could not find contact with {contactEM.Id}");
+
+        _mappingService.Map(contact, contactEM);
 
         contact.UpdateDate = DateTime.Now;
         contact.UpdatedBy = Guid.Parse(_environmentAccessor.GetUserId());
-
-        if (!_environmentAccessor.IsAuthorOrSupervisor(contact.CreatedBy))
-            throw new UzWorksException("You have not access to change this Contact data.");
 
         _contactsRepository.UpdateAsync(contact);
         await _contactsRepository.SaveChanges();
@@ -87,9 +83,7 @@ public class ContactService : IContactService
 
     public async Task<bool> ChangeStatus(Guid id, bool status)
     {
-        var contact = await _contactsRepository.GetById(id);
-
-        if (contact == null)
+        var contact = await _contactsRepository.GetById(id) ??
             throw new UzWorksException($"Could not find contact with id: {id}");
 
         if (!_environmentAccessor.IsAuthorOrSupervisor(contact.CreatedBy))
@@ -98,6 +92,7 @@ public class ContactService : IContactService
         contact.IsComplated = status;
         _contactsRepository.UpdateAsync(contact);
         await _contactsRepository.SaveChanges();
+        
         return true;
     }
 }

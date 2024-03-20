@@ -10,7 +10,7 @@ public class ContactsRepository : GenericRepository<Contact>, IContactsRepositor
     {
     }
 
-    public async Task<Contact[]> GetAllContactsAsync(int pageNumber, int pageSize, bool? isComplated)
+    public async Task<Contact[]> GetAllAsync(int pageNumber, int pageSize, bool? isComplated)
     {
         var query = _dbSet.Where(j => !j.IsDeleted).AsQueryable();
 
@@ -20,6 +20,6 @@ public class ContactsRepository : GenericRepository<Contact>, IContactsRepositor
         if (pageNumber != 0 && pageSize != 0)
             query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
 
-        return await query.ToArrayAsync();
+        return await query.OrderByDescending(x => x.CreateDate).ToArrayAsync();
     }
 }

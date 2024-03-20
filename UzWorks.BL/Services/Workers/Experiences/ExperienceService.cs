@@ -25,10 +25,8 @@ public class ExperienceService : IExperienceService
 
     public async Task<ExperienceVM> Create(ExperienceDto workerDto)
     {
-        if (workerDto == null)
-            throw new UzWorksException("Work Dto can not be null.");
-
-        var experience = _mappingService.Map<Experience, ExperienceDto>(workerDto);
+        var experience = _mappingService.Map<Experience, ExperienceDto>(workerDto) ??
+            throw new UzWorksException("Could not map ExperienceDto to Experience.");
 
         experience.CreateDate = DateTime.Now;
         experience.CreatedBy = Guid.Parse(_environmentAccessor.GetUserId());
@@ -41,17 +39,14 @@ public class ExperienceService : IExperienceService
 
     public async Task<IEnumerable<ExperienceVM>> GetAll()
     {
-        var experiences = await _experienceRepository.GetAllExperiencesAsync();
-        experiences = experiences.OrderByDescending(x => x.CreateDate).ToArray();
+        var experiences = await _experienceRepository.GetAllAsync();
         
         return _mappingService.Map<IEnumerable<ExperienceVM>, IEnumerable<Experience>>(experiences);
     }
 
     public async Task<ExperienceVM> GetById(Guid id)
     {
-        var experience = await _experienceRepository.GetById(id);
-
-        if (experience is null)
+        var experience = await _experienceRepository.GetById(id) ?? 
             throw new UzWorksException($"Could not find experience with id : {id}");
 
         return _mappingService.Map<ExperienceVM, Experience>(experience);
@@ -59,8 +54,7 @@ public class ExperienceService : IExperienceService
 
     public async Task<IEnumerable<ExperienceVM>> GetByUserId(Guid userId)
     {
-        var experiences = await _experienceRepository.GetAllExperiencesByWorkerIdAsync(userId);
-        experiences = experiences.OrderByDescending(x => x.CreateDate).ToArray();
+        var experiences = await _experienceRepository.GetAllByWorkerIdAsync(userId);
         
         return _mappingService.Map<IEnumerable<ExperienceVM>, IEnumerable<Experience>>(experiences);
     }
@@ -72,7 +66,7 @@ public class ExperienceService : IExperienceService
 
         _mappingService.Map(experienceEM, experience);
 
-        if (_environmentAccessor.GetUserId() != experience.CreatedBy.ToString())
+        if (_environmentAccessor.IsAuthorOrAdmin(Guid.Parse(_environmentAccessor.GetUserId())))
             throw new UzWorksException("You have not access for update this Experience.");
 
         experience.UpdateDate = DateTime.Now;
@@ -84,17 +78,17 @@ public class ExperienceService : IExperienceService
         return _mappingService.Map<ExperienceVM, Experience>(experience);
     }
 
-    public async Task Delete(Guid id)
+    public async Task<bool> Delete(Guid id)
     {
-        var experience = await _experienceRepository.GetById(id);
-
-        if (experience is null)
+        var experience = await _experienceRepository.GetById(id) ??
             throw new UzWorksException($"Could not find experience with id : {id}");
 
-        if (!_environmentAccessor.GetUserId().Equals(experience.CreatedBy))
+        if (_environmentAccessor.IsAuthorOrAdmin(Guid.Parse(_environmentAccessor.GetUserId())))
             throw new UzWorksException("You have not access for delete this Experience.");
 
         _experienceRepository.Delete(experience);
         await _experienceRepository.SaveChanges();
+
+        return true;
     }
 }

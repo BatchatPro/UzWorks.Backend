@@ -10,13 +10,13 @@ public class ExperienceRepository : GenericRepository<Experience>, IExperienceRe
     {
     }
 
-    public async Task<Experience[]> GetAllExperiencesByWorkerIdAsync(Guid userId)
+    public async Task<Experience[]> GetAllByWorkerIdAsync(Guid userId)
     {
-        return await _context.Experiences.Where(e => e.CreatedBy == userId).ToArrayAsync();
+        return await _context.Experiences.Where(e => e.CreatedBy == userId).OrderBy(x => x.CreateDate).ToArrayAsync();
     }
 
-    public async Task<Experience[]> GetAllExperiencesAsync()
+    public async Task<Experience[]> GetAllAsync()
     {
-        return await _context.Experiences.ToArrayAsync();
+        return await _context.Experiences.OrderBy(x => x.CreateDate).ToArrayAsync();
     }
 }

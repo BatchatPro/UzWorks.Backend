@@ -8,7 +8,7 @@ public interface IDistrictsRepository : IGenericRepository<District>
 
     Task<bool> IsExist(Guid districtId);
 
-    Task<IEnumerable<District>> GetAllDistrictsAsync();
+    Task<IEnumerable<District>> GetAllAsync();
 
-    Task<IEnumerable<District>> GetDistrictsByRegionIdAsync(Guid regionId);
+    Task<IEnumerable<District>> GetByRegionIdAsync(Guid regionId);
 }

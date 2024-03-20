@@ -29,15 +29,30 @@ public class DistrictService : IDistrictService
         return _mappingService.Map<DistrictVM,District>(district);
     }
 
-    public async Task Delete(Guid id)
+    public async Task<IEnumerable<DistrictVM>> GetAllAsync()
     {
-        var district = await _districtsRepository.GetById(id);
+        var districts = await _districtsRepository.GetAllAsync();
         
-        if (district is null)
-            throw new UzWorksException($"Could not find District with id: {id}");
+        if (districts is null)
+            throw new UzWorksException($"Could not find Districts");
 
-        _districtsRepository.Delete(district);
-        await _districtsRepository.SaveChanges();
+        return _mappingService.Map<IEnumerable<DistrictVM>, IEnumerable<District>>(districts);
+    }
+
+    public async Task<DistrictVM> GetById(Guid id)
+    {
+        var district = await _districtsRepository.GetById(id) ??
+            throw new UzWorksException($"Could not find District with Id: {id}");
+
+        return _mappingService.Map<DistrictVM,District>(district);
+    }
+
+    public async Task<IEnumerable<DistrictVM>> GetByRegionId(Guid regionId)
+    {
+        var districts = await _districtsRepository.GetByRegionIdAsync(regionId) ??
+            throw new UzWorksException($"Could not find District with this region id: {regionId}");
+
+        return _mappingService.Map<IEnumerable<DistrictVM>, IEnumerable<District>>(districts);
     }
 
     public Task<bool> IsExist(string districtName)
@@ -50,44 +65,27 @@ public class DistrictService : IDistrictService
         return _districtsRepository.IsExist(districtId);
     }
 
-    public async Task<IEnumerable<DistrictVM>> GetAllAsync()
-    {
-        var districts = await _districtsRepository.GetAllDistrictsAsync();
-        
-        if (districts is null)
-            throw new UzWorksException($"Could not find Districts");
-
-        return _mappingService.Map<IEnumerable<DistrictVM>, IEnumerable<District>>(districts);
-    }
-
-    public async Task<DistrictVM> GetById(Guid id)
-    {
-        var district = await _districtsRepository.GetById(id);
-        
-        if (district is null)
-            throw new UzWorksException($"Could not find District with Id: {id}");
-
-        return _mappingService.Map<DistrictVM,District>(district);
-    }
-
-    public async Task<IEnumerable<DistrictVM>> GetDistrictByRegionId(Guid regionId)
-    {
-        var districts = await _districtsRepository.GetDistrictsByRegionIdAsync(regionId);
-        
-        if (districts is null)
-            throw new UzWorksException($"Could not find District with this region id: {regionId}");
-
-        return _mappingService.Map<IEnumerable<DistrictVM>, IEnumerable<District>>(districts);
-    }
-
     public async Task<DistrictVM> Update(DistrictEM districtEM)
     {
-        if (districtEM is null) 
-            throw new UzWorksException("District edit model can not be null.");
+        var district = await _districtsRepository.GetById(districtEM.Id)??
+            throw new UzWorksException($"Could not find District with Id: {districtEM.Id}");
 
-        var district = _mappingService.Map<District, DistrictEM>(districtEM);
-        await _districtsRepository.CreateAsync(district);
+        _mappingService.Map(districtEM, district);
+
+        _districtsRepository.UpdateAsync(district);
         await _districtsRepository.SaveChanges();
+
         return _mappingService.Map<DistrictVM,District>(district);
+    }
+
+    public async Task<bool> Delete(Guid id)
+    {
+        var district = await _districtsRepository.GetById(id) ??
+            throw new UzWorksException($"Could not find District with id: {id}");
+
+        _districtsRepository.Delete(district);
+        await _districtsRepository.SaveChanges();
+
+        return true;
     }
 }

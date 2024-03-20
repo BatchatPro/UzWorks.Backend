@@ -96,8 +96,7 @@ public class ExperienceController : BaseController
     {
         try
         {
-            await _experienceService.Delete(id);
-            return Ok();
+            return await _experienceService.Delete(id) ? Ok() : BadRequest("Did not delete.");
         }
         catch (Exception ex)
         {

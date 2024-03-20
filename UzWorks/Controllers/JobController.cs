@@ -123,7 +123,6 @@ public class JobController : BaseController
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete([FromRoute] Guid id)
     {
-        await _jobService.Delete(id);
-        return Ok();
+        return (await _jobService.Delete(id)) ? Ok() : BadRequest();
     }
 }

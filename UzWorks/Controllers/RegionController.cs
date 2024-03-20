@@ -43,7 +43,7 @@ public class RegionController : BaseController
     [HttpGet("{id}")]
     public async Task<ActionResult<RegionVM>> GetByDistrictId([FromRoute]Guid id)
     {
-        var result = await _regionsService.GetRegionByDistrictId(id);
+        var result = await _regionsService.GetByDistrictId(id);
         return Ok(result);
     }
 
@@ -59,7 +59,6 @@ public class RegionController : BaseController
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete([FromRoute] Guid id)
     {
-        await _regionsService.Delete(id);
-        return Ok();
+        return await _regionsService.Delete(id) ? Ok() : BadRequest();
     }
 }
