@@ -19,38 +19,74 @@ public class JobCategoryController : BaseController
     [HttpPost]
     public async Task<ActionResult<JobCategoryVM>> Create(JobCategoryDto jobCategoryDto)
     {
-        var result = await _service.Create(jobCategoryDto);
-        return Ok(result);
+        try
+        {
+            var result = await _service.Create(jobCategoryDto);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<JobCategoryVM>>> GetAll()
     {
-        var result = await _service.GetAllAsync();
-        return Ok(result);
+        try
+        {
+           var result = await _service.GetAllAsync();
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<JobCategoryVM>> GetById([FromRoute] Guid id)
     {
-        var result = await _service.GetById(id);
-        return Ok(result);
+        try
+        {
+            var result = await _service.GetById(id);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPut]
     public async Task<ActionResult<JobCategoryVM>> Update([FromBody] JobCategoryEM jobCategoryEM)
     {
-        var result = await _service.Update(jobCategoryEM);
-        return Ok(result);
+        try
+        {
+            var result = await _service.Update(jobCategoryEM);
+            return Ok(result);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete([FromRoute] Guid id)
     {
-        return (await _service.Delete(id)) ? Ok() : BadRequest();
+        try
+        {
+            var result = await _service.Delete(id);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

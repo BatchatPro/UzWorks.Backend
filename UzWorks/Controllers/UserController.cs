@@ -23,8 +23,15 @@ public class UserController : BaseController
     [HttpPost]
     public async Task<ActionResult> Create([FromBody] UserDto user)
     {
-        await _userService.Create(user);
-        return Ok();
+        try
+        {
+            await _userService.Create(user);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
@@ -34,73 +41,120 @@ public class UserController : BaseController
         [FromQuery]string? gender, [FromQuery] string? email, 
         [FromQuery] string? phoneNumber)
     {
-        var users = await _userService.GetAll(pageNumber, pageSize, gender, email, phoneNumber);
-        return Ok(users);
+        try 
+        {
+            var users = await _userService.GetAll(pageNumber, pageSize, gender, email, phoneNumber);
+            return Ok(users);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<UserVM>> GetById([FromRoute]Guid id)
     {
-        var user = await _userService.GetById(id);
-        return Ok(user);
+        try
+        {
+            var user = await _userService.GetById(id);
+            return Ok(user);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize]
     [HttpGet("{id}")]   
     public async Task <ActionResult<IEnumerable<string>>> GetRoles([FromRoute] Guid id)
     {
-        var roles = await _userService.GetUserRoles(id);
-        return Ok(roles);
+        try
+        {
+            var roles = await _userService.GetUserRoles(id);
+            return Ok(roles);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPut]
     [Authorize]
     public async Task<ActionResult<UserVM>> Update([FromBody] UserEM profileEM)
     {
-        if (profileEM == null)
-            return BadRequest("User is null");
-
-        var result = await _userService.Update(profileEM);
-        return Ok(result);
+        try
+        {
+            var result = await _userService.Update(profileEM);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPut]
     [Authorize] 
     public async Task<ActionResult<ResetPasswordDto>> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
     {
-        if (resetPasswordDto == null)
-            return BadRequest("User is null");
+        try
+        {
+            var result = await _userService.ResetPassword(resetPasswordDto);
 
-        if (await _userService.ResetPassword(resetPasswordDto))
-            return Ok();
-
-        return BadRequest();
+            return result ? Ok() : BadRequest();
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPut]
     public async Task<ActionResult> AddRolesToUser([FromBody] UserRolesDto userRoles)
     {
-        await _userService.AddRolesToUser(userRoles);
-        return Ok();
+        try
+        {
+            await _userService.AddRolesToUser(userRoles);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpDelete]
     public async Task<ActionResult> DeleteRolesFromUser([FromBody] UserRolesDto userRoles)
     {
-        await _userService.DeleteRolesFromUser(userRoles);
-        return Ok();
+        try
+        {
+            await _userService.DeleteRolesFromUser(userRoles);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete([FromRoute]Guid id)
     {
-        if(await _userService.Delete(id))
-            return Ok();
-
-        return BadRequest();
+        try
+        {
+            var result = await _userService.Delete(id);
+            return result ? Ok() : BadRequest();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

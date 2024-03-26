@@ -19,47 +19,89 @@ public class ContactController : BaseController
     [HttpPost]
     public async Task<ActionResult<ContactVM>> Create([FromBody] ContactDto contactDto)
     {
-        var contact = await _contactService.Create(contactDto);
-        return Ok(contact);
+        try
+        {
+            var contact = await _contactService.Create(contactDto);
+            return Ok(contact);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpGet]
     public async Task<ActionResult<ContactVM>> GetAllContactsAsync(int pageNumber = 1, int pageSize = 15, bool? isComplated = null)
     {
-        var contacts = await _contactService.GetAllContactsAsync(pageNumber, pageSize, isComplated);
-        return Ok(contacts);
+        try
+        {
+            var contacts = await _contactService.GetAllContactsAsync(pageNumber, pageSize, isComplated);
+            return Ok(contacts);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpGet("{id}")]
     public async Task<ActionResult<ContactVM>> GetById([FromRoute]Guid id)
     {
-        var contact = await _contactService.GetById(id);
-        return Ok(contact);
+        try
+        {
+            var contact = await _contactService.GetById(id);
+            return Ok(contact);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpPut]
     public async Task<ActionResult<ContactVM>> Update([FromBody] ContactEM contactEM)
     {
-        var contact = await _contactService.Update(contactEM);
-        return Ok(contact);
+        try
+        {
+            var contact = await _contactService.Update(contactEM);
+            return Ok(contact);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpPut("{id}/{status}")]
     public async Task<ActionResult<ContactVM>> ChangeStatus(Guid id, bool status)
     {
-        var result = await _contactService.ChangeStatus(id, status);
-        return result?Ok(_contactService.GetById(id)):BadRequest();
+        try
+        {
+            var result = await _contactService.ChangeStatus(id, status);
+            return result ? Ok(_contactService.GetById(id)) : BadRequest();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpDelete("{id}")]
     public async Task<ActionResult<string>> Delete(Guid id)
     {
-        var result = await _contactService.Delete(id);
-        return result?Ok("Delete saccessfull."):BadRequest();
+        try
+        {
+            var result = await _contactService.Delete(id);
+            return result ? Ok("Delete saccessfull.") : BadRequest();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }
