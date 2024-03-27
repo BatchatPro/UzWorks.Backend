@@ -9,6 +9,7 @@ public interface IUserService
     Task<bool> Delete(Guid id);
     Task<UserVM> Update(UserEM userEM);
     Task<bool> ResetPassword(ResetPasswordDto resetPasswordDto);
+    Task<bool> ResetPassword(Guid userId, string NewPassword);
     Task<UserRolesDto> GetUserRoles(Guid id);
     Task<UserRolesDto> AddRolesToUser(UserRolesDto userRoles);
     Task<UserRolesDto> DeleteRolesFromUser(UserRolesDto userRoles);

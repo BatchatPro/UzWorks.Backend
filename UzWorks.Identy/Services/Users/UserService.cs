@@ -136,11 +136,11 @@ public class UserService : IUserService
 
     public async Task<UserVM> GetById(Guid id)
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == Convert.ToString(id)) ??
-            throw new UzWorksException("User not found.");
-
         if (!_environmentAccessor.IsAuthorOrSupervisor(id))
             throw new UzWorksException("You you have not access for view information about this user.");
+
+        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == Convert.ToString(id)) ??
+            throw new UzWorksException("User not found.");
 
         return _mappingService.Map<UserVM, User>(user);
     }
@@ -181,6 +181,22 @@ public class UserService : IUserService
 
         if (!result.Succeeded)
             throw new UzWorksException(result.Errors.Select(x => x.Description).ToString());
+
+        _dbContext.SaveChanges();
+
+        return true;
+    }
+
+    public async Task<bool> ResetPassword(Guid userId, string newPassword)
+    {
+        if (!_environmentAccessor.IsAdmin(Guid.Parse(_environmentAccessor.GetUserId())))
+            throw new UzWorksException("You cannot change user password");
+
+        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == Convert.ToString(userId)) ??
+            throw new UzWorksException("User not found.");
+
+        await _userManager.RemovePasswordAsync(user);
+        await _userManager.AddPasswordAsync(user, newPassword);
 
         _dbContext.SaveChanges();
 

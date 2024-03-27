@@ -113,6 +113,21 @@ public class UserController : BaseController
         }
     }
 
+    [HttpPut("{userId}")]
+    [Authorize(Roles = RoleNames.SuperAdmin)]
+    public async Task<ActionResult> ResetPasswordForAdmin([FromRoute]Guid userId, [FromBody] string newPassword)
+    {
+        try
+        {
+            var result = await _userService.ResetPassword(userId, newPassword);
+            return result ? Ok() : BadRequest();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPut]
     public async Task<ActionResult> AddRolesToUser([FromBody] UserRolesDto userRoles)
