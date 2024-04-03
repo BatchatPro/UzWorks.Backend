@@ -23,44 +23,50 @@ public class MappingProfile : Profile
 {
     public MappingProfile() 
     {
-        CreateMap<JobCategory, JobCategoryVM>().ReverseMap();
-        CreateMap<JobCategory, JobCategoryDto>().ReverseMap();
-        CreateMap<JobCategory, JobCategoryEM>().ReverseMap();
+        CreateMap<JobCategoryDto, JobCategory>();
+        CreateMap<JobCategoryEM, JobCategory>();
+        CreateMap<JobCategory, JobCategoryVM>();
 
-        CreateMap<District, DistrictDto>().ReverseMap();
-        CreateMap<District, DistrictVM>().ReverseMap();
-        CreateMap<District, DistrictEM>().ReverseMap();
+        CreateMap<DistrictDto, District>();
+        CreateMap<DistrictEM, District>();
+        CreateMap<District, DistrictVM>();
 
-        CreateMap<Region,RegionDto>().ReverseMap();
-        CreateMap<Region,RegionVM>().ReverseMap();
-        CreateMap<Region,RegionEM>().ReverseMap();
+        CreateMap<RegionDto, Region>();
+        CreateMap<RegionEM, Region>();
+        CreateMap<Region, RegionVM>();
 
-        CreateMap<Worker,WorkerDto>().ReverseMap();
-        CreateMap<Worker,WorkerVM>().ReverseMap();
-        CreateMap<Worker,WorkerEM>().ReverseMap();
+        CreateMap<WorkerDto, Worker>();
+        CreateMap<WorkerEM, Worker>();
+        CreateMap<Worker, WorkerVM>()
+            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.JobCategory.Title))
+            .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.District.Name))
+            .ForMember(dest => dest.RegionName, opt => opt.MapFrom(src => src.District.Region.Name));
 
-        CreateMap<Job,JobDto>().ReverseMap();
-        CreateMap<Job,JobVM>().ReverseMap();
-        CreateMap<Job,JobEM>().ReverseMap();
+        CreateMap<JobDto, Job>();
+        CreateMap<JobEM, Job>();
+        CreateMap<Job, JobVM>()
+            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.JobCategory.Title))
+            .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.District.Name))
+            .ForMember(dest => dest.RegionName, opt => opt.MapFrom(src => src.District.Region.Name));
 
-        CreateMap<User,UserEM>().ReverseMap();
-        CreateMap<User,UserDto>().ReverseMap();
-        CreateMap<User,UserVM>().ReverseMap();
+        CreateMap<UserEM, User>();
+        CreateMap<UserDto, User>();
+        CreateMap<User, UserVM>();
 
-        CreateMap<Experience,ExperienceDto>().ReverseMap();
-        CreateMap<Experience,ExperienceVM>().ReverseMap();
-        CreateMap<Experience,ExperienceEM>().ReverseMap();
+        CreateMap<ExperienceDto, Experience>();
+        CreateMap<Experience, ExperienceVM>();
+        CreateMap<ExperienceEM, Experience>();
 
-        CreateMap<Contact,ContactDto>().ReverseMap();
-        CreateMap<Contact,ContactVM>().ReverseMap();
-        CreateMap<Contact,ContactEM>().ReverseMap();
+        CreateMap<ContactDto, Contact>();
+        CreateMap<Contact, ContactVM>();
+        CreateMap<ContactEM, Contact>();
 
-        CreateMap<FAQ,FAQDto>().ReverseMap();
-        CreateMap<FAQ,FAQVM>().ReverseMap();
-        CreateMap<FAQ,FAQEM>().ReverseMap();
+        CreateMap<FAQDto, FAQ>();
+        CreateMap<FAQ, FAQVM>();
+        CreateMap<FAQEM, FAQ>();
 
-        CreateMap<FeedBack,FeedBackDto>().ReverseMap();
-        CreateMap<FeedBack,FeedBackVM>().ReverseMap();
-        CreateMap<FeedBack,FeedBackEM>().ReverseMap();
+        CreateMap<FeedBackDto, FeedBack>();
+        CreateMap<FeedBack, FeedBackVM>();
+        CreateMap<FeedBackEM, FeedBack>();
     }
 }

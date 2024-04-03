@@ -13,9 +13,9 @@ public class Worker : BaseJobEntity
     public string? AboutMe { get; set; } = string.Empty;
 
     public Guid DistrictId { get; set; }
-    public District District { get; set; }
+    public District? District { get; set; }
     public Guid CategoryId { get; set; }
-    public JobCategory JobCategory { get; set; }
+    public JobCategory? JobCategory { get; set; }
 
     [AllowNull]
     public List<Skill>? Skills { get; set; }

@@ -12,8 +12,8 @@ public class Job: BaseJobEntity
     public double Longitude { get; set; }
 
     public Guid CategoryId { get; set; }
-    public JobCategory JobCategory { get; set; }
+    public JobCategory? JobCategory { get; set; }
 
     public Guid DistrictId { get; set; }
-    public District District { get; set; }
+    public District? District { get; set; }
 }

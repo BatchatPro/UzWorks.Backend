@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace UzWorks.Core.DataTransferObjects.Jobs;
+﻿namespace UzWorks.Core.DataTransferObjects.Jobs;
 
 public class JobVM
 {
@@ -23,6 +21,7 @@ public class JobVM
     public int MaxAge { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public Guid CategoryId { get; set; }
-    public Guid DistrictId { get; set; }
+    public string RegionName { get; set; } = string.Empty; 
+    public string DistrictName { get; set; } = string.Empty;
+    public string CategoryName { get; set; } = string.Empty;
 }

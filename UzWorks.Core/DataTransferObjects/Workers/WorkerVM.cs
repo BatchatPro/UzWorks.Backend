@@ -19,7 +19,8 @@ public class WorkerVM
     public string InstagramLink { get; set; } = string.Empty;
     public string TgUserName { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
-    public string Location { get; set; } = string.Empty; 
-    public Guid DistrictId { get; set; }
-    public Guid CategoryId { get; set; }
+    public string Location { get; set; } = string.Empty;
+    public string RegionName { get; set; } = string.Empty;
+    public string DistrictName { get; set; } = string.Empty;
+    public string CategoryName { get; set; } = string.Empty;
 }
