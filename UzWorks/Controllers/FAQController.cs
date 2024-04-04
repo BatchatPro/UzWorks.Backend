@@ -35,15 +35,9 @@ public class FAQController : BaseController
     [HttpGet]
     public async Task<ActionResult<IEnumerable<FAQVM>>> GetAll()
     {
-        try
-        {
-            var faqs = await _faqService.GetAllAsync();
-            return Ok(faqs);
-        }
-        catch (UzWorksException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var faqs = await _faqService.GetAllAsync();
+
+        return Ok(faqs);
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]

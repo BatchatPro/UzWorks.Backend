@@ -28,5 +28,6 @@ public class WorkerEntityConfiguration : IEntityTypeConfiguration<Worker>
                     .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(x => x.JobCategory).AutoInclude();
+        builder.Navigation(x => x.District).AutoInclude();
     }
 }

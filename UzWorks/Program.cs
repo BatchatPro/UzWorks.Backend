@@ -6,6 +6,7 @@ using UzWorks.Core.Abstract;
 using UzWorks.Core.AccessConfigurations;
 using UzWorks.Identity;
 using UzWorks.Infrastructure;
+using UzWorks.Infrastructure.ExceptionHandling;
 using UzWorks.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -76,6 +77,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseCors(options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowCredentials().AllowAnyHeader());
+
+app.UseMiddleware<ExceptionHandler>();
 
 app.MapControllers();
 
