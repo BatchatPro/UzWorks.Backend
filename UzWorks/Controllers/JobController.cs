@@ -18,15 +18,8 @@ public class JobController : BaseController
     [HttpPost]
     public async Task<ActionResult<JobVM>> Create(JobDto jobDto)
     {
-        try
-        {
-            var result = await _jobService.Create(jobDto);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _jobService.Create(jobDto);
+        return Ok(result);
     }
 
     [AllowAnonymous]
@@ -37,48 +30,27 @@ public class JobController : BaseController
                                             [FromQuery] uint? minSalary, [FromQuery] string? gender,
                                             [FromQuery] Guid? regionId, [FromQuery] Guid? districtId)
     {
-        try
-        {
-            var result = await _jobService.GetAllAsync(
-                             pageNumber, pageSize, jobCategoryId,
-                             maxAge, minAge, maxSalary, minSalary,
-                             gender, true, regionId, districtId);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _jobService.GetAllAsync(
+                         pageNumber, pageSize, jobCategoryId,
+                         maxAge, minAge, maxSalary, minSalary,
+                         gender, true, regionId, districtId);
+        return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<JobVM>> GetById([FromRoute] Guid id)
     {
-        try
-        {
-            var result = await _jobService.GetById(id); 
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _jobService.GetById(id);
+        return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<JobVM>>> GetTopJobs()
     {
-        try
-        {
-            var result = await _jobService.GetTopJobs();
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _jobService.GetTopJobs();
+        return Ok(result);
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
@@ -89,34 +61,20 @@ public class JobController : BaseController
                                             [FromQuery] uint? minSalary, [FromQuery] string? gender,
                                             [FromQuery] Guid? regionId, [FromQuery] Guid? districtId)
     {
-        try
-        {
-            var result = await _jobService.GetAllAsync(
-                             pageNumber, pageSize, jobCategoryId,
-                             maxAge, minAge, maxSalary, minSalary,
-                             gender, null, regionId, districtId);
+        var result = await _jobService.GetAllAsync(
+                         pageNumber, pageSize, jobCategoryId,
+                         maxAge, minAge, maxSalary, minSalary,
+                         gender, null, regionId, districtId);
 
-           return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet("{status}")]
     public async Task<ActionResult<int>> GetCount([FromRoute]bool? status)
     {
-        try
-        {
-            var result = await _jobService.GetCount(status);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _jobService.GetCount(status);
+        return Ok(result);
     }
 
     [AllowAnonymous]
@@ -127,79 +85,42 @@ public class JobController : BaseController
                                             [FromQuery] uint? minSalary, [FromQuery] string? gender,
                                             [FromQuery] Guid? regionId, [FromQuery] Guid? districtId)
     {
-        try
-        {
-            var result = await _jobService.GetGountForFilter(jobCategoryId,
-                             maxAge, minAge, maxSalary, minSalary,
-                             gender, true, regionId, districtId);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _jobService.GetGountForFilter(jobCategoryId,
+                         maxAge, minAge, maxSalary, minSalary,
+                         gender, true, regionId, districtId);
+
+        return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<IEnumerable<JobVM>>> GetByUserId([FromRoute] Guid id)
     {
-        try
-        {
-            var result = await _jobService.GetJobsByUserId(id);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _jobService.GetJobsByUserId(id);
+        return Ok(result);
     }
 
     [Authorize(Roles = RoleNames.Employer)]
     [HttpPut]
     public async Task<ActionResult<JobVM>> Update([FromBody] JobEM jobEM)
     {
-        try
-        {
-            var result = await _jobService.Update(jobEM);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _jobService.Update(jobEM);
+        return Ok(result);
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpPut("{id}")]
     public async Task<ActionResult> ChangeStatus([FromRoute] Guid id, [FromBody] bool status)
     {
-        try
-        {
-            var result = await _jobService.ChangeStatus(id, status);
-    
-            if (result)
-                return Ok();
-            return BadRequest();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _jobService.ChangeStatus(id, status);
+
+        return result? Ok() : BadRequest();
     }
 
-    // can you write me try-catch block for this method?
     [Authorize(Roles = RoleNames.Employer)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete([FromRoute] Guid id)
     {
-        try
-        {
-            return (await _jobService.Delete(id)) ? Ok() : BadRequest();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return (await _jobService.Delete(id)) ? Ok() : BadRequest();
     }
 }

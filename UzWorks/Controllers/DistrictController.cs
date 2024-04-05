@@ -14,80 +14,44 @@ public class DistrictController : BaseController
         _districtService = districtService;
     }
 
-    // can you write me try catch block for each method?
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPost] 
     public async Task<ActionResult<DistrictVM>> Create([FromBody]DistrictDto district)
     {
-        try
-        {
-            var result = await _districtService.Create(district);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _districtService.Create(district);
+        return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<DistrictVM>> GetById([FromRoute]Guid id)
     {
-        try
-        {
-            var result = await _districtService.GetById(id);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _districtService.GetById(id);
+        return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DistrictVM>>> GetAll()
     {
-        try
-        {
-            var result = await _districtService.GetAllAsync();
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _districtService.GetAllAsync();
+        return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<IEnumerable<DistrictVM>>> GetByRegionId([FromRoute]Guid id)
     {
-        try
-        {
-            var result = await _districtService.GetByRegionId(id);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _districtService.GetByRegionId(id);
+        return Ok(result);
     }
     
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPut]
     public async Task<ActionResult<DistrictVM>> Update([FromBody]DistrictEM districtEM)
     {
-        try
-        {
-            var result = await _districtService.Update(districtEM);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _districtService.Update(districtEM);
+        return Ok(result);
     }
 
     
@@ -95,14 +59,7 @@ public class DistrictController : BaseController
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete([FromRoute]Guid id)
     {
-        try
-        {
-            var result = await _districtService.Delete(id);
-            return result ? Ok() : BadRequest();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _districtService.Delete(id);
+        return result ? Ok() : BadRequest();
     }
 }

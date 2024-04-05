@@ -19,88 +19,46 @@ public class ExperienceController : BaseController
     [HttpPost]
     public async Task<ActionResult<ExperienceVM>> Create([FromBody] ExperienceDto experienceDto)
     {
-        try
-        {
-            var result = await _experienceService.Create(experienceDto);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _experienceService.Create(experienceDto);
+        return Ok(result);
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ExperienceVM>>> GetAll()
     {
-        try
-        {
-            var result = await _experienceService.GetAll();
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _experienceService.GetAll();
+        return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<ExperienceVM>> GetById([FromRoute] Guid id)
     {
-        try
-        {
-            var result = await _experienceService.GetById(id);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _experienceService.GetById(id);
+        return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<IEnumerable<ExperienceVM>>> GetByUserId([FromRoute] Guid id)
     {
-        try
-        {
-            var result = await _experienceService.GetByUserId(id);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _experienceService.GetByUserId(id);
+        return Ok(result);
     }
 
     [Authorize(Roles = RoleNames.Employee)]
     [HttpPut]
     public async Task<ActionResult<ExperienceVM>> Update([FromBody] ExperienceEM experienceEM)
     {
-        try
-        {
-            var result = await _experienceService.Update(experienceEM);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _experienceService.Update(experienceEM);
+        return Ok(result);
     }
 
     [Authorize(Roles = RoleNames.Employee)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete([FromRoute] Guid id)
     {
-        try
-        {
-            return await _experienceService.Delete(id) ? Ok() : BadRequest("Did not delete.");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return await _experienceService.Delete(id) ? Ok() : BadRequest("Did not delete.");
     }
 }

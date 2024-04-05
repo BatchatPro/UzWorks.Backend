@@ -19,89 +19,47 @@ public class RegionController : BaseController
     [HttpPost]
     public async Task<ActionResult<RegionVM>> Create(RegionDto regionDto)
     {
-        try
-        {
-            var result = await _regionsService.Create(regionDto);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _regionsService.Create(regionDto);
+        return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<RegionVM>>> GetAll()
     {
-        try
-        {
-            var result = await _regionsService.GetAllAsync();
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _regionsService.GetAllAsync();
+        return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<RegionVM>> GetById([FromRoute]Guid id)
     {
-        try
-        {
-            var result = await _regionsService.GetById(id);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _regionsService.GetById(id);
+        return Ok(result);
     }
 
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<RegionVM>> GetByDistrictId([FromRoute]Guid id)
     {
-        try
-        {
-            var result = await _regionsService.GetByDistrictId(id);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _regionsService.GetByDistrictId(id);
+        return Ok(result);
     }
 
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpPut]
     public async Task<ActionResult<RegionVM>> Update([FromBody]RegionEM regionEM)
     {
-        try
-        {
-            var result = await _regionsService.Update(regionEM);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _regionsService.Update(regionEM);
+        return Ok(result);
     }
 
     [Authorize(Roles = RoleNames.SuperAdmin)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete([FromRoute] Guid id)
     {
-        try
-        {
-            var result = await _regionsService.Delete(id);
-            return result ? Ok() : BadRequest();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _regionsService.Delete(id);
+        return result ? Ok() : BadRequest();
     }
 }

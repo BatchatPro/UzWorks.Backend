@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using UzWorks.BL.Services.FAQs;
 using UzWorks.Core.Constants;
 using UzWorks.Core.DataTransferObjects.FAQs;
-using UzWorks.Core.Exceptions;
 
 namespace UzWorks.API.Controllers;
 
@@ -20,15 +19,8 @@ public class FAQController : BaseController
     [HttpPost]
     public async Task<ActionResult<FAQVM>> Create([FromBody] FAQDto dto)
     {
-        try
-        {
-            var faq = await _faqService.Create(dto);
-            return Ok(faq);
-        }
-        catch (UzWorksException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var faq = await _faqService.Create(dto);
+        return Ok(faq);
     }
 
     [AllowAnonymous]
@@ -44,29 +36,15 @@ public class FAQController : BaseController
     [HttpPut]
     public async Task<ActionResult<FAQVM>> Update([FromBody] FAQEM EM)
     {
-        try
-        {
-            var faq = await _faqService.Update(EM);
-            return Ok(faq);
-        }
-        catch (UzWorksException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var faq = await _faqService.Update(EM);
+        return Ok(faq);
     }
 
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpDelete("{id}")]
     public async Task<ActionResult<bool>> Delete(Guid id)
     {
-        try
-        {
-            var result = await _faqService.Delete(id);
-            return Ok(result);
-        }
-        catch (UzWorksException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _faqService.Delete(id);
+        return Ok(result);
     }
 }

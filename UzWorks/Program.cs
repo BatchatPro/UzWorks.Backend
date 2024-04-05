@@ -72,6 +72,8 @@ app.UseSwaggerUI();
 await app.UseRoleInitializerMiddleware();
 //await app.UseLocationInitializerMiddleware();
 
+await app.LoginToEskizSMSService();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
