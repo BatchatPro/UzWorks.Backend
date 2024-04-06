@@ -15,4 +15,8 @@
     <ProjectReference Include="..\UzWorks.Core\UzWorks.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Auth\" />
+  </ItemGroup>
+
 </Project>
