@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using UzWorks.Core.AccessConfigurations;
+using UzWorks.Core.Constants;
 using UzWorks.Core.DataTransferObjects.Auth;
 using UzWorks.Core.Exceptions;
 using UzWorks.Identity.Constants;
@@ -66,8 +67,27 @@ public class AuthService : IAuthService
                         user.BirthDate, user.PhoneNumber, roles);
     }
 
-    public Task<SignUpResponseDto> Register(SignUpDto registerDto)
+    public async Task<SignUpResponseDto> Register(SignUpDto signUpDto)
     {
-        throw new NotImplementedException();
+        if (signUpDto.Role is not (RoleNames.Employer or RoleNames.Employee))
+            throw new UzWorksException($"Please select '{RoleNames.Employee}' or '{RoleNames.Employer}' as your role.");
+
+        User user = await _userManager.FindByNameAsync(signUpDto.UserName);
+
+        if (user != null)
+            throw new UzWorksException("This user already created.");
+
+        User newUser = new User(signUpDto.FirstName, signUpDto.LastName, signUpDto.UserName);
+
+        var result = await _userManager.CreateAsync(newUser, signUpDto.Password);
+
+        if (!result.Succeeded)
+            throw new UzWorksException("Didn't Succeeded.");
+
+        var roles = new List<string> { RoleNames.NewUser, signUpDto.Role };
+
+        await _userManager.AddToRolesAsync(newUser, roles);
+
+        return new SignUpResponseDto(Guid.Parse(newUser.Id), newUser.UserName, newUser.FirstName, newUser.LastName, roles);
     }
 }

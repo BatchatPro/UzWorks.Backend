@@ -29,26 +29,9 @@ namespace UzWorks.Controllers
 
         [HttpPost]
         [Route("signup")]
-        public async Task<IActionResult> SignUpAsync([FromBody] SignUpDto signUpDto)
+        public async Task<ActionResult<SignUpResponseDto>> SignUpAsync([FromBody] SignUpDto signUpDto)
         {
-            if (signUpDto.Role is not (RoleNames.Employer or RoleNames.Employee))
-                return BadRequest($"Please select '{RoleNames.Employee}' or '{RoleNames.Employer}' as your role.");
-
-            User user = await _userManager.FindByNameAsync(signUpDto.UserName);
-
-            if (user != null)
-                return BadRequest("This user already created.");
-
-            User newUser = new User(signUpDto.FirstName, signUpDto.LastName, signUpDto.UserName);
-
-            var result = await _userManager.CreateAsync(newUser, signUpDto.Password);
-
-            if (!result.Succeeded)
-                return BadRequest("Didn't Succeeded.");
-            
-            await _userManager.AddToRolesAsync(newUser, new[] { RoleNames.NewUser, signUpDto.Role });
-            
-            return Ok(result);
+            return Ok(await _authService.Register(signUpDto));  
         }
     }
 }
