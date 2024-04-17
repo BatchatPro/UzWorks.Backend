@@ -26,7 +26,7 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponseDto> Login(LoginDto loginDto)
     {
-        var user = await _userManager.FindByNameAsync(loginDto.UserName) ??
+        var user = await _userManager.FindByNameAsync(loginDto.PhoneNumber) ??
                 throw new UzWorksException("Not Found");
 
         if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
@@ -72,12 +72,12 @@ public class AuthService : IAuthService
         if (signUpDto.Role is not (RoleNames.Employer or RoleNames.Employee))
             throw new UzWorksException($"Please select '{RoleNames.Employee}' or '{RoleNames.Employer}' as your role.");
 
-        User user = await _userManager.FindByNameAsync(signUpDto.UserName);
+        User user = await _userManager.FindByNameAsync(signUpDto.PhoneNumber);
 
         if (user != null)
             throw new UzWorksException("This user already created.");
 
-        User newUser = new User(signUpDto.FirstName, signUpDto.LastName, signUpDto.UserName);
+        User newUser = new User(signUpDto.FirstName, signUpDto.LastName, signUpDto.PhoneNumber);
 
         var result = await _userManager.CreateAsync(newUser, signUpDto.Password);
 

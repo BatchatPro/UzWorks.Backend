@@ -116,7 +116,7 @@ public class UserService : IUserService
                 $"Wrong Role! You have to select '{RoleNames.Employee}' or '{RoleNames.Employer}'."
                 );
 
-        if (await _userManager.FindByNameAsync(userDto.UserName) != null)
+        if (await _userManager.FindByNameAsync(userDto.PhoneNumber) != null)
             throw new UzWorksException("This user already created.");
         
         var newUser = _mappingService.Map<User,UserDto>(userDto) ;
@@ -153,7 +153,7 @@ public class UserService : IUserService
         if (!_environmentAccessor.IsAuthorOrAdmin(userEM.Id))
             throw new UzWorksException("You have not access for change this user information.");
 
-        if (user.UserName != userEM.UserName)
+        if (user.UserName != userEM.PhoneNumber)
             throw new UzWorksException("You can not change UserName.");
 
         var userNewData = _mappingService.Map(userEM, user);

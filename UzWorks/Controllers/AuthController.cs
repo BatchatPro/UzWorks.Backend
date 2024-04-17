@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UzWorks.Core.DataTransferObjects.Auth;
 using UzWorks.Identity.Models;
-using UzWorks.Core.Constants;
 using UzWorks.Identity.Services.Auth;
 
 namespace UzWorks.Controllers
@@ -12,12 +11,10 @@ namespace UzWorks.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly UserManager<User> _userManager;
 
-        public AuthController(IAuthService authService, UserManager<User> userManager)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
-            _userManager = userManager;
         }
 
         [HttpPost]

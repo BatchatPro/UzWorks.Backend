@@ -30,6 +30,7 @@ public static class IdentityModule
              option.Password.RequireLowercase = true;
              option.Password.RequireUppercase = false;
              option.Password.RequireDigit = true;
+             option.SignIn.RequireConfirmedPhoneNumber = true;
          }).AddRoles<Role>()
           .AddUserManager<UserManager<User>>()
           .AddRoleManager<RoleManager<Role>>()

@@ -13,6 +13,7 @@ using UzWorks.Persistence.Repositories.Workers.Experiences;
 using UzWorks.Persistence.Repositories.Contacts;
 using UzWorks.Persistence.Repositories.FAQs;
 using UzWorks.Persistence.Repositories.FeedBacks;
+using UzWorks.Persistence.Repositories.SMSTokens;
 
 namespace UzWorks.Persistence;
 
@@ -37,6 +38,7 @@ public static class PersistenceModule
         services.AddScoped<IContactsRepository, ContactsRepository>();
         services.AddScoped<IFAQsRepository, FAQsRepository>();
         services.AddScoped<IFeedBacksRepository, FeedBacksRepository>();
+        services.AddScoped<ISmsTokensRepository, SmsTokensRepository>();
 
         using var provider = services.BuildServiceProvider();
 

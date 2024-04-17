@@ -5,7 +5,7 @@ namespace UzWorks.Core.DataTransferObjects.Auth;
 public class SignUpDto
 {
     [Required(ErrorMessage = "This Poly is Required.")]
-    public string UserName { get; set; } = string.Empty;
+    public string PhoneNumber { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "This Poly is Required.")]
     [StringLength(100, ErrorMessage = "Minimum Length = 8 !", MinimumLength = 8)]
