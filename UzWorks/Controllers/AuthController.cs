@@ -28,7 +28,7 @@ namespace UzWorks.Controllers
         [Route("signup")]
         public async Task<ActionResult<SignUpResponseDto>> SignUpAsync([FromBody] SignUpDto signUpDto)
         {
-            return Ok(await _authService.Register(signUpDto));  
+            return Ok(await _authService.Register(signUpDto));
         }
     }
 }

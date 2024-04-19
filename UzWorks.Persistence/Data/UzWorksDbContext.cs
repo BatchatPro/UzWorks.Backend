@@ -6,7 +6,6 @@ using UzWorks.Core.Entities.FAQs;
 using UzWorks.Core.Entities.Feedbacks;
 using UzWorks.Core.Entities.JobAndWork;
 using UzWorks.Core.Entities.Location;
-using UzWorks.Core.Entities.SMS;
 
 namespace UzWorks.Persistence.Data;
 
@@ -23,7 +22,6 @@ public class UzWorksDbContext : DbContext
     public DbSet<Contact> Contacts { get; set; }
     public DbSet<FAQ> FAQs { get; set; }
     public DbSet<FeedBack> FeedBacks { get; set; }
-    public DbSet<SmsToken> SmsTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

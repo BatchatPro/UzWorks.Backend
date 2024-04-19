@@ -1,12 +1,17 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using UzWorks.Core.AccessConfigurations;
 using UzWorks.Core.Constants;
 using UzWorks.Core.DataTransferObjects.Auth;
+using UzWorks.Core.Entities.SMS;
 using UzWorks.Core.Exceptions;
 using UzWorks.Identity.Constants;
 using UzWorks.Identity.Models;
@@ -17,11 +22,13 @@ public class AuthService : IAuthService
 {
     private IOptions<AccessConfiguration> _siteSettings;
     private readonly UserManager<User> _userManager;
+    private readonly UzWorksIdentityDbContext _context;
 
-    public AuthService(IOptions<AccessConfiguration> siteSettings, UserManager<User> userManager)
+    public AuthService(IOptions<AccessConfiguration> siteSettings, UserManager<User> userManager, UzWorksIdentityDbContext context)
     {
         _siteSettings = siteSettings;
         _userManager = userManager;
+        _context = context;
     }
 
     public async Task<LoginResponseDto> Login(LoginDto loginDto)
@@ -36,7 +43,7 @@ public class AuthService : IAuthService
 
         var authClaims = new List<Claim>()
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(ClaimNames.UserId, user.Id),
                     new Claim(ClaimNames.FirstName, user.FirstName),
@@ -63,7 +70,7 @@ public class AuthService : IAuthService
 
         return new LoginResponseDto(
                         Guid.Parse(user.Id), token, jwtSecurityToken.ValidTo,
-                        user.UserName, user.FirstName, user.LastName, user.Gender,
+                        user.FirstName, user.LastName, user.Gender,
                         user.BirthDate, user.PhoneNumber, roles);
     }
 
@@ -88,6 +95,56 @@ public class AuthService : IAuthService
 
         await _userManager.AddToRolesAsync(newUser, roles);
 
-        return new SignUpResponseDto(Guid.Parse(newUser.Id), newUser.UserName, newUser.FirstName, newUser.LastName, roles);
+        var code = new Random().Next(1000, 9999).ToString();
+
+        _context.SmsTokens.Add(new SmsToken(code, newUser.PhoneNumber));
+        await _context.SaveChangesAsync();
+
+        var message = $"Your verification code is: {code}";
+        
+        if(await SendCode(newUser.PhoneNumber, message))
+            throw new UzWorksException("Code not sent.");
+
+        return new SignUpResponseDto(Guid.Parse(newUser.Id), newUser.PhoneNumber, newUser.FirstName, newUser.LastName, roles);
+    }
+
+    public async Task<bool> VerifyPhoneNumber(string phoneNumber, string user_code)
+    {
+        var user = await _userManager.FindByNameAsync(phoneNumber) ??
+            throw new UzWorksException("User not found.");
+
+        var code = _context.SmsTokens.Where(x => x.PhoneNumber == phoneNumber).FirstOrDefault().SmsCode ??
+            throw new UzWorksException("Code not found.");
+
+        if (code != user_code)
+            throw new UzWorksException("Code is incorrect.");
+
+        user.PhoneNumberConfirmed = true;
+        await _userManager.UpdateAsync(user);
+
+        return true;
+    }
+
+    public async Task<bool> SendCode(string phoneNumber, string smsMessage)
+    {
+        var client = new HttpClient();
+
+        client.DefaultRequestHeaders.Add("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTYxMjQ1MjAsImlhdCI6MTcxMzUzMjUyMCwicm9sZSI6InVzZXIiLCJzaWduIjoiM2JkZDM1YWRjNDNkMGI4Y2VjYWZjNmI4YjUzZTdiMjAzNDJlODNiMGYwMGZkMGE0MzIwN2YzYjllNjFjMGMwYyIsInN1YiI6IjY4OTIifQ.909i6Rr1ECTKTjzGt8psc7STN4upQrSJC2tMkhqyr-M");
+
+        var stringContent = JsonConvert.SerializeObject(new
+        {
+            mobile_phone = phoneNumber,
+            message = smsMessage,
+            from = "4546"
+        });
+
+        var content = new StringContent(stringContent, Encoding.UTF8, "application/json");
+
+        var response = await client.PostAsync("https://notify.eskiz.uz/api/message/sms/send", content);
+        var responseString = await response.Content.ReadAsStringAsync();
+
+        Console.WriteLine(responseString);
+
+        return true;
     }
 }

@@ -6,4 +6,5 @@ public interface IAuthService
 {
     Task<LoginResponseDto> Login(LoginDto loginDto);
     Task<SignUpResponseDto> Register(SignUpDto registerDto);
+    Task<bool> VerifyPhoneNumber(string phoneNumber, string userCode);
 }

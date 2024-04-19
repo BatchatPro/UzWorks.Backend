@@ -15,22 +15,22 @@ public class User : IdentityUser
     [ProtectedPersonalData]
     public override string PhoneNumber { get; set; }
 
-    public User(string firstName, string lastName, string userName)
+    public User(string firstName, string lastName, string phoneNumber)
     {
         FirstName = firstName;
         LastName = lastName;
-        UserName = userName;
-        PhoneNumber = userName;
+        UserName = phoneNumber;
+        PhoneNumber = phoneNumber;
     }
 
-    public User(string firstName, string lastName, string userName, string email, string? gender, DateTime birthDate)
+    public User(string firstName, string lastName, string phoneNumber, string email, string? gender, DateTime birthDate)
     {
         FirstName = firstName;
         LastName = lastName;
-        UserName= userName;
+        UserName= phoneNumber;
         Email = email;
         Gender = gender;
         BirthDate = birthDate;
-        PhoneNumber = userName;
+        PhoneNumber = phoneNumber;
     }
 }
