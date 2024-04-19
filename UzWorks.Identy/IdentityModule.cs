@@ -9,6 +9,7 @@ using System.Text;
 using UzWorks.Core.AccessConfigurations;
 using UzWorks.Identity.ClaimsPrincipalFactory;
 using UzWorks.Identity.Models;
+using UzWorks.Identity.Services.Auth;
 using UzWorks.Identity.Services.Roles;
 
 namespace UzWorks.Identity;
@@ -58,6 +59,7 @@ public static class IdentityModule
         });
 
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         using var provider = services.BuildServiceProvider();
 

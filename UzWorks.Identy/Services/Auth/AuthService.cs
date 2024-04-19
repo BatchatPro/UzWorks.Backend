@@ -45,7 +45,7 @@ public class AuthService : IAuthService
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(ClaimNames.UserId, user.Id),
+                    new Claim(ClaimNames.UserId, Convert.ToString(user.Id)),
                     new Claim(ClaimNames.FirstName, user.FirstName),
                     new Claim(ClaimNames.LastName, user.LastName)
                 };

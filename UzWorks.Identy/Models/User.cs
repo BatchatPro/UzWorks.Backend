@@ -10,9 +10,10 @@ public class User : IdentityUser
     public string? Gender { get; set; }
     public DateTime BirthDate { get; set; }
     public string? MobileId { get; set; } = string.Empty;
+    public string Status { get; set; } = "Active";
 
     [Required]
-    [ProtectedPersonalData]
+    [Phone]
     public override string PhoneNumber { get; set; }
 
     public User(string firstName, string lastName, string phoneNumber)
@@ -28,9 +29,9 @@ public class User : IdentityUser
         FirstName = firstName;
         LastName = lastName;
         UserName= phoneNumber;
+        PhoneNumber = phoneNumber;
         Email = email;
         Gender = gender;
         BirthDate = birthDate;
-        PhoneNumber = phoneNumber;
     }
 }

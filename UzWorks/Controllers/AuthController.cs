@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UzWorks.Core.DataTransferObjects.Auth;
-using UzWorks.Identity.Models;
 using UzWorks.Identity.Services.Auth;
 
 namespace UzWorks.Controllers
@@ -29,6 +27,15 @@ namespace UzWorks.Controllers
         public async Task<ActionResult<SignUpResponseDto>> SignUpAsync([FromBody] SignUpDto signUpDto)
         {
             return Ok(await _authService.Register(signUpDto));
+        }
+
+        [HttpPost]
+        [Route("verify-phone")]
+        public async Task<IActionResult> VerifyPhoneNumber([FromBody] VerifyDto verifyDto)
+        {
+            if (await _authService.VerifyPhoneNumber(verifyDto.PhoneNumber, verifyDto.Code))
+                return Ok("Successfull!");
+            return BadRequest("Not Saccessfull!");
         }
     }
 }
