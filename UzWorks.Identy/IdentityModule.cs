@@ -11,6 +11,7 @@ using UzWorks.Identity.ClaimsPrincipalFactory;
 using UzWorks.Identity.Models;
 using UzWorks.Identity.Services.Auth;
 using UzWorks.Identity.Services.Roles;
+using UzWorks.Identity.SMS;
 
 namespace UzWorks.Identity;
 
@@ -60,6 +61,8 @@ public static class IdentityModule
 
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ISmsSender, SmsSender>();
+        services.AddOptions<SmsClientOptions>().Bind(configuration.GetSection(SmsClientOptions.SmsSectionName));
 
         using var provider = services.BuildServiceProvider();
 

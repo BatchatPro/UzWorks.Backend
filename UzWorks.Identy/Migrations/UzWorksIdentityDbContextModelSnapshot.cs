@@ -207,6 +207,9 @@ namespace UzWorks.Identity.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -218,8 +221,8 @@ namespace UzWorks.Identity.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Gender")
-                        .HasColumnType("text");
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer");
 
                     b.Property<string>("LastName")
                         .IsRequired()

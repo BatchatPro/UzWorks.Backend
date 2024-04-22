@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UzWorks.Identity.Models;
 using UzWorks.Core.Constants;
+using UzWorks.Core.Enums.GenderTypes;
 
 namespace UzWorks.API.Middleware;
 
@@ -9,7 +10,7 @@ namespace UzWorks.API.Middleware;
     public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<Role> roleManager)
     {
         string SuperAdminEmail = "goblindev02@gmail.com";
-        string SuperAdminPhoneNumber = "+998932505255";
+        string SuperAdminPhoneNumber = "998932505255";
         string SuperAdminPassword = "123456dev";
 
         var Roles = new Dictionary<string, string>()
@@ -40,8 +41,10 @@ namespace UzWorks.API.Middleware;
         else
         {
             user = new User(
-                "Abdulaziz", "Nabijonov", SuperAdminPhoneNumber, SuperAdminEmail, "Male", new DateTime(2002, 06, 17)
+                "Abdulaziz", "Nabijonov", SuperAdminPhoneNumber, SuperAdminEmail, Gender.Male, new DateTime(2002, 06, 17)
             );
+            user.PhoneNumberConfirmed = true;
+            user.EmailConfirmed = true;
             
             IdentityResult result = await userManager.CreateAsync(user, SuperAdminPassword);
             

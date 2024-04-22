@@ -1,4 +1,5 @@
 ﻿using NullGuard;
+using UzWorks.Core.Enums.GenderTypes;
 
 namespace UzWorks.Core.Entities.JobAndWork;
 
@@ -6,7 +7,7 @@ public class BaseJobEntity : BaseEntity
 {
     public string Title { get; set; }
     public uint Salary {  get; set; }
-    public string Gender { get; set; }
+    public Gender Gender { get; set; }
     public string WorkingTime { get; set; }
     public string WorkingSchedule { get; set; }
     public bool Status { get; set; } = false;

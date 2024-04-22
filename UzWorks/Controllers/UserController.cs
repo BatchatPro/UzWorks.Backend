@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using UzWorks.Core.Constants;
 using UzWorks.Core.DataTransferObjects.UserRoles;
 using UzWorks.Core.DataTransferObjects.Users;
+using UzWorks.Core.Enums.GenderTypes;
 using UzWorks.Identity.Services.Roles;
 
 namespace UzWorks.API.Controllers;
@@ -28,7 +29,7 @@ public class UserController : BaseController
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery]int pageNumber, [FromQuery]int pageSize, 
-        [FromQuery]string? gender, [FromQuery] string? email, 
+        [FromQuery]Gender? gender, [FromQuery] string? email, 
         [FromQuery] string? phoneNumber)
     {
         var users = await _userService.GetAll(pageNumber, pageSize, gender, email, phoneNumber);

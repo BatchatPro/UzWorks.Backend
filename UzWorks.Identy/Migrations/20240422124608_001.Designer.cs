@@ -12,8 +12,8 @@ using UzWorks.Identity;
 namespace UzWorks.Identity.Migrations
 {
     [DbContext(typeof(UzWorksIdentityDbContext))]
-    [Migration("20240419143118_002")]
-    partial class _002
+    [Migration("20240422124608_001")]
+    partial class _001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -210,6 +210,9 @@ namespace UzWorks.Identity.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -221,8 +224,8 @@ namespace UzWorks.Identity.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Gender")
-                        .HasColumnType("text");
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer");
 
                     b.Property<string>("LastName")
                         .IsRequired()

@@ -7,6 +7,7 @@ using UzWorks.Core.DataTransferObjects.UserRoles;
 using UzWorks.Core.Exceptions;
 using UzWorks.Identity.Models;
 using UzWorks.Core.DataTransferObjects.Roles;
+using UzWorks.Core.Enums.GenderTypes;
 
 namespace UzWorks.Identity.Services.Roles;
 
@@ -219,7 +220,7 @@ public class UserService : IUserService
 
     public async Task<IEnumerable<UserVM>> GetAll(
         int pageNumber, int pageSize, 
-        string? gender, string? email, 
+        Gender? gender, string? email, 
         string? phoneNumber)
     {
         var query = _dbContext.Users.AsQueryable();

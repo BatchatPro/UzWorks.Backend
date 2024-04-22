@@ -51,7 +51,8 @@ public class MappingProfile : Profile
 
         CreateMap<UserEM, User>();
         CreateMap<UserDto, User>();
-        CreateMap<User, UserVM>();
+        CreateMap<User, UserVM>()
+            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.ToString()));
 
         CreateMap<ExperienceDto, Experience>();
         CreateMap<Experience, ExperienceVM>();

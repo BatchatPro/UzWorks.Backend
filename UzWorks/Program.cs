@@ -70,15 +70,13 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 await app.UseRoleInitializerMiddleware();
-//await app.UseLocationInitializerMiddleware();
-
-await app.LoginToEskizSMSService();
+await app.UseLocationInitializerMiddleware();
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseCors(options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowCredentials().AllowAnyHeader());
+app.UseCors();
 
 app.UseMiddleware<ExceptionHandler>();
 

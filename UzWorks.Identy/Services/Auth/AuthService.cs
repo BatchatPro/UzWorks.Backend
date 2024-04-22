@@ -1,20 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using UzWorks.Core.AccessConfigurations;
 using UzWorks.Core.Constants;
 using UzWorks.Core.DataTransferObjects.Auth;
-using UzWorks.Core.Entities.SMS;
 using UzWorks.Core.Exceptions;
 using UzWorks.Identity.Constants;
 using UzWorks.Identity.Models;
+using UzWorks.Identity.SMS;
 
 namespace UzWorks.Identity.Services.Auth;
 
@@ -23,12 +19,14 @@ public class AuthService : IAuthService
     private IOptions<AccessConfiguration> _siteSettings;
     private readonly UserManager<User> _userManager;
     private readonly UzWorksIdentityDbContext _context;
+    private readonly ISmsSender _smsSender;
 
-    public AuthService(IOptions<AccessConfiguration> siteSettings, UserManager<User> userManager, UzWorksIdentityDbContext context)
+    public AuthService(IOptions<AccessConfiguration> siteSettings, UserManager<User> userManager, UzWorksIdentityDbContext context, ISmsSender smsSender)
     {
         _siteSettings = siteSettings;
         _userManager = userManager;
         _context = context;
+        _smsSender = smsSender;
     }
 
     public async Task<LoginResponseDto> Login(LoginDto loginDto)
@@ -36,19 +34,22 @@ public class AuthService : IAuthService
         var user = await _userManager.FindByNameAsync(loginDto.PhoneNumber) ??
                 throw new UzWorksException("Not Found");
 
+        if (!user.PhoneNumberConfirmed)
+            throw new UzWorksException($"Please verify your phone number. {user.PhoneNumber}");
+
         if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
             throw new UzWorksException("Your Password is incorrect.");
 
         var roles = await _userManager.GetRolesAsync(user);
 
         var authClaims = new List<Claim>()
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(ClaimNames.UserId, Convert.ToString(user.Id)),
-                    new Claim(ClaimNames.FirstName, user.FirstName),
-                    new Claim(ClaimNames.LastName, user.LastName)
-                };
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimNames.UserId, Convert.ToString(user.Id)),
+            new Claim(ClaimNames.FirstName, user.FirstName),
+            new Claim(ClaimNames.LastName, user.LastName)
+        };
 
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey.TheSecretKey));
 
@@ -95,15 +96,10 @@ public class AuthService : IAuthService
 
         await _userManager.AddToRolesAsync(newUser, roles);
 
-        var code = new Random().Next(1000, 9999).ToString();
+        var smsResponce = await _smsSender.SendSmsAsync(signUpDto.PhoneNumber);
 
-        _context.SmsTokens.Add(new SmsToken(code, newUser.PhoneNumber));
-        await _context.SaveChangesAsync();
-
-        var message = $"Your verification code is: {code}";
-        
-        if(await SendCode(newUser.PhoneNumber, message))
-            throw new UzWorksException("Code not sent.");
+        if (smsResponce.IsSuccessStatusCode)
+            throw new UzWorksException("SMS not sent.");
 
         return new SignUpResponseDto(Guid.Parse(newUser.Id), newUser.PhoneNumber, newUser.FirstName, newUser.LastName, roles);
     }
@@ -125,25 +121,32 @@ public class AuthService : IAuthService
         return true;
     }
 
-    public async Task<bool> SendCode(string phoneNumber, string smsMessage)
+    public async Task<bool> ForgetPassword(string phoneNumber)
     {
-        var client = new HttpClient();
+        var user = await _userManager.FindByNameAsync(phoneNumber) ??
+            throw new UzWorksException("User not found.");
 
-        client.DefaultRequestHeaders.Add("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTYxMjQ1MjAsImlhdCI6MTcxMzUzMjUyMCwicm9sZSI6InVzZXIiLCJzaWduIjoiM2JkZDM1YWRjNDNkMGI4Y2VjYWZjNmI4YjUzZTdiMjAzNDJlODNiMGYwMGZkMGE0MzIwN2YzYjllNjFjMGMwYyIsInN1YiI6IjY4OTIifQ.909i6Rr1ECTKTjzGt8psc7STN4upQrSJC2tMkhqyr-M");
+        var smsResponce = await _smsSender.SendSmsAsync(user.PhoneNumber);
 
-        var stringContent = JsonConvert.SerializeObject(new
-        {
-            mobile_phone = phoneNumber,
-            message = smsMessage,
-            from = "4546"
-        });
+        if (smsResponce.IsSuccessStatusCode)
+            throw new UzWorksException("SMS not sent.");
 
-        var content = new StringContent(stringContent, Encoding.UTF8, "application/json");
+        return true;
+    }
 
-        var response = await client.PostAsync("https://notify.eskiz.uz/api/message/sms/send", content);
-        var responseString = await response.Content.ReadAsStringAsync();
+    public async Task<bool> ResetPassword(string phoneNumber, string newPassword, string code)
+    {
+        var user = await _userManager.FindByNameAsync(phoneNumber) ??
+            throw new UzWorksException("User not found.");
 
-        Console.WriteLine(responseString);
+        var smsToken = _context.SmsTokens.Where(x => x.PhoneNumber == phoneNumber).FirstOrDefault() ??
+            throw new UzWorksException("Code not found.");
+
+        if (smsToken.SmsCode != code)
+            throw new UzWorksException("Code is incorrect.");
+
+        await _userManager.RemovePasswordAsync(user);
+        await _userManager.AddPasswordAsync(user, newPassword);
 
         return true;
     }
