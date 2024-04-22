@@ -96,7 +96,7 @@ public class AuthService : IAuthService
 
         await _userManager.AddToRolesAsync(newUser, roles);
 
-        var smsResponce = await _smsSender.SendSmsAsync(signUpDto.PhoneNumber);
+        var smsResponce = await _smsSender.SendSmsOtpAsync(signUpDto.PhoneNumber);
 
         if (smsResponce.IsSuccessStatusCode)
             throw new UzWorksException("SMS not sent.");
@@ -109,7 +109,7 @@ public class AuthService : IAuthService
         var user = await _userManager.FindByNameAsync(phoneNumber) ??
             throw new UzWorksException("User not found.");
 
-        var code = _context.SmsTokens.Where(x => x.PhoneNumber == phoneNumber).FirstOrDefault().SmsCode ??
+        var code = _context.SmsTokens.Where(x => x.PhoneNumber == phoneNumber).FirstOrDefault()?.SmsCode ??
             throw new UzWorksException("Code not found.");
 
         if (code != user_code)
@@ -126,7 +126,7 @@ public class AuthService : IAuthService
         var user = await _userManager.FindByNameAsync(phoneNumber) ??
             throw new UzWorksException("User not found.");
 
-        var smsResponce = await _smsSender.SendSmsAsync(user.PhoneNumber);
+        var smsResponce = await _smsSender.SendSmsOtpAsync(user.PhoneNumber);
 
         if (smsResponce.IsSuccessStatusCode)
             throw new UzWorksException("SMS not sent.");

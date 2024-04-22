@@ -1,5 +1,6 @@
 using UzWorks.Web.Components;
-using UzWorks.Web.Services;
+using UzWorks.Web.Services.Auth;
+using UzWorks.Web.Services.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<IAuthService,  AuthService>();
 
 builder.Services.AddScoped(x => new HttpClient { BaseAddress = new Uri(builder.Configuration["BackendUrl"] ?? "https://localhost:28") });
 

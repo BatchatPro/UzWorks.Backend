@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using UzWorks.Core.DataTransferObjects.Jobs;
 
-namespace UzWorks.Web.Services;
+namespace UzWorks.Web.Services.Jobs;
 
 public class JobService : IJobService
 {

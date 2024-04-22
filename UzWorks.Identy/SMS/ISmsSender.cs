@@ -2,7 +2,5 @@
 
 public interface ISmsSender
 {
-    Task LogInToEskiz();
-    Task RefreshToken();
-    Task<HttpResponseMessage> SendSmsAsync(string phoneNumber);
+    Task SendSmsOtpAsync(string phoneNumber);
 }

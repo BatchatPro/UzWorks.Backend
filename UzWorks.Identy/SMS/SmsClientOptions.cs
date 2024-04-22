@@ -3,7 +3,6 @@
 public class SmsClientOptions
 {
     public const string SmsSectionName = "SMS";
-    public string Token {  get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
 

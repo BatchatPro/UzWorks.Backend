@@ -62,6 +62,9 @@ public static class IdentityModule
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ISmsSender, SmsSender>();
+
+        services.AddSingleton<EskizTokenHandler>();
+
         services.AddOptions<SmsClientOptions>().Bind(configuration.GetSection(SmsClientOptions.SmsSectionName));
 
         using var provider = services.BuildServiceProvider();
