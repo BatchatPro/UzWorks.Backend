@@ -1,4 +1,5 @@
-﻿using UzWorks.Core.Entities.Location;
+﻿using System.Diagnostics.CodeAnalysis;
+using UzWorks.Core.Entities.Location;
 
 namespace UzWorks.Core.Entities.JobAndWork;
 
@@ -8,6 +9,9 @@ public class Job: BaseJobEntity
     public string Requirement { get; set; }
     public int MinAge { get; set; }
     public int MaxAge { get; set; }
+
+    [AllowNull]
+    public string? Orientation { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
 

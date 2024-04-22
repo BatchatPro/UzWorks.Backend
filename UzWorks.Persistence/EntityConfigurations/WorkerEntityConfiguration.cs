@@ -13,7 +13,6 @@ public class WorkerEntityConfiguration : IEntityTypeConfiguration<Worker>
 
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Location).IsRequired();
         builder.Property(x => x.BirthDate).IsRequired();
         builder.Property(x => x.Salary).IsRequired();
         builder.Property(x => x.Gender).IsRequired();

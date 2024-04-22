@@ -210,9 +210,8 @@ namespace UzWorks.Persistence.Migrations
                     b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer");
 
                     b.Property<string>("InstagramLink")
                         .IsRequired()
@@ -238,6 +237,9 @@ namespace UzWorks.Persistence.Migrations
 
                     b.Property<int>("MinAge")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Orientation")
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -350,9 +352,8 @@ namespace UzWorks.Persistence.Migrations
                     b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer");
 
                     b.Property<string>("InstagramLink")
                         .IsRequired()
@@ -366,10 +367,6 @@ namespace UzWorks.Persistence.Migrations
 
                     b.Property<Guid?>("JobCategoryId")
                         .HasColumnType("uuid");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()

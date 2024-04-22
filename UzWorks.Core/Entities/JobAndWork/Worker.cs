@@ -8,7 +8,7 @@ namespace UzWorks.Core.Entities.JobAndWork;
 public class Worker : BaseJobEntity
 {
     public DateTime BirthDate { get; set; }
-    public string Location { get; set; }
+
     [AllowNull]
     public string? AboutMe { get; set; } = string.Empty;
 
