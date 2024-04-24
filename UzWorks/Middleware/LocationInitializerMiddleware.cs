@@ -34,7 +34,7 @@ public class LocationInitializer1
         {
             var regionName = EnumHelper.GetDescription(regionEnum);
 
-            if (!await _regionsService.Exists(regionName))
+            if (!await _regionsService.IsExists(regionName))
                 await _regionsService.Create(new RegionDto { Name = regionName});
         }
         

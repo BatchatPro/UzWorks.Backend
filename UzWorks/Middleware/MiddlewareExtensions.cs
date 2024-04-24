@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using UzWorks.BL.Services.JobCategories;
 using UzWorks.BL.Services.Locations.Districts;
 using UzWorks.BL.Services.Locations.Regions;
 using UzWorks.Identity.Models;
@@ -44,6 +45,25 @@ public static class MiddlewareExtensions
                 logger.LogError(ex, "An error occurred while seeding the database.");
             }
 
+        }
+    }
+
+    public static async Task UseJobCategoryInitializerMiddleware(this WebApplication app)
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+
+            try
+            {
+                var jobCategoryService = services.GetRequiredService<IJobCategoryService>();
+                await JobCategoryInitializerMiddleware.InitializeJobCategory(jobCategoryService);
+            }
+            catch(Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred while seeding the database.");
+            }
         }
     }
 }

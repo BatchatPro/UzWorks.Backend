@@ -46,6 +46,11 @@ public class JobCategoryService : IJobCategoryService
         return _mappingService.Map<JobCategoryVM, JobCategory>(jobCategory);
     }
 
+    public async Task<bool> IsExist(string jobCategoryName)
+    {
+        return await _repository.IsExist(jobCategoryName);
+    }
+
     public async Task<JobCategoryVM> Update(JobCategoryEM jobCategoryEM)
     {
         var jobCategory = await _repository.GetById(jobCategoryEM.Id) ?? 

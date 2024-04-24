@@ -15,4 +15,9 @@ public class JobCategoriesRepository : GenericRepository<JobCategory>, IJobCateg
         return await _context.JobCategories.OrderBy(x => x.Title).ToArrayAsync();
     }
 
+    public async Task<bool> IsExist(string jobCategoryName)
+    {
+        return await _context.JobCategories.AnyAsync(r => r.Title == jobCategoryName);
+    }
+
 }

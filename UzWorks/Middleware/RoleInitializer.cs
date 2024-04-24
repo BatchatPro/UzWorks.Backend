@@ -41,7 +41,7 @@ namespace UzWorks.API.Middleware;
         else
         {
             user = new User(
-                "Abdulaziz", "Nabijonov", SuperAdminPhoneNumber, SuperAdminEmail, Gender.Male, new DateTime(2002, 06, 17)
+                "Abdulaziz", "Nabijonov", SuperAdminPhoneNumber, SuperAdminEmail, GenderEnum.Male, new DateTime(2002, 06, 17)
             );
             user.PhoneNumberConfirmed = true;
             user.EmailConfirmed = true;

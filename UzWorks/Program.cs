@@ -69,8 +69,9 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-await app.UseRoleInitializerMiddleware();
+//await app.UseRoleInitializerMiddleware();
 //await app.UseLocationInitializerMiddleware();
+//await app.UseJobCategoryInitializerMiddleware();
 
 app.UseHttpsRedirection();
 

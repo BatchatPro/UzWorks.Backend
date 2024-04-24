@@ -220,7 +220,7 @@ public class UserService : IUserService
 
     public async Task<IEnumerable<UserVM>> GetAll(
         int pageNumber, int pageSize, 
-        Gender? gender, string? email, 
+        GenderEnum? gender, string? email, 
         string? phoneNumber)
     {
         var query = _dbContext.Users.AsQueryable();

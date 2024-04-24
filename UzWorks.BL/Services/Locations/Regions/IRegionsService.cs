@@ -8,7 +8,7 @@ public interface IRegionsService
     Task<IEnumerable<RegionVM>> GetAllAsync();
     Task<RegionVM> GetById(Guid id);
     Task<RegionVM> GetByDistrictId(Guid id);
-    Task<bool> Exists(string regionName);
+    Task<bool> IsExists(string regionName);
     Task<RegionVM> Update(RegionEM regionEM);
     Task<bool> Delete(Guid Id);
 }

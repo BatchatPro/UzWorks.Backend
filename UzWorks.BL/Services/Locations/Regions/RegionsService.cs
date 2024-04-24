@@ -52,7 +52,7 @@ public class RegionsService : IRegionsService
         return _mappingService.Map<RegionVM, Region>(region);
     }
 
-    public async Task<bool> Exists(string regionName)
+    public async Task<bool> IsExists(string regionName)
     {
         return await _regionsRepository.Exists(regionName);
     }

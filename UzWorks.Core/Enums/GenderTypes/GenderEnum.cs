@@ -1,6 +1,6 @@
 ﻿namespace UzWorks.Core.Enums.GenderTypes;
 
-public enum Gender
+public enum GenderEnum
 {
     Male,
     Female,
