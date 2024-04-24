@@ -64,10 +64,10 @@ public class ExperienceService : IExperienceService
         var experience = await _experienceRepository.GetById(experienceEM.Id) ?? 
             throw new UzWorksException($"Could not find experience with {experienceEM.Id}.");
 
-        _mappingService.Map(experienceEM, experience);
-
-        if (_environmentAccessor.IsAuthorOrAdmin(Guid.Parse(_environmentAccessor.GetUserId())))
+        if (!_environmentAccessor.IsAuthorOrAdmin(Guid.Parse(_environmentAccessor.GetUserId())))
             throw new UzWorksException("You have not access for update this Experience.");
+
+        _mappingService.Map(experienceEM, experience);
 
         experience.UpdateDate = DateTime.Now;
         experience.UpdatedBy = Guid.Parse(_environmentAccessor.GetUserId());
