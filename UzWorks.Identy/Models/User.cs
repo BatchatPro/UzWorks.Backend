@@ -7,7 +7,7 @@ public class User : IdentityUser
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public Gender? Gender { get; set; } 
+    public Gender? Gender { get; set; } = Core.Enums.GenderTypes.Gender.Unknown;
     public DateTime BirthDate { get; set; }
     public DateTime CreateDate { get; set; } = DateTime.Now;
     public string? MobileId { get; set; } = string.Empty;

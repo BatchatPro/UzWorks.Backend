@@ -17,15 +17,15 @@ public class AuthService : IAuthService
         throw new NotImplementedException();
     }
 
-    public async Task<ActionResult<LoginResponseDto>> LoginAsync(LoginDto dto)
+    public async Task<LoginResponseDto> LoginAsync(LoginDto dto)
     {
         var jsonRequest = JsonConvert.SerializeObject(dto);
         var stringContent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
         var response = await _httpClient.PostAsync("", stringContent);
         var jsonResponse = await response.Content.ReadAsStringAsync();
 
-        var result = JsonConvert.DeserializeObject<>(jsonResponse);
-        return jsonResponse;
+        var result = JsonConvert.DeserializeObject<LoginResponseDto>(jsonResponse);
+        return result;
     }
 
     public async Task LogoutAsync()

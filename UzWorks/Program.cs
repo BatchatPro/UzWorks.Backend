@@ -70,7 +70,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 await app.UseRoleInitializerMiddleware();
-await app.UseLocationInitializerMiddleware();
+//await app.UseLocationInitializerMiddleware();
 
 app.UseHttpsRedirection();
 

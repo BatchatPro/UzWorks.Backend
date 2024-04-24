@@ -5,7 +5,7 @@ namespace UzWorks.Web.Services.Auth;
 
 public interface IAuthService
 {
-    Task<ActionResult<LoginResponseDto>> LoginAsync(LoginDto dto);
+    Task<LoginResponseDto> LoginAsync(LoginDto dto);
     Task<ActionResult<SignUpResponseDto>> SignUpAsync(SignUpDto dto);
     Task<IActionResult> VerifyPhoneNumber (VerifyPhoneNumberDto dto);
     Task<IActionResult> ResetPassword (ResetPasswordByCodeDto dto);

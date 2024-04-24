@@ -80,12 +80,12 @@ public class AuthService : IAuthService
         if (signUpDto.Role is not (RoleNames.Employer or RoleNames.Employee))
             throw new UzWorksException($"Please select '{RoleNames.Employee}' or '{RoleNames.Employer}' as your role.");
 
-        User user = await _userManager.FindByNameAsync(signUpDto.PhoneNumber);
+        var user = await _userManager.FindByNameAsync(signUpDto.PhoneNumber);
 
         if (user != null)
             throw new UzWorksException("This user already created.");
 
-        User newUser = new User(signUpDto.FirstName, signUpDto.LastName, signUpDto.PhoneNumber);
+        var newUser = new User(signUpDto.FirstName, signUpDto.LastName, signUpDto.PhoneNumber);
 
         var result = await _userManager.CreateAsync(newUser, signUpDto.Password);
 
@@ -96,10 +96,7 @@ public class AuthService : IAuthService
 
         await _userManager.AddToRolesAsync(newUser, roles);
 
-        var smsResponce = await _smsSender.SendSmsOtpAsync(signUpDto.PhoneNumber);
-
-        if (smsResponce.IsSuccessStatusCode)
-            throw new UzWorksException("SMS not sent.");
+        await _smsSender.SendSmsOtpAsync(signUpDto.PhoneNumber);
 
         return new SignUpResponseDto(Guid.Parse(newUser.Id), newUser.PhoneNumber, newUser.FirstName, newUser.LastName, roles);
     }
@@ -126,10 +123,7 @@ public class AuthService : IAuthService
         var user = await _userManager.FindByNameAsync(phoneNumber) ??
             throw new UzWorksException("User not found.");
 
-        var smsResponce = await _smsSender.SendSmsOtpAsync(user.PhoneNumber);
-
-        if (smsResponce.IsSuccessStatusCode)
-            throw new UzWorksException("SMS not sent.");
+        await _smsSender.SendSmsOtpAsync(user.PhoneNumber);
 
         return true;
     }

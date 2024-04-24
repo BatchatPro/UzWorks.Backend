@@ -7,7 +7,7 @@ public class BaseJobEntity : BaseEntity
 {
     public string Title { get; set; }
     public uint Salary {  get; set; }
-    public Gender Gender { get; set; }
+    public Gender Gender { get; set; } = UzWorks.Core.Enums.GenderTypes.Gender.Unknown;
     public string WorkingTime { get; set; }
     public string WorkingSchedule { get; set; }
     public bool Status { get; set; } = false;
