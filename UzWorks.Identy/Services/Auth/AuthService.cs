@@ -94,7 +94,7 @@ public class AuthService : IAuthService
         var user = await _userManager.FindByNameAsync(signUpDto.PhoneNumber);
 
         if (user != null && user.PhoneNumberConfirmed == true)
-            throw new UzWorksException("This user already created. You can use Forget Password.");
+            throw new UzWorksException("This user already created. You can Login to your account.");
 
         if (signUpDto.Role is not (RoleNames.Employer or RoleNames.Employee))
             throw new UzWorksException($"Please select '{RoleNames.Employee}' or '{RoleNames.Employer}' as your role.");
@@ -107,7 +107,7 @@ public class AuthService : IAuthService
         var result = await _userManager.CreateAsync(newUser, signUpDto.Password);
 
         if (!result.Succeeded)
-            throw new UzWorksException("Didn't Succeeded.");
+            throw new UzWorksException("Didn't Succeed.");
 
         var roles = new List<string> { RoleNames.NewUser, signUpDto.Role };
 
