@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SendGrid.Extensions.DependencyInjection;
 using UzWorks.Core.Abstract;
+using UzWorks.Core.Checkers;
 using UzWorks.Infrastructure.Mappers;
 
 namespace UzWorks.Infrastructure;
@@ -12,6 +13,7 @@ public static class InfrastructureModule
     {
         services.AddAutoMapper(typeof(MappingProfile));
         services.AddSingleton<IMappingService, MappingService>();
+        services.AddScoped<PhoneNumberService>();
 
         services.AddSendGrid(options =>
         {

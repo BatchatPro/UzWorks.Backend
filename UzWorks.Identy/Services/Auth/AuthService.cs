@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using UzWorks.Core.AccessConfigurations;
+using UzWorks.Core.Checkers;
 using UzWorks.Core.Constants;
 using UzWorks.Core.DataTransferObjects.Auth;
 using UzWorks.Core.Exceptions;
@@ -20,22 +21,32 @@ public class AuthService : IAuthService
     private readonly UserManager<User> _userManager;
     private readonly UzWorksIdentityDbContext _context;
     private readonly ISmsSender _smsSender;
+    private readonly PhoneNumberService _numberService;
 
-    public AuthService(IOptions<AccessConfiguration> siteSettings, UserManager<User> userManager, UzWorksIdentityDbContext context, ISmsSender smsSender)
+    public AuthService(
+                IOptions<AccessConfiguration> siteSettings, 
+                UserManager<User> userManager, 
+                UzWorksIdentityDbContext context, 
+                ISmsSender smsSender, 
+                PhoneNumberService numberService)
     {
         _siteSettings = siteSettings;
         _userManager = userManager;
         _context = context;
         _smsSender = smsSender;
+        _numberService = numberService;
     }
 
     public async Task<LoginResponseDto> Login(LoginDto loginDto)
     {
         var user = await _userManager.FindByNameAsync(loginDto.PhoneNumber) ??
-                throw new UzWorksException("Not Found");
+            throw new UzWorksException("Not Found");
 
         if (!user.PhoneNumberConfirmed)
+        {
+            await _smsSender.SendSmsOtpAsync(user.PhoneNumber);
             throw new UzWorksException($"Please verify your phone number. {user.PhoneNumber}");
+        }
 
         if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
             throw new UzWorksException("Your Password is incorrect.");
@@ -77,13 +88,19 @@ public class AuthService : IAuthService
 
     public async Task<SignUpResponseDto> Register(SignUpDto signUpDto)
     {
-        if (signUpDto.Role is not (RoleNames.Employer or RoleNames.Employee))
-            throw new UzWorksException($"Please select '{RoleNames.Employee}' or '{RoleNames.Employer}' as your role.");
+        if (!_numberService.IsFormValid(signUpDto.PhoneNumber))
+            throw new UzWorksException($"Syntax error with your phone number.");
 
         var user = await _userManager.FindByNameAsync(signUpDto.PhoneNumber);
 
-        if (user != null)
-            throw new UzWorksException("This user already created.");
+        if (user != null && user.PhoneNumberConfirmed == true)
+            throw new UzWorksException("This user already created. You can use Forget Password.");
+
+        if (signUpDto.Role is not (RoleNames.Employer or RoleNames.Employee))
+            throw new UzWorksException($"Please select '{RoleNames.Employee}' or '{RoleNames.Employer}' as your role.");
+
+        if (user != null && user.PhoneNumberConfirmed == false)
+            await _userManager.DeleteAsync(user);
 
         var newUser = new User(signUpDto.FirstName, signUpDto.LastName, signUpDto.PhoneNumber);
 
