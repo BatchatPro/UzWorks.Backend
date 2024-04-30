@@ -5,6 +5,7 @@ namespace UzWorks.Core.DataTransferObjects.Auth;
 public class SignUpDto
 {
     [Required(ErrorMessage = "This Poly is Required.")]
+    [RegularExpression("^998\\d{9}$", ErrorMessage = "Please enter a valid phone number starting with 998 and 12 digits long.")]
     public string PhoneNumber { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "This Poly is Required.")]

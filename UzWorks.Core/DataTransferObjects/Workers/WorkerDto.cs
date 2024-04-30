@@ -23,6 +23,7 @@ public class WorkerDto
     [Required]
     public string TgUserName { get; set; } = string.Empty;
     [Required]
+    [RegularExpression("^998\\d{9}$", ErrorMessage = "Please enter a valid phone number starting with 998 and 12 digits long.")]
     public string PhoneNumber { get; set; } = string.Empty;
     [Required]
     public string Location { get; set; } = string.Empty; 

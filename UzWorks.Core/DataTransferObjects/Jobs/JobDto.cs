@@ -30,6 +30,7 @@ public class JobDto
     public string TgUserName { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "This field is required.")]
+    [RegularExpression("^998\\d{9}$", ErrorMessage = "Please enter a valid phone number starting with 998 and 12 digits long.")]
     public string PhoneNumber { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "This field is required.")]

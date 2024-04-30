@@ -5,7 +5,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using UzWorks.Core.AccessConfigurations;
-using UzWorks.Core.Checkers;
 using UzWorks.Core.Constants;
 using UzWorks.Core.DataTransferObjects.Auth;
 using UzWorks.Core.Exceptions;
@@ -21,20 +20,17 @@ public class AuthService : IAuthService
     private readonly UserManager<User> _userManager;
     private readonly UzWorksIdentityDbContext _context;
     private readonly ISmsSender _smsSender;
-    private readonly PhoneNumberService _numberService;
 
     public AuthService(
                 IOptions<AccessConfiguration> siteSettings, 
                 UserManager<User> userManager, 
                 UzWorksIdentityDbContext context, 
-                ISmsSender smsSender, 
-                PhoneNumberService numberService)
+                ISmsSender smsSender)
     {
         _siteSettings = siteSettings;
         _userManager = userManager;
         _context = context;
         _smsSender = smsSender;
-        _numberService = numberService;
     }
 
     public async Task<LoginResponseDto> Login(LoginDto loginDto)
@@ -88,9 +84,6 @@ public class AuthService : IAuthService
 
     public async Task<SignUpResponseDto> Register(SignUpDto signUpDto)
     {
-        if (!_numberService.IsFormValid(signUpDto.PhoneNumber))
-            throw new UzWorksException($"Syntax error with your phone number.");
-
         var user = await _userManager.FindByNameAsync(signUpDto.PhoneNumber);
 
         if (user != null && user.PhoneNumberConfirmed == true)
