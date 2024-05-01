@@ -8,8 +8,8 @@ public interface IJobService
                         Guid? jobCategoryId, int? maxAge, int? minAge, uint? maxSalary,
                         uint? minSalary, string? gender, bool? status, Guid? regionId, Guid? districtId);
     Task<JobVM> GetById(Guid id);
-    Task<IEnumerable<JobVM>> GetJobsByUserId(Guid userId);
-    Task<IEnumerable<JobVM>> GetTopJobs();
+    Task<IEnumerable<JobVM>> GetByUserId(Guid userId);
+    Task<IEnumerable<JobVM>> GetTops();
     Task<JobVM> Create(JobDto jobDto);
     Task<JobVM> Update(JobEM jobEM);
     Task<bool> ChangeStatus(Guid id, bool status);

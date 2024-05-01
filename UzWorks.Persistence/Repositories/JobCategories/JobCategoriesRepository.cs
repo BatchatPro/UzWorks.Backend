@@ -20,4 +20,8 @@ public class JobCategoriesRepository : GenericRepository<JobCategory>, IJobCateg
         return await _context.JobCategories.AnyAsync(r => r.Title == jobCategoryName);
     }
 
+    public async Task<bool> IsExist(Guid id)
+    {
+        return await _context.JobCategories.AnyAsync(r => r.Id == id);
+    }
 }

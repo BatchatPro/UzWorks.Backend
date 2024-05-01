@@ -15,5 +15,7 @@ public interface IWorkersRepository : IGenericRepository<Worker>
 
     Task<Worker[]> GetByUserIdAsync(Guid userId);
 
+    Task<int> CountOfAnnouncements(Guid userId);
+
     Task<Worker[]> GetTopsAsync();
 }

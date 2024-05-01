@@ -49,7 +49,7 @@ public class JobController : BaseController
     [HttpGet]
     public async Task<ActionResult<IEnumerable<JobVM>>> GetTopJobs()
     {
-        var result = await _jobService.GetTopJobs();
+        var result = await _jobService.GetTops();
         return Ok(result);
     }
 
@@ -96,7 +96,7 @@ public class JobController : BaseController
     [HttpGet("{id}")]
     public async Task<ActionResult<IEnumerable<JobVM>>> GetByUserId([FromRoute] Guid id)
     {
-        var result = await _jobService.GetJobsByUserId(id);
+        var result = await _jobService.GetByUserId(id);
         return Ok(result);
     }
 

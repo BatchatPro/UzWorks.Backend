@@ -9,6 +9,7 @@ public class JobVM
     public string WorkingTime {  get; set; } = string.Empty;
     public string WorkingSchedule { get; set; } = string.Empty;
     public bool IsTop { get; set; }
+    public bool Status { get; set; }
     public DateTime Deadline { get; set; }
     public DateTime CreateDate { get; set; }
     public string TelegramLink { get; set; } = string.Empty;

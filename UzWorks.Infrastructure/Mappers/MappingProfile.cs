@@ -39,8 +39,8 @@ public class MappingProfile : Profile
         CreateMap<WorkerEM, Worker>();
         CreateMap<Worker, WorkerVM>()
             .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.JobCategory.Title))
-            .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.District.Name))
-            .ForMember(dest => dest.RegionName, opt => opt.MapFrom(src => src.District.Region.Name))
+            .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.District.Name == null ? null : src.District.Name))
+            .ForMember(dest => dest.RegionName, opt => opt.MapFrom(src => src.District.Region.Name == null ? null : src.District.Region.Name))
             .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.ToString()));
 
         CreateMap<JobDto, Job>();

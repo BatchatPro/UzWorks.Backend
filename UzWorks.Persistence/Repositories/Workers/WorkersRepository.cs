@@ -104,11 +104,18 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
 
     public async Task<Worker[]> GetByUserIdAsync(Guid userId)
     {
-        var query = _dbSet.Where(x => (x.CreatedBy == userId));
+        var query = _dbSet.Where(x => x.CreatedBy == userId);
 
         return await query.ToArrayAsync() ;
     }
-    
+
+    public async Task<int> CountOfAnnouncements(Guid userId)
+    {
+        var query = _dbSet.Where(x => x.CreatedBy == userId);
+        
+        return await query.CountAsync();
+    }
+
     public async Task<Worker[]> GetTopsAsync()
     {
         var query = _dbSet.Where(j => !j.IsDeleted).AsQueryable();

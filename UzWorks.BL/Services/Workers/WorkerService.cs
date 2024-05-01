@@ -1,9 +1,11 @@
-﻿using UzWorks.BL.Services.Locations.Districts;
-using UzWorks.Core.Abstract;
+﻿using UzWorks.Core.Abstract;
 using UzWorks.Core.DataTransferObjects.Workers;
 using UzWorks.Core.Entities.JobAndWork;
 using UzWorks.Core.Exceptions;
 using UzWorks.Identity.Services.Roles;
+using UzWorks.Persistence.Repositories.Districts;
+using UzWorks.Persistence.Repositories.JobCategories;
+using UzWorks.Persistence.Repositories.Regions;
 using UzWorks.Persistence.Repositories.Workers;
 
 namespace UzWorks.BL.Services.Workers;
@@ -13,27 +15,36 @@ public class WorkerService : IWorkerService
     private readonly IWorkersRepository _workersRepository;
     private readonly IMappingService _mappingService;
     private readonly IEnvironmentAccessor _environmentAccessor;
-    private readonly IDistrictService _districtService;
     private readonly IUserService _userService;
+    private readonly IDistrictsRepository _districtsRepository;
+    private readonly IRegionsRepository _regionsRepository;
+    private readonly IJobCategoriesRepository _jobCategoriesRepository;
 
     public WorkerService(
                     IWorkersRepository workersRepository, 
                     IMappingService mappingService, 
                     IEnvironmentAccessor environmentAccessor, 
-                    IDistrictService districtService,
-                    IUserService userService)
+                    IUserService userService,
+                    IDistrictsRepository districtsRepository,
+                    IRegionsRepository regionsRepository,
+                    IJobCategoriesRepository jobCategoriesRepository)
     {
         _workersRepository = workersRepository;
         _mappingService = mappingService;
         _environmentAccessor = environmentAccessor;
-        _districtService = districtService;
         _userService = userService;
+        _districtsRepository = districtsRepository;
+        _regionsRepository = regionsRepository;
+        _jobCategoriesRepository = jobCategoriesRepository;
     }
 
     public async Task<WorkerVM> Create(WorkerDto workerDto)
     {
-        if (!await _districtService.IsExist(workerDto.DistrictId))
+        if (!await _districtsRepository.IsExist(workerDto.DistrictId))
             throw new UzWorksException($"Could not find district with id: {workerDto.DistrictId}");
+
+        if (!await _jobCategoriesRepository.IsExist(workerDto.CategoryId))
+            throw new UzWorksException($"Could not find job category with id: {workerDto.CategoryId}");
 
         var worker = _mappingService.Map<Worker, WorkerDto>(workerDto) ??
             throw new UzWorksException("Could not map WorkerDto to Worker.");
@@ -41,16 +52,31 @@ public class WorkerService : IWorkerService
         worker.CreateDate = DateTime.Now;
         worker.CreatedBy = Guid.Parse(_environmentAccessor.GetUserId());
 
-        if (_environmentAccessor.IsAdmin(Guid.Parse(_environmentAccessor.GetUserId())))
+        var userId = Guid.Parse(_environmentAccessor.GetUserId());
+        var isAdmin = _environmentAccessor.IsAdmin(userId);
+
+        if (isAdmin)
         {
             worker.Status = true;
             worker.IsTop = true;   
         }
 
+        var district = await _districtsRepository.GetById(workerDto.DistrictId)??
+            throw new UzWorksException("District not found");
+
+        var jobCategory = await _jobCategoriesRepository.GetById(workerDto.CategoryId);
+        var region = await _regionsRepository.GetByDistrictId(district.Id);
+
+        worker.District = district;
+        worker.JobCategory = jobCategory;
+        worker.District.Region = region;
+
         await _workersRepository.CreateAsync(worker);
         await _workersRepository.SaveChanges();
 
-        var result = _mappingService.Map<WorkerVM, Worker>(worker);
+        var result = _mappingService.Map<WorkerVM, Worker>(worker) ??
+            throw new UzWorksException("Could not map Worker to WorkerVM.");
+
         result.FullName = _environmentAccessor.GetFullName();
 
         return result;
@@ -118,7 +144,7 @@ public class WorkerService : IWorkerService
         var worker = await _workersRepository.GetById(workerEM.Id) ??
             throw new UzWorksException($"Could not find worker with id: {workerEM.Id}");
         
-        if (!await _districtService.IsExist(workerEM.DistrictId))
+        if (!await _districtsRepository.IsExist(workerEM.DistrictId))
             throw new UzWorksException($"Could not find district with id: {workerEM.DistrictId}");
 
         if (!_environmentAccessor.IsAuthorOrSupervisor(worker.CreatedBy))

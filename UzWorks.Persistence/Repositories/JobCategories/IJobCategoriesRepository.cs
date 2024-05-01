@@ -6,4 +6,5 @@ public interface IJobCategoriesRepository : IGenericRepository<JobCategory>
 {
     Task<IEnumerable<JobCategory>> GetAllAsync();
     Task<bool> IsExist(string jobCategoryName);
+    Task<bool> IsExist(Guid categoryId);
 }

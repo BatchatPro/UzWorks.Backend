@@ -51,6 +51,11 @@ public class JobCategoryService : IJobCategoryService
         return await _repository.IsExist(jobCategoryName);
     }
 
+    public async Task<bool> IsExist(Guid id)
+    {
+        return await _repository.IsExist(id);
+    }
+
     public async Task<JobCategoryVM> Update(JobCategoryEM jobCategoryEM)
     {
         var jobCategory = await _repository.GetById(jobCategoryEM.Id) ?? 

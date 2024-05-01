@@ -1,29 +1,37 @@
-﻿using UzWorks.BL.Services.Locations.Districts;
-using UzWorks.Core.Abstract;
+﻿using UzWorks.Core.Abstract;
 using UzWorks.Core.DataTransferObjects.Jobs;
 using UzWorks.Core.Entities.JobAndWork;
 using UzWorks.Core.Exceptions;
+using UzWorks.Persistence.Repositories.Districts;
+using UzWorks.Persistence.Repositories.JobCategories;
 using UzWorks.Persistence.Repositories.Jobs;
+using UzWorks.Persistence.Repositories.Regions;
 
 namespace UzWorks.BL.Services.Jobs;
 
 public class JobService : IJobService
 {
     private readonly IJobsRepository _jobsRepository;
-    private readonly IDistrictService _districtService;
     private readonly IMappingService _mappingService;
     private readonly IEnvironmentAccessor _environmentAccessor;
+    private readonly IDistrictsRepository _districtsRepository;
+    private readonly IRegionsRepository _regionsRepository;
+    private readonly IJobCategoriesRepository _jobCategoriesRepository;
 
     public JobService(
                 IJobsRepository jobsRepository, 
                 IMappingService mappingService, 
                 IEnvironmentAccessor environmentAccessor, 
-                IDistrictService districtService)
+                IDistrictsRepository districtsRepository,
+                IRegionsRepository regionsRepository,
+                IJobCategoriesRepository jobCategoriesRepository)
     {
         _jobsRepository = jobsRepository;
         _mappingService = mappingService;
         _environmentAccessor = environmentAccessor; 
-        _districtService = districtService;
+        _districtsRepository = districtsRepository;
+        _regionsRepository = regionsRepository;
+        _jobCategoriesRepository = jobCategoriesRepository;
     }
 
     public async Task<JobVM> Create(JobDto jobDto)
@@ -31,8 +39,11 @@ public class JobService : IJobService
         if (jobDto == null)
             throw new UzWorksException("Job Dto can not be null.");
 
-        if (!await _districtService.IsExist(jobDto.DistrictId))
+        if (!await _districtsRepository.IsExist(jobDto.DistrictId))
             throw new UzWorksException($"Could not find district with id: {jobDto.DistrictId}");
+
+        if (!await _jobCategoriesRepository.IsExist(jobDto.CategoryId))
+            throw new UzWorksException($"Could not find job category with id: {jobDto.CategoryId}");
 
         var job = _mappingService.Map<Job, JobDto>(jobDto);
 
@@ -45,6 +56,16 @@ public class JobService : IJobService
             job.Status = true;
             job.IsTop = true;   
         }
+
+        var district = await _districtsRepository.GetById(jobDto.DistrictId) ??
+            throw new UzWorksException("District not found");
+
+        var jobCategory = await _jobCategoriesRepository.GetById(jobDto.CategoryId);
+        var region = await _regionsRepository.GetByDistrictId(district.Id);
+
+        job.District = district;
+        job.JobCategory = jobCategory;
+        job.District.Region = region;
 
         await _jobsRepository.CreateAsync(job);
         await _jobsRepository.SaveChanges();
@@ -73,7 +94,7 @@ public class JobService : IJobService
         return _mappingService.Map<JobVM, Job>(job);
     }
 
-    public async Task<IEnumerable<JobVM>> GetTopJobs() 
+    public async Task<IEnumerable<JobVM>> GetTops() 
     { 
         var jobs = await _jobsRepository.GetTopsAsync();
         var result = _mappingService.Map<IEnumerable<JobVM>, IEnumerable<Job>>(jobs);
@@ -86,7 +107,7 @@ public class JobService : IJobService
         return _jobsRepository.GetCount(statys);
     }
 
-    public async Task<IEnumerable<JobVM>> GetJobsByUserId(Guid userId)
+    public async Task<IEnumerable<JobVM>> GetByUserId(Guid userId)
     {
         if (!_environmentAccessor.IsAuthorOrSupervisor(userId))
             throw new UzWorksException($"You have not access to get this {userId}'s jobs.");
@@ -112,7 +133,7 @@ public class JobService : IJobService
         var job = await _jobsRepository.GetById(jobEM.Id) ?? 
             throw new UzWorksException($"Could not find job with {jobEM.Id}");
         
-        if (!await _districtService.IsExist(jobEM.DistrictId))
+        if (!await _districtsRepository.IsExist(jobEM.DistrictId))
             throw new UzWorksException($"Could not find district with id: {jobEM.DistrictId}");
 
         if (!_environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
