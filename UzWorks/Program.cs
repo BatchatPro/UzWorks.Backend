@@ -1,5 +1,4 @@
 using Microsoft.OpenApi.Models;
-using UzWorks.API.Middleware;
 using UzWorks.API.Utils;
 using UzWorks.BL;
 using UzWorks.Core.Abstract;

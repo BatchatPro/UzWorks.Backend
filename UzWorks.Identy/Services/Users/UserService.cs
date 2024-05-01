@@ -154,9 +154,6 @@ public class UserService : IUserService
         if (!_environmentAccessor.IsAuthorOrAdmin(userEM.Id))
             throw new UzWorksException("You have not access for change this user information.");
 
-        if (user.UserName != userEM.PhoneNumber)
-            throw new UzWorksException("You can not change UserName.");
-
         var userNewData = _mappingService.Map(userEM, user);
 
         var result = await _userManager.UpdateAsync(userNewData);

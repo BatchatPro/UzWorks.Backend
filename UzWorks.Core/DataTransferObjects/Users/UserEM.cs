@@ -1,6 +1,21 @@
-﻿namespace UzWorks.Core.DataTransferObjects.Users;
+﻿using System.ComponentModel.DataAnnotations;
+using UzWorks.Core.Enums.GenderTypes;
 
-public class UserEM : BaseUserDto
+namespace UzWorks.Core.DataTransferObjects.Users;
+
+public class UserEM 
 {
+    [Required]
     public Guid Id { get; set; }
+
+    [Required]
+    public string FirstName { get; set; }
+
+    [Required]
+    public string LastName { get; set; }
+
+    public string? Email { get; set; }
+    public GenderEnum? Gender { get; set; }
+    public string? MobileId { get; set; }
+    public DateTime BirthDate { get; set; }
 }

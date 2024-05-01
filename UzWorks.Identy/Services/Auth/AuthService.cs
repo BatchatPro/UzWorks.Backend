@@ -38,14 +38,14 @@ public class AuthService : IAuthService
         var user = await _userManager.FindByNameAsync(loginDto.PhoneNumber) ??
             throw new UzWorksException("Not Found");
 
+        if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
+            throw new UzWorksException("Your Password is incorrect.");
+
         if (!user.PhoneNumberConfirmed)
         {
             await _smsSender.SendSmsOtpAsync(user.PhoneNumber);
             throw new UzWorksException($"Please verify your phone number. {user.PhoneNumber}");
         }
-
-        if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
-            throw new UzWorksException("Your Password is incorrect.");
 
         var roles = await _userManager.GetRolesAsync(user);
 
@@ -88,9 +88,6 @@ public class AuthService : IAuthService
 
         if (user != null && user.PhoneNumberConfirmed == true)
             throw new UzWorksException("This user already created. You can Login to your account.");
-
-        if (signUpDto.Role is not (RoleNames.Employer or RoleNames.Employee))
-            throw new UzWorksException($"Please select '{RoleNames.Employee}' or '{RoleNames.Employer}' as your role.");
 
         if (user != null && user.PhoneNumberConfirmed == false)
             await _userManager.DeleteAsync(user);
