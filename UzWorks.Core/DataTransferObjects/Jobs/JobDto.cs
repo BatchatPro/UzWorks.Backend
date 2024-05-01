@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using UzWorks.Core.Enums.GenderTypes;
 
 namespace UzWorks.Core.DataTransferObjects.Jobs;
 
@@ -11,7 +12,7 @@ public class JobDto
     public uint Salary { get; set; }
     
     [Required(ErrorMessage = "This field is required.")]
-    public string Gender { get; set; } = string.Empty;
+    public GenderEnum Gender { get; set; } = GenderEnum.Unknown;
     
     [Required(ErrorMessage = "This field is required.")]
     public string WorkingTime { get; set; } = string.Empty;
