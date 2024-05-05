@@ -47,11 +47,13 @@ public class JobService : IJobService
 
         var job = _mappingService.Map<Job, JobDto>(jobDto);
 
-        job.CreateDate = DateTime.Now;
-        job.CreatedBy = Guid.Parse(_environmentAccessor.GetUserId());
+        var userId = Guid.Parse(_environmentAccessor.GetUserId());
+        var isAdmin = _environmentAccessor.IsAdmin(userId);
 
-        if (_environmentAccessor.IsAdmin(job.CreatedBy ?? 
-                throw new UzWorksException("CreatedBy cannot be null")))
+        job.CreateDate = DateTime.Now;
+        job.CreatedBy = userId;
+
+        if (isAdmin)
         {
             job.Status = true;
             job.IsTop = true;   
@@ -136,13 +138,25 @@ public class JobService : IJobService
         if (!await _districtsRepository.IsExist(jobEM.DistrictId))
             throw new UzWorksException($"Could not find district with id: {jobEM.DistrictId}");
 
+        if (!await _jobCategoriesRepository.IsExist(jobEM.CategoryId))
+            throw new UzWorksException($"Could not find job category with id: {jobEM.CategoryId}");
+
         if (!_environmentAccessor.IsAuthorOrSupervisor(job.CreatedBy))
             throw new UzWorksException("You have not access to change this Job data.");
 
         _mappingService.Map(jobEM, job);
 
+        var district = await _districtsRepository.GetById(jobEM.DistrictId)??
+            throw new UzWorksException($"Could not find district with id: {jobEM.DistrictId}");
+
+        var jobCategory = await _jobCategoriesRepository.GetById(jobEM.CategoryId);
+        var region = await _regionsRepository.GetByDistrictId(district.Id);
+
         job.UpdateDate = DateTime.Now;
         job.UpdatedBy = Guid.Parse(_environmentAccessor.GetUserId());
+        job.District = district;
+        job.JobCategory = jobCategory;
+        job.District.Region = region;
 
         _jobsRepository.UpdateAsync(job);
         await _jobsRepository.SaveChanges();

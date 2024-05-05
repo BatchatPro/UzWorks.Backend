@@ -147,10 +147,25 @@ public class WorkerService : IWorkerService
         if (!await _districtsRepository.IsExist(workerEM.DistrictId))
             throw new UzWorksException($"Could not find district with id: {workerEM.DistrictId}");
 
+        if (!await _jobCategoriesRepository.IsExist(workerEM.CategoryId))
+            throw new UzWorksException($"Could not find job category with id: {workerEM.CategoryId}");
+
         if (!_environmentAccessor.IsAuthorOrSupervisor(worker.CreatedBy))
             throw new UzWorksException("You have not access for update this worker model.");
 
         _mappingService.Map(workerEM, worker);
+
+        var district = await _districtsRepository.GetById(workerEM.DistrictId) ??
+            throw new UzWorksException($"Could not find district with id: {workerEM.DistrictId}");
+
+        var jobCategory = await _jobCategoriesRepository.GetById(workerEM.CategoryId);
+        var region = await _regionsRepository.GetByDistrictId(district.Id);
+
+        worker.UpdateDate = DateTime.Now;
+        worker.UpdatedBy = Guid.Parse(_environmentAccessor.GetUserId());
+        worker.District = district;
+        worker.JobCategory = jobCategory;
+        worker.District.Region = region;
 
         _workersRepository.UpdateAsync(worker);
         await _workersRepository.SaveChanges();
