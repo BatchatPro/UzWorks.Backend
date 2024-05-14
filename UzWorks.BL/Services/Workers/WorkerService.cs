@@ -160,12 +160,16 @@ public class WorkerService : IWorkerService
 
         var jobCategory = await _jobCategoriesRepository.GetById(workerEM.CategoryId);
         var region = await _regionsRepository.GetByDistrictId(district.Id);
+        var userId = Guid.Parse(_environmentAccessor.GetUserId());
 
         worker.UpdateDate = DateTime.Now;
-        worker.UpdatedBy = Guid.Parse(_environmentAccessor.GetUserId());
+        worker.UpdatedBy = userId;
         worker.District = district;
         worker.JobCategory = jobCategory;
         worker.District.Region = region;
+
+        if (!_environmentAccessor.IsAdmin(userId))
+            worker.Status = false;
 
         _workersRepository.UpdateAsync(worker);
         await _workersRepository.SaveChanges();

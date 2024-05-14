@@ -27,6 +27,6 @@ public class DistrictsRepository : GenericRepository<District>, IDistrictsReposi
 
     public async Task<IEnumerable<District>> GetByRegionIdAsync(Guid regionId)
     {
-        return await _dbSet.Where(x => x.RegionId.Equals(regionId)).ToArrayAsync();
+        return await _dbSet.Where(x => x.RegionId.Equals(regionId)).OrderBy(x => x.Name).ToArrayAsync();
     }
 }

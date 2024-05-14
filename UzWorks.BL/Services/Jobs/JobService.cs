@@ -151,12 +151,16 @@ public class JobService : IJobService
 
         var jobCategory = await _jobCategoriesRepository.GetById(jobEM.CategoryId);
         var region = await _regionsRepository.GetByDistrictId(district.Id);
+        var userId = Guid.Parse(_environmentAccessor.GetUserId());
 
         job.UpdateDate = DateTime.Now;
-        job.UpdatedBy = Guid.Parse(_environmentAccessor.GetUserId());
+        job.UpdatedBy = userId;
         job.District = district;
         job.JobCategory = jobCategory;
         job.District.Region = region;
+
+        if (!_environmentAccessor.IsAdmin(userId))
+            job.Status = false;
 
         _jobsRepository.UpdateAsync(job);
         await _jobsRepository.SaveChanges();
