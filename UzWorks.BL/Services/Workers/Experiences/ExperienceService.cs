@@ -83,7 +83,7 @@ public class ExperienceService : IExperienceService
         var experience = await _experienceRepository.GetById(id) ??
             throw new UzWorksException($"Could not find experience with id : {id}");
 
-        if (_environmentAccessor.IsAuthorOrAdmin(Guid.Parse(_environmentAccessor.GetUserId())))
+        if (!_environmentAccessor.IsAuthorOrAdmin(Guid.Parse(_environmentAccessor.GetUserId())))
             throw new UzWorksException("You have not access for delete this Experience.");
 
         _experienceRepository.Delete(experience);
