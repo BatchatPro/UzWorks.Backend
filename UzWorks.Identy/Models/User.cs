@@ -12,6 +12,7 @@ public class User : IdentityUser
     public DateTime CreateDate { get; set; } = DateTime.Now;
     public string? MobileId { get; set; } = string.Empty;
     public string Status { get; set; } = "Active";
+    public Guid? DistrictId { get; set; }
 
     public User(string firstName, string lastName, string phoneNumber)
     {

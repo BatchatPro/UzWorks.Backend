@@ -8,7 +8,8 @@ public class LoginResponseDto
                 Guid id, string token, DateTime expiration, 
                 string firstName, string lastName, 
                 GenderEnum? gender, DateTime birthDate, 
-                string phoneNumber, IList<string> roles)
+                string phoneNumber,Guid? districtId, 
+                IList<string> roles)
     {
         Id = id;
         Token = token;
@@ -18,6 +19,7 @@ public class LoginResponseDto
         Gender = gender;
         BirthDate = birthDate;
         PhoneNumber = phoneNumber;
+        DistrictId = districtId;
         Roles = roles;
     }
 
@@ -29,5 +31,6 @@ public class LoginResponseDto
     public string LastName { get; set; } = string.Empty;
     public GenderEnum? Gender { get; set; }
     public DateTime BirthDate { get; set; }
+    public Guid? DistrictId { get; set; }  
     public IList<string>? Roles { get; set;}
 }
