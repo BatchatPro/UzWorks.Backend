@@ -9,6 +9,7 @@ public class LoginResponseDto
                 string firstName, string lastName, 
                 GenderEnum? gender, DateTime birthDate, 
                 string phoneNumber,Guid? districtId, 
+                string? districtName,string? regionName,
                 IList<string> roles)
     {
         Id = id;
@@ -20,6 +21,8 @@ public class LoginResponseDto
         BirthDate = birthDate;
         PhoneNumber = phoneNumber;
         DistrictId = districtId;
+        DistrictName = districtName;
+        RegionNamee = regionName;
         Roles = roles;
     }
 
@@ -32,5 +35,7 @@ public class LoginResponseDto
     public GenderEnum? Gender { get; set; }
     public DateTime BirthDate { get; set; }
     public Guid? DistrictId { get; set; }  
+    public string? DistrictName {  get; set; }
+    public string? RegionNamee { get; set; }
     public IList<string>? Roles { get; set;}
 }

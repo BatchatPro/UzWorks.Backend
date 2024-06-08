@@ -13,6 +13,8 @@ public class User : IdentityUser
     public string? MobileId { get; set; } = string.Empty;
     public string Status { get; set; } = "Active";
     public Guid? DistrictId { get; set; }
+    public string? DistrcitName { get; set; }
+    public string? RegionName {  get; set; } 
 
     public User(string firstName, string lastName, string phoneNumber)
     {

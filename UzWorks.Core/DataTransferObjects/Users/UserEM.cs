@@ -18,4 +18,7 @@ public class UserEM
     public GenderEnum? Gender { get; set; }
     public string? MobileId { get; set; }
     public DateTime BirthDate { get; set; }
+    public Guid? DistrictId { get; set; }
+    public string? DistrictName { get; set; }
+    public string? RegionName { get; set; }
 }

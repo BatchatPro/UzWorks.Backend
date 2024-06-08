@@ -79,7 +79,8 @@ public class AuthService : IAuthService
         return new LoginResponseDto(
                         Guid.Parse(user.Id), token, jwtSecurityToken.ValidTo,
                         user.FirstName, user.LastName, user.Gender,
-                        user.BirthDate, user.PhoneNumber, user.DistrictId, roles);
+                        user.BirthDate, user.PhoneNumber, user.DistrictId,
+                        user.DistrcitName, user.RegionName, roles);
     }
 
     public async Task<SignUpResponseDto> Register(SignUpDto signUpDto)
