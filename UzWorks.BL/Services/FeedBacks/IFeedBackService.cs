@@ -7,6 +7,7 @@ public interface IFeedBackService
 {
     Task<FeedBackVM> Create(FeedBackDto dto);
     Task<IEnumerable<FeedBackVM>> GetAllAsync();
+    Task<FeedBackVM> GetById(Guid Id);
     Task<FeedBackVM> Update(FeedBackEM EM);
     Task<bool> Delete(Guid Id);
 }

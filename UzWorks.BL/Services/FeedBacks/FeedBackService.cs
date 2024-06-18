@@ -1,5 +1,6 @@
 ﻿using UzWorks.Core.Abstract;
 using UzWorks.Core.DataTransferObjects.FeedBacks;
+using UzWorks.Core.Entities.FAQs;
 using UzWorks.Core.Entities.Feedbacks;
 using UzWorks.Core.Exceptions;
 using UzWorks.Persistence.Repositories.FeedBacks;
@@ -42,6 +43,14 @@ public class FeedBackService : IFeedBackService
         return _mappingService.Map<IEnumerable<FeedBackVM>, IEnumerable<FeedBack>>(feedBacks);
     }
 
+    public async Task<FeedBackVM> GetById(Guid Id)
+    {
+        var feedBack = await _feedBacksRepository.GetById(Id) ?? 
+            throw new UzWorksException($"Could not find FeedBack with {Id}");
+
+        return _mappingService.Map<FeedBackVM, FeedBack>(feedBack);
+    }
+
     public async Task<FeedBackVM> Update(FeedBackEM EM)
     {
         var feedBack = await _feedBacksRepository.GetById(EM.Id) ?? 
@@ -49,6 +58,8 @@ public class FeedBackService : IFeedBackService
 
         if (!_environmentAccessor.IsAuthorOrSupervisor(feedBack.CreatedBy))
             throw new UzWorksException("You have not access to change this FeedBack data.");
+
+        _mappingService.Map(EM, feedBack);
 
         feedBack.UpdateDate = DateTime.Now;
         feedBack.UpdatedBy = Guid.Parse(_environmentAccessor.GetUserId());

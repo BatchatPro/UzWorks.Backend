@@ -42,6 +42,14 @@ public class FAQService : IFAQService
         return _mapping.Map<IEnumerable<FAQVM>, IEnumerable<FAQ>>(contacts);
     }
 
+    public async Task<FAQVM> GetById(Guid Id)
+    {
+        var faq = await _repository.GetById(Id) ?? 
+            throw new UzWorksException($"Could not find FAQ with {Id}");
+
+        return _mapping.Map<FAQVM, FAQ>(faq);
+    }
+
     public async Task<FAQVM> Update(FAQEM EM)
     {
         var faq = await _repository.GetById(EM.Id) ??

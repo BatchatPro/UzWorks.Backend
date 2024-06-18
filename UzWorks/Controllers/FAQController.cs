@@ -32,6 +32,14 @@ public class FAQController : BaseController
         return Ok(faqs);
     }
 
+    [Authorize]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<FAQVM>> GetById(Guid id)
+    {
+        var faq = await _faqService.GetById(id);
+        return Ok(faq);
+    }
+
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpPut]
     public async Task<ActionResult<FAQVM>> Update([FromBody] FAQEM EM)

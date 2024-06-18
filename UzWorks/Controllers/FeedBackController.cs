@@ -31,6 +31,14 @@ public class FeedBackController : BaseController
         return Ok(feedBacks);
     }
 
+    [Authorize]
+    [HttpGet("{Id}")]
+    public async Task<ActionResult<FeedBackVM>> GetById(Guid Id)
+    {
+        var feedBack = await _feedBackService.GetById(Id);
+        return Ok(feedBack);
+    }
+
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpPut]
     public async Task<ActionResult<FeedBackVM>> Update([FromBody] FeedBackEM EM)
