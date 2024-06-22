@@ -110,11 +110,20 @@ public class JobController : BaseController
 
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpPut("{id}")]
-    public async Task<ActionResult> ChangeStatus([FromRoute] Guid id, [FromBody] bool status)
+    public async Task<ActionResult> Activate([FromRoute] Guid id)
     {
-        var result = await _jobService.ChangeStatus(id, status);
+        await _jobService.ChangeStatus(id, true);
 
-        return result? Ok() : BadRequest();
+        return Ok(await _jobService.GetById(id));
+    }
+
+    [Authorize(Roles = RoleNames.Supervisor)]
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Deactivate([FromRoute] Guid id)
+    {
+        await _jobService.ChangeStatus(id, false);
+
+        return Ok(await _jobService.GetById(id));
     }
 
     [Authorize(Roles = RoleNames.Employer)]
