@@ -196,7 +196,7 @@ public class WorkerService : IWorkerService
         _workersRepository.UpdateAsync(worker);
         await _workersRepository.SaveChanges();
 
-        return true;
+        return worker.Status;
     }
 
     public async Task<bool> Delete(Guid id)

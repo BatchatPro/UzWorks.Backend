@@ -113,7 +113,7 @@ public class WorkerController : BaseController
     public async Task<ActionResult> ChangeStatus([FromRoute] Guid id, [FromBody] bool status)
     {
         var result = await _workerService.ChangeStatus(id, status);
-        return result ? Ok(_workerService.GetById(id)) : BadRequest();
+        return Ok(_workerService.GetById(id));
     }
 
     [Authorize(Roles = RoleNames.Employee)]
