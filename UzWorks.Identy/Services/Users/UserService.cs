@@ -31,85 +31,6 @@ public class UserService : IUserService
         _environmentAccessor = environmentAccessor;
     }
 
-    public async Task<UserRolesDto> GetUserRoles(Guid userId)
-    {
-        if (await _userManager.FindByIdAsync(userId.ToString()) == null)
-            throw new UzWorksException("User not found.");
-        
-        var userRolesDto = new UserRolesDto();
-        var userRoles = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(userId.ToString()));
-        var roles = new List<RoleDto>();
-
-        foreach (var role in userRoles)
-        {
-            var userRole = await _roleManager.FindByNameAsync(role);
-            roles.Add(new RoleDto(userRole.Name));
-        }
-
-        userRolesDto.UserId = userId;
-        userRolesDto.Roles = roles;
-
-        return userRolesDto;
-    }
-
-    public async Task<UserRolesDto> AddRolesToUser(UserRolesDto userRolesDto)
-    {
-        var user = await _userManager.FindByIdAsync(userRolesDto.UserId.ToString());
-        IList<string> addingRoles = new List<string>();
-        
-        foreach (var role in userRolesDto.Roles)
-            addingRoles.Add(role.Name);
-
-        var result = await _userManager.AddToRolesAsync(user, addingRoles);
-
-        if (!result.Succeeded)
-            throw new UzWorksException(result.Errors.Select(x => x.Description).ToString());
-
-        _dbContext.SaveChanges();
-
-        var userRoles = await _userManager.GetRolesAsync(user);
-        var rolesDTOs = new List<RoleDto>();
-        
-        foreach (var role in userRoles)
-        {
-            var userRole = await _roleManager.FindByNameAsync(role);
-            rolesDTOs.Add(new RoleDto(userRole.Name));
-        }
-
-        userRolesDto.Roles = rolesDTOs;
-        
-        return userRolesDto;
-    }
-    
-    public async Task<UserRolesDto> DeleteRolesFromUser(UserRolesDto userRolesDto)
-    {
-        var user = await _userManager.FindByIdAsync(userRolesDto.UserId.ToString());
-        var removingRoles = new List<string>();
-
-        foreach (var role in userRolesDto.Roles)
-            removingRoles.Add(role.Name);
-
-        var result = await _userManager.RemoveFromRolesAsync(user, removingRoles);
-
-        if (!result.Succeeded)
-            throw new UzWorksException(result.Errors.Select(x => x.Description).ToString());
-
-        _dbContext.SaveChanges();
-
-        var userRoles = await _userManager.GetRolesAsync(user);
-        var roles = new List<RoleDto>();
-
-        foreach (var role in userRoles)
-        {
-            var userRole = await _roleManager.FindByNameAsync(role);
-            roles.Add(new RoleDto(userRole.Name));
-        }
-
-        userRolesDto.Roles = roles;
-
-        return userRolesDto;
-    }
-
     public async Task Create(UserDto userDto)
     {
         if (userDto.RoleName != RoleNames.Employer && userDto.RoleName != RoleNames.Employee)
@@ -135,6 +56,31 @@ public class UserService : IUserService
         _dbContext.SaveChanges();
     }
 
+    public async Task<IEnumerable<UserVM>> GetAll(
+        int pageNumber, int pageSize, 
+        GenderEnum? gender, string? email, 
+        string? phoneNumber)
+    {
+        var query = _dbContext.Users.AsQueryable();
+
+        if(gender is not null)
+            query = query.Where(x => x.Gender == gender);
+
+        if(email is not null)
+            query = query.Where(x => x.Email == email);
+
+        if (phoneNumber is not null)
+            query = query.Where(x => x.PhoneNumber == phoneNumber);
+
+        if (pageNumber != 0 && pageSize != 0)
+            query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
+
+        var users = await query.ToArrayAsync();
+        var result = _mappingService.Map<IEnumerable<UserVM>, IEnumerable<User>>(users);
+
+        return result;
+    }
+
     public async Task<UserVM> GetById(Guid id)
     {
         if (!_environmentAccessor.IsAuthorOrSupervisor(id))
@@ -146,6 +92,42 @@ public class UserService : IUserService
         return _mappingService.Map<UserVM, User>(user);
     }
     
+    public async Task<UserRolesDto> GetUserRoles(Guid userId)
+    {
+        if (await _userManager.FindByIdAsync(userId.ToString()) == null)
+            throw new UzWorksException("User not found.");
+        
+        var userRolesDto = new UserRolesDto();
+        var userRoles = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(userId.ToString()));
+        var roles = new List<RoleDto>();
+
+        foreach (var role in userRoles)
+        {
+            var userRole = await _roleManager.FindByNameAsync(role);
+            roles.Add(new RoleDto(userRole.Name));
+        }
+
+        userRolesDto.UserId = userId;
+        userRolesDto.Roles = roles;
+
+        return userRolesDto;
+    }
+
+    public async Task<string> GetUserFullName(Guid id)
+    {
+        var user = await _userManager.FindByIdAsync(id.ToString()) ??
+            throw new UzWorksException("User not found.");
+
+        return user.FirstName + " " + user.LastName;
+    }
+
+    public async Task<int> GetCount()
+    {
+        var count_of_users = await _userManager.Users.CountAsync();
+        //count_of_users = await _dbContext.Users.CountAsync();
+        return count_of_users;
+    }
+
     public async Task<UserVM> Update(UserEM userEM)
     {
         var user = await _userManager.FindByIdAsync(userEM.Id.ToString()) ??
@@ -201,6 +183,35 @@ public class UserService : IUserService
         return true;
     }
 
+    public async Task<UserRolesDto> AddRolesToUser(UserRolesDto userRolesDto)
+    {
+        var user = await _userManager.FindByIdAsync(userRolesDto.UserId.ToString());
+        IList<string> addingRoles = new List<string>();
+        
+        foreach (var role in userRolesDto.Roles)
+            addingRoles.Add(role.Name);
+
+        var result = await _userManager.AddToRolesAsync(user, addingRoles);
+
+        if (!result.Succeeded)
+            throw new UzWorksException(result.Errors.Select(x => x.Description).ToString());
+
+        _dbContext.SaveChanges();
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var rolesDTOs = new List<RoleDto>();
+        
+        foreach (var role in userRoles)
+        {
+            var userRole = await _roleManager.FindByNameAsync(role);
+            rolesDTOs.Add(new RoleDto(userRole.Name));
+        }
+
+        userRolesDto.Roles = rolesDTOs;
+        
+        return userRolesDto;
+    }
+
     public async Task<bool> Delete(Guid id)
     {
         var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == Convert.ToString(id));
@@ -214,38 +225,34 @@ public class UserService : IUserService
         return true;
 
     }
-
-    public async Task<IEnumerable<UserVM>> GetAll(
-        int pageNumber, int pageSize, 
-        GenderEnum? gender, string? email, 
-        string? phoneNumber)
+    
+    public async Task<UserRolesDto> DeleteRolesFromUser(UserRolesDto userRolesDto)
     {
-        var query = _dbContext.Users.AsQueryable();
+        var user = await _userManager.FindByIdAsync(userRolesDto.UserId.ToString());
+        var removingRoles = new List<string>();
 
-        if(gender is not null)
-            query = query.Where(x => x.Gender == gender);
+        foreach (var role in userRolesDto.Roles)
+            removingRoles.Add(role.Name);
 
-        if(email is not null)
-            query = query.Where(x => x.Email == email);
+        var result = await _userManager.RemoveFromRolesAsync(user, removingRoles);
 
-        if (phoneNumber is not null)
-            query = query.Where(x => x.PhoneNumber == phoneNumber);
+        if (!result.Succeeded)
+            throw new UzWorksException(result.Errors.Select(x => x.Description).ToString());
 
-        if (pageNumber != 0 && pageSize != 0)
-            query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
+        _dbContext.SaveChanges();
 
-        var users = await query.ToArrayAsync();
-        var result = _mappingService.Map<IEnumerable<UserVM>, IEnumerable<User>>(users);
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var roles = new List<RoleDto>();
 
-        return result;
-    }
+        foreach (var role in userRoles)
+        {
+            var userRole = await _roleManager.FindByNameAsync(role);
+            roles.Add(new RoleDto(userRole.Name));
+        }
 
-    public async Task<string> GetUserFullName(Guid id)
-    {
-        var user = await _userManager.FindByIdAsync(id.ToString()) ??
-            throw new UzWorksException("User not found.");
+        userRolesDto.Roles = roles;
 
-        return user.FirstName + " " + user.LastName;
+        return userRolesDto;
     }
 }
 

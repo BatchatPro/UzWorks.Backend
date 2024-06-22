@@ -52,6 +52,14 @@ public class UserController : BaseController
         return Ok(roles);
     }
 
+    [Authorize]
+    [HttpGet]
+    public async Task <ActionResult<int>> GetCount()
+    {
+        var count = await _userService.GetCount();
+        return Ok(count);
+    }
+
     [HttpPut]
     [Authorize]
     public async Task<ActionResult<UserVM>> Update([FromBody] UserEM profileEM)
