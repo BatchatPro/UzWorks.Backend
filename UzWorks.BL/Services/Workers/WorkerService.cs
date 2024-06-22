@@ -193,7 +193,7 @@ public class WorkerService : IWorkerService
 
         worker.Status = status;
 
-         _workersRepository.UpdateAsync(worker);
+        _workersRepository.UpdateAsync(worker);
         await _workersRepository.SaveChanges();
 
         return worker.Status;
