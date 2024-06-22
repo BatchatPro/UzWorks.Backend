@@ -110,10 +110,18 @@ public class WorkerController : BaseController
 
     [Authorize(Roles = RoleNames.Supervisor)]
     [HttpPut("{id}")]
-    public async Task<ActionResult> ChangeStatus([FromRoute] Guid id, [FromBody] bool status)
+    public async Task<ActionResult> Activate([FromRoute] Guid id)
     {
-        var result = await _workerService.ChangeStatus(id, status);
-        return Ok(_workerService.GetById(id));
+        await _workerService.ChangeStatus(id, true);
+        return Ok(await _workerService.GetById(id));
+    }
+
+    [Authorize(Roles = RoleNames.Supervisor)]
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Deactivate([FromRoute] Guid id)
+    {
+        await _workerService.ChangeStatus(id, false);
+        return Ok(await _workerService.GetById(id));
     }
 
     [Authorize(Roles = RoleNames.Employee)]
