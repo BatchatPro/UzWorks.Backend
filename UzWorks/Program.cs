@@ -15,11 +15,7 @@ IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettin
 
 builder.Services.AddOptions();
 builder.Services.Configure<AccessConfiguration>(configuration.GetSection("AccessConfiguration"));
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    options.JsonSerializerOptions.MaxDepth = 0;
-}); 
+builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 
