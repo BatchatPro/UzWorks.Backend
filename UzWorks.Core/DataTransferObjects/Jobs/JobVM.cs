@@ -1,4 +1,7 @@
-﻿namespace UzWorks.Core.DataTransferObjects.Jobs;
+﻿using UzWorks.Core.DataTransferObjects.JobCategories;
+using UzWorks.Core.DataTransferObjects.Location.Districts;
+
+namespace UzWorks.Core.DataTransferObjects.Jobs;
 
 public class JobVM
 {
@@ -22,7 +25,6 @@ public class JobVM
     public int MaxAge { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public string RegionName { get; set; } = string.Empty; 
-    public string DistrictName { get; set; } = string.Empty;
-    public string CategoryName { get; set; } = string.Empty;
+    public DistrictVM? District{ get; set; }
+    public JobCategoryVM? JobCategory { get; set; } 
 }

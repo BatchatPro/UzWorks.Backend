@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using UzWorks.API.Utils;
 using UzWorks.BL;
 using UzWorks.Core.Abstract;
@@ -14,7 +15,12 @@ IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettin
 
 builder.Services.AddOptions();
 builder.Services.Configure<AccessConfiguration>(configuration.GetSection("AccessConfiguration"));
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.MaxDepth = 0;
+}); 
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>

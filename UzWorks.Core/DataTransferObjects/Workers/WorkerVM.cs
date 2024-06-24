@@ -1,4 +1,7 @@
-﻿namespace UzWorks.Core.DataTransferObjects.Workers;
+﻿using UzWorks.Core.DataTransferObjects.JobCategories;
+using UzWorks.Core.DataTransferObjects.Location.Districts;
+
+namespace UzWorks.Core.DataTransferObjects.Workers;
  
 public class WorkerVM
 {
@@ -20,7 +23,7 @@ public class WorkerVM
     public string InstagramLink { get; set; } = string.Empty;
     public string TgUserName { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
-    public string RegionName { get; set; } = string.Empty;
-    public string DistrictName { get; set; } = string.Empty;
-    public string CategoryName { get; set; } = string.Empty;
+
+    public DistrictVM? District { get; set; }
+    public JobCategoryVM? JobCategory { get; set; }
 }

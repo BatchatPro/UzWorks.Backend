@@ -1,4 +1,6 @@
-﻿namespace UzWorks.Core.DataTransferObjects.Location.Regions;
+﻿using UzWorks.Core.DataTransferObjects.Location.Districts;
+
+namespace UzWorks.Core.DataTransferObjects.Location.Regions;
 
 public class RegionVM
 {
