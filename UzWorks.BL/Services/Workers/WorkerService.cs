@@ -86,7 +86,7 @@ public class WorkerService : IWorkerService
                         int pageNumber, int pageSize, 
                         Guid? jobCategoryId, int? maxAge, 
                         int? minAge, uint? maxSalary, 
-                        uint? minSalary, string? gender, bool? status, 
+                        uint? minSalary, int? gender, bool? status, 
                         Guid? regionId, Guid? districtId)
     {
         var workers = await _workersRepository.GetAllAsync(pageNumber, pageSize, jobCategoryId, 
@@ -131,7 +131,7 @@ public class WorkerService : IWorkerService
 
     public Task<int> GetCountForFilter(Guid? jobCategoryId, int? maxAge,
                         int? minAge, uint? maxSalary,
-                        uint? minSalary, string? gender, bool? status,
+                        uint? minSalary, int? gender, bool? status,
                         Guid? regionId, Guid? districtId)
     {
         return _workersRepository.GetCountForFilter(jobCategoryId,

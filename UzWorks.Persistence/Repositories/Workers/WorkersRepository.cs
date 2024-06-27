@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UzWorks.Core.Entities.JobAndWork;
+using UzWorks.Core.Enums.GenderTypes;
 using UzWorks.Persistence.Data;
 
 namespace UzWorks.Persistence.Repositories.Workers;
@@ -12,7 +13,7 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
 
     public async Task<Worker[]> GetAllAsync(int pageNumber, int pageSize,
                         Guid? jobCategoryId, int? maxAge, int? minAge, uint? maxSalary,
-                        uint? minSalary, string? gender, bool? status, Guid? regionId, Guid? districtId)
+                        uint? minSalary, int? gender, bool? status, Guid? regionId, Guid? districtId)
     {
         var query = _dbSet.AsQueryable();
 
@@ -37,9 +38,9 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
         if (minSalary is not null)
             query = query.Where(x => (x.Salary > minSalary));
 
-        if (!string.IsNullOrEmpty(gender))
-            query = query.Where(x => x.Gender.Equals(gender));
-
+        if (gender is not null)
+            query = query.Where(x => x.Gender.Equals((GenderEnum)gender));
+            
         if (regionId is not null)
             query = query.Where(x => x.District.RegionId.Equals(regionId));
 
@@ -65,7 +66,9 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
         return await query.CountAsync();
     }
 
-    public async Task<int> GetCountForFilter(Guid? jobCategoryId = null, int? maxAge = null, int? minAge = null, uint? maxSalary = null, uint? minSalary = null, string? gender = null, bool? status = null, Guid? regionId = null, Guid? districtId = null)
+    public async Task<int> GetCountForFilter(Guid? jobCategoryId = null, int? maxAge = null, 
+                             int? minAge = null, uint? maxSalary = null, uint? minSalary = null, 
+                             int? gender = null, bool? status = null, Guid? regionId = null, Guid? districtId = null)
     {
         var query = _dbSet.AsQueryable();
 
@@ -90,8 +93,8 @@ public class WorkersRepository : GenericRepository<Worker>, IWorkersRepository
         if (minSalary is not null)
             query = query.Where(x => (x.Salary > minSalary));
 
-        if (!string.IsNullOrEmpty(gender))
-            query = query.Where(x => x.Gender.Equals(gender));
+        if (gender is not null)
+            query = query.Where(x => x.Gender.Equals((GenderEnum)gender));
 
         if (regionId is not null)
             query = query.Where(x => x.District.RegionId.Equals(regionId));

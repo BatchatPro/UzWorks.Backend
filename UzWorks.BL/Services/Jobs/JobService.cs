@@ -76,7 +76,7 @@ public class JobService : IJobService
     }
 
     public async Task<IEnumerable<JobVM>> GetAllAsync(int pageNumber, int pageSize, Guid? jobCategoryId, int? maxAge, 
-                                                int? minAge, uint? maxSalary, uint? minSalary, string? gender, 
+                                                int? minAge, uint? maxSalary, uint? minSalary, int? gender, 
                                                 bool? status, Guid? regionId, Guid? districtId)
     {
         var jobs = await _jobsRepository.GetAllAsync(
@@ -121,7 +121,7 @@ public class JobService : IJobService
     }
 
     public async Task<int> GetGountForFilter(Guid? jobCategoryId, int? maxAge,
-                                       int? minAge, uint? maxSalary, uint? minSalary, string? gender,
+                                       int? minAge, uint? maxSalary, uint? minSalary, int? gender,
                                        bool? status, Guid? regionId, Guid? districtId)
     {
         return await _jobsRepository.GetcountForFilter(

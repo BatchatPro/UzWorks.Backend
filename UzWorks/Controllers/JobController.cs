@@ -27,7 +27,7 @@ public class JobController : BaseController
     public async Task<ActionResult<IEnumerable<JobVM>>> GetAll([FromQuery] int pageNumber, [FromQuery] int pageSize,
                                             [FromQuery] Guid? jobCategoryId, [FromQuery] int? maxAge,
                                             [FromQuery] int? minAge, [FromQuery] uint? maxSalary,
-                                            [FromQuery] uint? minSalary, [FromQuery] string? gender,
+                                            [FromQuery] uint? minSalary, [FromQuery] int? gender,
                                             [FromQuery] Guid? regionId, [FromQuery] Guid? districtId)
     {
         var result = await _jobService.GetAllAsync(
@@ -58,7 +58,7 @@ public class JobController : BaseController
     public async Task<ActionResult<IEnumerable<JobVM>>> GetAllForAdmin([FromQuery] int pageNumber, [FromQuery] int pageSize,
                                             [FromQuery] Guid? jobCategoryId, [FromQuery] int? maxAge,
                                             [FromQuery] int? minAge, [FromQuery] uint? maxSalary,
-                                            [FromQuery] uint? minSalary, [FromQuery] string? gender,
+                                            [FromQuery] uint? minSalary, [FromQuery] int? gender,
                                             [FromQuery] Guid? regionId, [FromQuery] Guid? districtId)
     {
         var result = await _jobService.GetAllAsync(
@@ -82,7 +82,7 @@ public class JobController : BaseController
     public async Task<ActionResult<int>> GetCountForFilter(
                                             [FromQuery] Guid? jobCategoryId, [FromQuery] int? maxAge,
                                             [FromQuery] int? minAge, [FromQuery] uint? maxSalary,
-                                            [FromQuery] uint? minSalary, [FromQuery] string? gender,
+                                            [FromQuery] uint? minSalary, [FromQuery] int? gender,
                                             [FromQuery] Guid? regionId, [FromQuery] Guid? districtId)
     {
         var result = await _jobService.GetGountForFilter(jobCategoryId,
